@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+:root {
+  font-family: Inter, "Noto Sans SC", system-ui, Avenir, Helvetica, Arial,
+    sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.gradientColor {
+  /* color: transparent; */
+  display: inline-block;
+  background-image: linear-gradient(
+    78deg,
+    rgb(238, 162, 162) 5%,
+    rgb(157, 213, 194) 13%,
+    rgb(87, 198, 225) 25%,
+    rgb(180, 159, 218) 47%,
+    rgb(122, 197, 216) 60%,
+    transparent 75%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  /* -webkit-text-fill-color: transparent; */
+  background-size: 400% 100%;
+}
+
+.invisibleScrollbar.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.invisibleScrollbar::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+}
+
+.invisibleScrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.invisibleScrollbar {
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}

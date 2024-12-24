@@ -1,0 +1,146 @@
+.PromptEditor {
+  overflow-y: auto;
+  /* scrollbar-gutter: stable both-edges; */
+  scrollbar-gutter: stable;
+  min-height: 1rem;
+  height: 100%;
+  user-select: none;
+}
+.PromptEditorInner {
+  position: relative;
+  overflow: hidden;
+  min-height: 100%;
+}
+
+.PromptEditorInner > div {
+  white-space: pre-wrap;
+  word-break: break-all;
+  border-radius: inherit;
+  overflow: hidden;
+
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: inherit;
+}
+
+.PromptEditorInner > textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: inherit;
+
+  overflow: hidden;
+  resize: none;
+  outline: none;
+  border: none;
+
+  background-color: transparent;
+  color: transparent;
+  word-break: break-all;
+  caret-color: black;
+
+  padding: inherit;
+  border-radius: inherit;
+
+  user-select: auto;
+}
+
+.PromptEditorInner > textarea::selection {
+  background-color: #7eccf953;
+}
+
+.PromptEditorInner * {
+  overflow-wrap: break-word;
+  word-break: break-all;
+  word-spacing: 0px;
+}
+
+.promptAction {
+  /* border-radius: 0.5rem;
+  background-color: #ff8a65;
+  color: #fff;
+  border: 0.5px solid #f4511e; */
+  font-weight: 600;
+}
+
+.promptActionLeft,
+.promptActionRight {
+  color: transparent;
+}
+.promptActionLeft::before,
+.promptActionRight::after {
+  content: "AC";
+  color: #aaa;
+  position: absolute;
+  font-size: 0.5em;
+  padding: 0.4rem 0rem 0.3rem 0.1rem;
+  min-width: 0.7rem;
+  word-break: keep-all;
+}
+
+.promptActionRight::after {
+  padding: 0.4rem 0.2rem 0.3rem 0rem;
+  margin-left: -0.7rem;
+}
+
+.promptEmotion {
+  /* border-radius: 0.5rem;
+  background-color: #1e88e5;
+  color: #fff;
+  border: 0.5px solid #1565c0; */
+  font-style: italic;
+}
+
+.promptEmotionLeft,
+.promptEmotionRight {
+  color: transparent;
+}
+
+.promptEmotionLeft::before,
+.promptEmotionRight::after {
+  content: "EM";
+  color: #aaa;
+  position: absolute;
+  font-size: 0.5em;
+  padding: 0.4rem 0rem 0.3rem 0.1rem;
+  word-break: keep-all;
+  min-width: 0.7rem;
+}
+
+.promptEmotionRight::after {
+  padding: 0.4rem 0.2rem 0.3rem 0;
+  margin-left: -0.7rem;
+}
+
+/* .promptAction,
+.promptEmotion {
+  margin: 0 -1px;
+} */
+
+.promptAction > span::selection,
+.promptEmotion > span::selection {
+  color: transparent !important;
+}
+
+.PromptEditor.invisibleScrollbar::-webkit-scrollbar {
+  width: 16px;
+  background-color: transparent;
+}
+
+.PromptEditor.invisibleScrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.PromptEditor.invisibleScrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
