@@ -9,9 +9,11 @@ import { Toaster } from "react-hot-toast";
 
 const app = createRoot(document.getElementById("root")!);
 
+const BASENAME = import.meta.env.DEV ? "/" : "/web-rwkv-realweb/";
+
 app.render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={BASENAME}>
       <App />
       <Toaster />
     </BrowserRouter>
