@@ -15,9 +15,8 @@ export default function Chat() {
   const isSubmited = useRef(false);
 
   useEffect(() => {
-    // console.log(location.state.prompt);
     if (!isSubmited.current) {
-      if (location.state.prompt) {
+      if (location.state?.prompt!) {
         submitMessage("user", location.state.prompt);
       }
       isSubmited.current = true;
@@ -29,11 +28,13 @@ export default function Chat() {
   };
   return (
     <div className="w-full h-full flex flex-col">
-      <div className={cn("flex-1 overflow-y-auto")}>
+      <div
+        className={cn("flex-1 overflow-y-auto mt-20 md:mt-4 p-4 flex flex-col gap-4")}
+      >
         {activeMessageList.map((v, k) => {
           return (
-            <div key={k} className="flex flex-col">
-              <div>{v.role}</div>
+            <div key={k} className="flex flex-col gap-2">
+              <div className="font-bold">{v.role}</div>
               <div>{v.content}</div>
             </div>
           );

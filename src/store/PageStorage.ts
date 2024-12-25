@@ -84,93 +84,86 @@ interface ChatStorage {
   setSessionById: (id: string, session: ChatSession) => void;
   createNewSession: () => string;
   deleteSessionById: (id: string) => void;
-
-  // createNewMessageContent: (
-  //   session: ChatSession,
-  //   parentMessasgeContentId: number,
-  //   role: string,
-  //   prompt: string
-  // ) => MessageContent[];
 }
 
 export const useChatSessionStore = create<ChatStorage>()(
-  // persist(
-  // immer(
-  (set, get) => ({
-    sessions: {},
-    sessionInformations: [],
-    setSessionById: (id: string, session: ChatSession) => {
-      const sessions: { [id: string]: ChatSession } = {
-        ...get().sessions,
-        [id]: { ...session },
-      };
-      const sessionInformations: ChatSessionInfomation[] =
-        get().sessionInformations.map((info) => {
-          if (info.id === id) {
-            return {
-              ...info,
-              id: session.id,
-              title: session.title,
-              updateTimestamp: session.updateTimestamp,
-            };
-          }
-          return info;
+  persist(
+    // immer(
+    (set, get) => ({
+      sessions: {},
+      sessionInformations: [],
+      setSessionById: (id: string, session: ChatSession) => {
+        const sessions: { [id: string]: ChatSession } = {
+          ...get().sessions,
+          [id]: { ...session },
+        };
+        const sessionInformations: ChatSessionInfomation[] =
+          get().sessionInformations.map((info) => {
+            if (info.id === id) {
+              return {
+                ...info,
+                id: session.id,
+                title: session.title,
+                updateTimestamp: session.updateTimestamp,
+              };
+            }
+            return info;
+          });
+        set((prev) => {
+          return { ...prev, sessions: sessions };
         });
-      set((prev) => {
-        return { ...prev, sessions: sessions };
-      });
-    },
-    createNewSession: () => {
-      const session = {
-        id: self.crypto.randomUUID(),
-        messageBlock: [],
-        messageContent: [],
-        samplerConfig: {
-          temp: 1.0,
-          top_p: 0.5,
-          presence_penalty: 0.5,
-          count_penalty: 0.5,
-          penalty_decay: 0.996,
-        },
-        stop_tokens: [],
-        max_len: 2048,
-        title: "New Session",
-        updateTimestamp: Date.now(),
-      };
-      const sessionInformations: ChatSessionInfomation[] = [
-        ...get().sessionInformations,
-        {
-          id: session.id,
-          title: session.title,
-          updateTimestamp: session.updateTimestamp,
-        },
-      ];
+      },
+      createNewSession: () => {
+        const session = {
+          id: self.crypto.randomUUID(),
+          messageBlock: [],
+          messageContent: [],
+          samplerConfig: {
+            temp: 1.0,
+            top_p: 0.5,
+            presence_penalty: 0.5,
+            count_penalty: 0.5,
+            penalty_decay: 0.996,
+          },
+          stop_tokens: [],
+          max_len: 2048,
+          title: "New Session",
+          updateTimestamp: Date.now(),
+        };
+        const sessionInformations: ChatSessionInfomation[] = [
+          ...get().sessionInformations,
+          {
+            id: session.id,
+            title: session.title,
+            updateTimestamp: session.updateTimestamp,
+          },
+        ];
 
-      set((prev) => ({
-        ...prev,
-        sessionInformations: sessionInformations,
-        sessions: { ...prev.sessions, [session.id]: session },
-      }));
-      return session.id;
-    },
-    deleteSessionById: (id: string) => {
-      const sessionInformations = get().sessionInformations.filter(
-        (info) => info.id !== id
-      );
-      const sessions = { ...get().sessions };
-      delete sessions[id];
-      set((prev) => ({
-        ...prev,
-        sessionInformations: sessionInformations,
-        sessions: sessions,
-      }));
-    },
-  })
-  //   {
-  //     name: "webrwkv-storage",
-  //     storage: createJSONStorage(() => sessionStorage),
-  //   }
-  // )
+        set((prev) => ({
+          ...prev,
+          sessionInformations: sessionInformations,
+          sessions: { ...prev.sessions, [session.id]: session },
+        }));
+        return session.id;
+      },
+      deleteSessionById: (id: string) => {
+        const sessionInformations = get().sessionInformations.filter(
+          (info) => info.id !== id
+        );
+        const sessions = { ...get().sessions };
+        delete sessions[id];
+        set((prev) => ({
+          ...prev,
+          sessionInformations: sessionInformations,
+          sessions: sessions,
+        }));
+      },
+    }),
+    {
+      name: "webrwkv-storage",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
   // )
 );
 
@@ -201,8 +194,6 @@ export function useChatSession(id: string) {
   const getActiveMessageList = (session: ChatSession) => {
     const newActiveMessageList: ActiveMessage[] = [];
     let currentMessageBlockIndex = 0;
-
-    console.log(activeSession.current.messageBlock.length);
     if (activeSession.current.messageBlock.length === 0) {
       return newActiveMessageList;
     }
@@ -272,9 +263,8 @@ export function useChatSession(id: string) {
   };
 
   const updateActiveMessageList = () => {
-    console.log(activeSession.current);
-    console.log(getActiveMessageList(activeSession.current));
     setActiveMessageList(getActiveMessageList(activeSession.current));
+    updateSession();
   };
 
   const updateSession = () => {
