@@ -132,7 +132,12 @@ export function Bar() {
             </span>
             <span className={cn("break-keep flex-shrink-0")}>New Chat</span>
           </button>
-          <div className={cn("overflow-auto flex flex-col gap-2 mt-4")}>
+          <div
+            className={cn(
+              "overflow-auto flex flex-col gap-2 mt-4",
+              sessionStorage.isBarOpen ? "visible" : "invisible"
+            )}
+          >
             {[...chatSessionInformations].reverse().map((v, k) => {
               return (
                 <div
@@ -141,28 +146,43 @@ export function Bar() {
                     navigate(`/chat/${v.id}`, { state: { prompt: null } })
                   }
                   className={cn(
-                    "group text-left p-1 pl-4 pr-2 hover:bg-slate-100 rounded-lg flex items-center "
+                    "text-left p-1 pl-4 pr-2 gap-1 hover:bg-slate-100 rounded-lg flex items-center cursor-pointer"
                   )}
                 >
-                  <span
-                    className={cn("py-1 text-nowrap overflow-hidden flex-1")}
-                  >
+                  <span className={cn("py-1 text-nowrap truncate flex-1")}>
                     {v.title}
                   </span>
-                  <button
-                    className={cn(
-                      "ml-auto p-1 bg-red-500 text-sm text-white rounded-md opacity-0 group-hover:opacity-100"
-                    )}
+                  <div
+                    className={cn("group flex gap-1")}
                     onClick={(e) => {
                       e.stopPropagation();
-                      chatSessionStorage.deleteSessionById(v.id);
-                      if (location.pathname.includes(v.id)) {
-                        navigate("/");
-                      }
                     }}
                   >
-                    Delete
-                  </button>
+                    <button
+                      className={cn(
+                        "p-1 bg-red-500 text-sm text-white rounded-md hidden group-hover:block"
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        chatSessionStorage.deleteSessionById(v.id);
+                        if (location.pathname.includes(v.id)) {
+                          navigate("/");
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <div className="w-7 h-7 rounded-full p-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="size-5"
+                      >
+                        <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               );
             })}

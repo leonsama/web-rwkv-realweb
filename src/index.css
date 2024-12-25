@@ -9,6 +9,10 @@ body,
   width: 100%;
 }
 
+* {
+  outline: none;
+}
+
 :root {
   font-family: Inter, "Noto Sans SC", system-ui, Avenir, Helvetica, Arial,
     sans-serif;

@@ -34,7 +34,7 @@ export function App() {
 
   return (
     <Suspense fallback={<Placeholder></Placeholder>}>
-      <div className="h-screen w-screen flex bg-white">
+      <div className="h-screen w-screen flex bg-white text-black">
         <Bar></Bar>
         <div className="flex-1 overflow-auto relative px-4 md:px-7 flex justify-center">
           <div className="w-full h-full max-w-screen-md">
