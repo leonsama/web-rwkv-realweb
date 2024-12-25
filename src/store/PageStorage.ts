@@ -110,7 +110,11 @@ export const useChatSessionStore = create<ChatStorage>()(
             return info;
           });
         set((prev) => {
-          return { ...prev, sessions: sessions };
+          return {
+            ...prev,
+            sessions: sessions,
+            sessionInformations: sessionInformations,
+          };
         });
       },
       createNewSession: () => {
@@ -274,9 +278,14 @@ export function useChatSession(id: string) {
     );
   };
 
+  const updateChatSessionTitle = (title: string) => {
+    activeSession.current.title = title;
+    updateSession();
+  };
+
   useEffect(() => {
     activeSession.current = sessions[id];
     updateActiveMessageList();
   }, [id]);
-  return { activeMessageList, submitMessage };
+  return { activeMessageList, submitMessage, updateChatSessionTitle };
 }

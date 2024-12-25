@@ -133,7 +133,7 @@ export function Bar() {
             <span className={cn("break-keep flex-shrink-0")}>New Chat</span>
           </button>
           <div className={cn("overflow-auto flex flex-col gap-2 mt-4")}>
-            {chatSessionInformations.reverse().map((v, k) => {
+            {[...chatSessionInformations].reverse().map((v, k) => {
               return (
                 <div
                   key={k}
@@ -141,10 +141,14 @@ export function Bar() {
                     navigate(`/chat/${v.id}`, { state: { prompt: null } })
                   }
                   className={cn(
-                    "group text-left p-1 pl-4 pr-2 hover:bg-slate-100 rounded-lg flex items-center"
+                    "group text-left p-1 pl-4 pr-2 hover:bg-slate-100 rounded-lg flex items-center "
                   )}
                 >
-                  <span className={cn("py-1")}>{v.title}</span>
+                  <span
+                    className={cn("py-1 text-nowrap overflow-hidden flex-1")}
+                  >
+                    {v.title}
+                  </span>
                   <button
                     className={cn(
                       "ml-auto p-1 bg-red-500 text-sm text-white rounded-md opacity-0 group-hover:opacity-100"

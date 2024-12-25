@@ -9,15 +9,15 @@ export default function Chat() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { activeMessageList, submitMessage } = useChatSession(
-    location.pathname.split("/")[2]
-  );
+  const { activeMessageList, submitMessage, updateChatSessionTitle } =
+    useChatSession(location.pathname.split("/")[2]);
   const isSubmited = useRef(false);
 
   useEffect(() => {
     if (!isSubmited.current) {
       if (location.state?.prompt!) {
         submitMessage("user", location.state.prompt);
+        updateChatSessionTitle(location.state.prompt);
       }
       isSubmited.current = true;
     }
@@ -29,7 +29,9 @@ export default function Chat() {
   return (
     <div className="w-full h-full flex flex-col">
       <div
-        className={cn("flex-1 overflow-y-auto mt-20 md:mt-4 p-4 flex flex-col gap-4")}
+        className={cn(
+          "flex-1 overflow-y-auto mt-20 md:mt-4 p-4 flex flex-col gap-4"
+        )}
       >
         {activeMessageList.map((v, k) => {
           return (
