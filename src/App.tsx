@@ -20,7 +20,6 @@ export function App() {
   const sessionStorage = useSessionStorage((s) => s);
   const isLocationRoot = useMatch("");
   const location = useLocation();
-  console.log(isLocationRoot !== null);
 
   useEffect(() => {
     sessionStorage.setIsBarOpen(!isMobile());
@@ -28,7 +27,6 @@ export function App() {
 
   useEffect(() => {
     sessionStorage.setShowLargeBanner(isLocationRoot !== null);
-    console.log(isLocationRoot !== null);
     if (isMobile()) {
       sessionStorage.setIsBarOpen(false);
     }

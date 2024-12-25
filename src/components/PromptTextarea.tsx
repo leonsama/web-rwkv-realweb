@@ -51,6 +51,7 @@ export const PromptTextarea = ({
   invisibleScrollbar = false,
   isFocus = false,
   setIsFocus = (status: boolean) => {},
+  isKeepFocus,
 }: {
   value: string;
   onChange?: (value: string) => void;
@@ -62,6 +63,7 @@ export const PromptTextarea = ({
   invisibleScrollbar?: boolean;
   isFocus?: boolean;
   setIsFocus?: (status: boolean) => void;
+  isKeepFocus?: React.MutableRefObject<boolean>;
 }) => {
   const [content, setContent] = useState(value);
   const [config, setConfig] = useState(globalConfig);
@@ -166,6 +168,11 @@ export const PromptTextarea = ({
             ref={textareaEle}
             onFocus={() => setIsFocus(true)}
             onBlur={() => {
+              console.log("isKeepFocus", isKeepFocus);
+              if (isKeepFocus && isKeepFocus.current === true) {
+                textareaEle.current?.focus();
+                return;
+              }
               setTimeout(() => {
                 setContent((prev) => {
                   setTimeout(() => {

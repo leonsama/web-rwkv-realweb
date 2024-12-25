@@ -1,8 +1,12 @@
-import { create } from "zustand";
+import { create, StateCreator } from "zustand";
 
 import { immer } from "zustand/middleware/immer";
 
+import { persist, createJSONStorage, PersistOptions } from "zustand/middleware";
+import { useShallow } from "zustand/react/shallow";
+
 import { StoreApi, UseBoundStore } from "zustand";
+import { useEffect, useRef, useState } from "react";
 
 const LOCAL_SESSION_ID_LIST = "LOCAL_SESSION_ID_LIST";
 
@@ -47,31 +51,40 @@ interface NucleusSamplerConfig {
 
 interface ChatSession {
   id: string;
-  message: MessageContent[]; // 这是一个链表
+  title: string;
+  messageBlock: MessageBlock[];
   samplerConfig: NucleusSamplerConfig;
   stop_tokens: number[];
   max_len: number;
+  updateTimestamp: number;
+}
+
+interface ChatSessionInfomation {
+  id: string;
+  title: string;
+  updateTimestamp: number;
+}
+
+interface MessageBlock {
+  messageContents: MessageContent[];
+  activeMessageContentIndex: number;
 }
 
 interface MessageContent {
   role: string;
   content: string;
-  nextMessagesID: number[]; // 可用的下一个messagecontent的id，id是messagecontent在message列表中的id。
-  activeNextMessageID: number | null; // 当前激活的下一个messagecontent的id
+  nextMessagesBlockIndexs: number[];
+  activeNextMessageBlockIndex: number | null;
 }
 
 interface ChatStorage {
-  sessions: ChatSession[];
+  sessions: { [id: string]: ChatSession };
+  sessionInformations: ChatSessionInfomation[];
 
-  init: () => void;
-
-  getSessionById: (id: string) => ChatSession | undefined;
   setSessionById: (id: string, session: ChatSession) => void;
-
-  createNewSession: () => ChatSession;
+  createNewSession: () => string;
   deleteSessionById: (id: string) => void;
 
-  getActiveMessageList: (session: ChatSession) => MessageContent[];
   // createNewMessageContent: (
   //   session: ChatSession,
   //   parentMessasgeContentId: number,
@@ -80,49 +93,38 @@ interface ChatStorage {
   // ) => MessageContent[];
 }
 
-// 使用localstorage持久化储存session
-export const useChatSession = createSelectors(
-  create<ChatStorage>()((set, get) => ({
-    sessions: [],
-    init: () =>
-      set((prev) => {
-        const sessionIds: string[] = JSON.parse(
-          localStorage.getItem(LOCAL_SESSION_ID_LIST) || "[]"
-        );
-        const sessions: ChatSession[] = [];
-        sessionIds.forEach((value: string, index: number) => {
-          const session = localStorage.getItem(value);
-          if (session) {
-            sessions.push(JSON.parse(session));
-          }
-        });
-        return {
-          sessions: sessions,
-        };
-      }),
-    getSessionById: (id: string) => {
-      const session = localStorage.getItem(id);
-      if (session) {
-        return JSON.parse(session);
-      }
-      return undefined;
-    },
+export const useChatSessionStore = create<ChatStorage>()(
+  // persist(
+  // immer(
+  (set, get) => ({
+    sessions: {},
+    sessionInformations: [],
     setSessionById: (id: string, session: ChatSession) => {
-      localStorage.setItem(id, JSON.stringify(session));
-
-      localStorage.setItem(
-        LOCAL_SESSION_ID_LIST,
-        JSON.stringify([...get().sessions, id])
-      );
-      const sessions: ChatSession[] = [...get().sessions, session];
+      const sessions: { [id: string]: ChatSession } = {
+        ...get().sessions,
+        [id]: { ...session },
+      };
+      const sessionInformations: ChatSessionInfomation[] =
+        get().sessionInformations.map((info) => {
+          if (info.id === id) {
+            return {
+              ...info,
+              id: session.id,
+              title: session.title,
+              updateTimestamp: session.updateTimestamp,
+            };
+          }
+          return info;
+        });
       set((prev) => {
-        return { sessions: sessions };
+        return { ...prev, sessions: sessions };
       });
     },
     createNewSession: () => {
       const session = {
         id: self.crypto.randomUUID(),
-        message: [],
+        messageBlock: [],
+        messageContent: [],
         samplerConfig: {
           temp: 1.0,
           top_p: 0.5,
@@ -132,24 +134,159 @@ export const useChatSession = createSelectors(
         },
         stop_tokens: [],
         max_len: 2048,
+        title: "New Session",
+        updateTimestamp: Date.now(),
       };
-      localStorage.setItem(session.id, JSON.stringify(session));
-      return session;
+      const sessionInformations: ChatSessionInfomation[] = [
+        ...get().sessionInformations,
+        {
+          id: session.id,
+          title: session.title,
+          updateTimestamp: session.updateTimestamp,
+        },
+      ];
+
+      set((prev) => ({
+        ...prev,
+        sessionInformations: sessionInformations,
+        sessions: { ...prev.sessions, [session.id]: session },
+      }));
+      return session.id;
     },
     deleteSessionById: (id: string) => {
-      localStorage.removeItem(id);
+      const sessionInformations = get().sessionInformations.filter(
+        (info) => info.id !== id
+      );
+      const sessions = { ...get().sessions };
+      delete sessions[id];
+      set((prev) => ({
+        ...prev,
+        sessionInformations: sessionInformations,
+        sessions: sessions,
+      }));
     },
-    getActiveMessageList: (session: ChatSession) => {
-      // 生成活动MessageList方法：从ChatSession的message列表中的第0个messagecontent开始，根据activeNextMessageID，从message列表里选择下一个messagecontent，直到activeNextMessageID为null
-      const activeMessageList: MessageContent[] = [];
-      let currentMessageContent = session.message[0];
-      while (true) {
-        if (currentMessageContent.activeNextMessageID === null) break;
-        activeMessageList.push(currentMessageContent);
-        currentMessageContent =
-          session.message[currentMessageContent.activeNextMessageID];
-      }
-      return activeMessageList;
-    },
-  }))
+  })
+  //   {
+  //     name: "webrwkv-storage",
+  //     storage: createJSONStorage(() => sessionStorage),
+  //   }
+  // )
+  // )
 );
+
+export function useChatSessionInformation() {
+  const informations = useChatSessionStore(
+    useShallow((state) => state.sessionInformations)
+  );
+  return informations;
+}
+
+interface ActiveMessage {
+  role: string;
+  content: string;
+  currentBlockIndex: number;
+  currentMessageContentIndex: number;
+  totalMessageContentCount: number;
+}
+
+export function useChatSession(id: string) {
+  const chatSessionStorage = useChatSessionStore((state) => state);
+  const sessions = useChatSessionStore(useShallow((state) => state.sessions));
+
+  const activeSession = useRef<ChatSession>(sessions[id]);
+  const [activeMessageList, setActiveMessageList] = useState<ActiveMessage[]>(
+    []
+  );
+
+  const getActiveMessageList = (session: ChatSession) => {
+    const newActiveMessageList: ActiveMessage[] = [];
+    let currentMessageBlockIndex = 0;
+
+    console.log(activeSession.current.messageBlock.length);
+    if (activeSession.current.messageBlock.length === 0) {
+      return newActiveMessageList;
+    }
+
+    while (true) {
+      const activeMessage: ActiveMessage = {
+        role: "",
+        content: "",
+        currentBlockIndex: -1,
+        currentMessageContentIndex: -1,
+        totalMessageContentCount: -1,
+      };
+
+      const messageBlock =
+        activeSession.current.messageBlock[currentMessageBlockIndex];
+      const messageContent =
+        messageBlock.messageContents[messageBlock.activeMessageContentIndex];
+
+      activeMessage.role = messageContent.role;
+      activeMessage.content = messageContent.content;
+      activeMessage.currentBlockIndex = currentMessageBlockIndex;
+      activeMessage.currentMessageContentIndex =
+        messageBlock.activeMessageContentIndex;
+      activeMessage.totalMessageContentCount =
+        messageBlock.messageContents.length;
+      newActiveMessageList.push(activeMessage);
+      if (messageContent.activeNextMessageBlockIndex === null) {
+        break;
+      } else {
+        currentMessageBlockIndex = messageContent.activeNextMessageBlockIndex;
+      }
+    }
+
+    return newActiveMessageList;
+  };
+
+  const submitMessage = (role: string, content: string) => {
+    const newMessageBlock: MessageBlock = {
+      activeMessageContentIndex: 0,
+      messageContents: [
+        {
+          role,
+          content,
+          activeNextMessageBlockIndex: null,
+          nextMessagesBlockIndexs: [],
+        },
+      ],
+    };
+    // activeSession.current.messageBlock.push(newMessageBlock);
+    if (activeMessageList.length > 0) {
+      const newMessageBlockIndex = activeSession.current.messageBlock.length;
+      const previousMessageBlock =
+        activeSession.current.messageBlock[
+          activeMessageList[activeMessageList.length - 1].currentBlockIndex
+        ];
+      const previousMessageContent =
+        previousMessageBlock.messageContents[
+          previousMessageBlock.activeMessageContentIndex
+        ];
+
+      previousMessageContent.nextMessagesBlockIndexs.push(newMessageBlockIndex);
+      previousMessageContent.activeNextMessageBlockIndex = newMessageBlockIndex;
+    }
+    activeSession.current.messageBlock.push(newMessageBlock);
+
+    updateActiveMessageList();
+  };
+
+  const updateActiveMessageList = () => {
+    console.log(activeSession.current);
+    console.log(getActiveMessageList(activeSession.current));
+    setActiveMessageList(getActiveMessageList(activeSession.current));
+  };
+
+  const updateSession = () => {
+    chatSessionStorage.setSessionById(
+      activeSession.current.id,
+      activeSession.current
+    );
+  };
+
+  useEffect(() => {
+    activeSession.current = sessions[id];
+    updateActiveMessageList();
+  }, [id]);
+  return { activeMessageList, submitMessage };
+}

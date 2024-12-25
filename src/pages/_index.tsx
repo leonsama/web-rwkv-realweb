@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { ChatTextarea } from "../components/ChatTextarea";
-import { useSessionStorage } from "../store/PageStorage";
+import { useChatSessionStore, useSessionStorage } from "../store/PageStorage";
 import { Flipped, Flipper } from "react-flip-toolkit";
 import { useState } from "react";
 import { cn } from "../utils/utils";
@@ -8,11 +8,15 @@ import { cn } from "../utils/utils";
 export default function Home() {
   const sessionStorage = useSessionStorage((s) => s);
   const navigate = useNavigate();
+
+  const chatSessionStorage = useChatSessionStore((state) => state);
   const createNewConversation = (prompt: string) => {
     sessionStorage.setShowLargeBanner(false);
 
+    const newSessionId = chatSessionStorage.createNewSession();
+
     setTimeout(() => {
-      navigate("/chat", { state: { prompt } });
+      navigate(`/chat/${newSessionId}`, { state: { prompt } });
     }, 400);
   };
 

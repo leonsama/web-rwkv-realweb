@@ -1,5 +1,9 @@
-import { useNavigate, useNavigation } from "react-router";
-import { useSessionStorage } from "../store/PageStorage";
+import { useLocation, useNavigate, useNavigation } from "react-router";
+import {
+  useChatSessionInformation,
+  useChatSessionStore,
+  useSessionStorage,
+} from "../store/PageStorage";
 import { cn } from "../utils/utils";
 import { WebRWKVFixedBanner } from "./WebRWKVBanner";
 
@@ -34,6 +38,12 @@ function BarButtom({
 export function Bar() {
   const sessionStorage = useSessionStorage((s) => s);
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const chatSessionInformations = useChatSessionInformation();
+  const chatSessionStorage = useChatSessionStore((state) => state);
+
   return (
     <>
       <button
@@ -102,7 +112,9 @@ export function Bar() {
               "group h-12 w-12 gap-4 rounded-full bg-slate-200 hover:bg-slate-300 p-3.5 overflow-hidden break-keep inline-flex transition-all duration-200 text-slate-600",
               sessionStorage.isBarOpen ? "w-36" : ""
             )}
-            onClick={()=>{navigate("/")}}
+            onClick={() => {
+              navigate("/");
+            }}
           >
             <span
               className={cn(
@@ -120,7 +132,39 @@ export function Bar() {
             </span>
             <span className={cn("break-keep flex-shrink-0")}>New Chat</span>
           </button>
-          <BarButtom className={cn("mt-auto")}
+          <div className={cn("overflow-auto flex flex-col gap-2 mt-4")}>
+            {chatSessionInformations.reverse().map((v, k) => {
+              return (
+                <div
+                  key={k}
+                  onClick={() =>
+                    navigate(`/chat/${v.id}`, { state: { prompt: null } })
+                  }
+                  className={cn(
+                    "group text-left p-1 pl-4 pr-2 hover:bg-slate-100 rounded-lg flex items-center"
+                  )}
+                >
+                  <span className={cn("py-1")}>{v.title}</span>
+                  <button
+                    className={cn(
+                      "ml-auto p-1 bg-red-500 text-sm text-white rounded-md opacity-0 group-hover:opacity-100"
+                    )}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      chatSessionStorage.deleteSessionById(v.id);
+                      if (location.pathname.includes(v.id)) {
+                        navigate("/");
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <BarButtom
+            className={cn("mt-auto")}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"

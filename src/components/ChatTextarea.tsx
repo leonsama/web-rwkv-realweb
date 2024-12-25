@@ -24,11 +24,13 @@ function PromptSuggestion({
   onClick,
   className,
   style,
+  isKeepFocus,
   ...prop
 }: {
   promptContent: string;
   children: React.ReactNode;
   onClick: (prompt: string) => void;
+  isKeepFocus?: React.MutableRefObject<boolean>;
   className?: string;
   style?: React.CSSProperties;
   prop?: React.HTMLAttributes<HTMLButtonElement>;
@@ -39,12 +41,16 @@ function PromptSuggestion({
         "text-xs rounded-3xl h-7 py-1.5 px-2 outline outline-1 outline-slate-400 hover:bg-gray-100 shadow-md select-none flex-shrink-0 transition-all duration-300",
         className
       )}
-      onClick={() => {
+      onClick={(e) => {
         onClick(promptContent);
       }}
-      onTouchStart={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
+      onTouchStart={() => {
+        if (isKeepFocus) {
+          isKeepFocus.current = true;
+          setTimeout(() => {
+            isKeepFocus.current = false;
+          }, 200);
+        }
       }}
       style={style}
       {...prop}
@@ -72,6 +78,8 @@ export function ChatTextarea({
   const [lineCount, setLineCount] = useState(1);
 
   const [isFocus, setIsFocus] = useState(false);
+
+  const isKeepFocus = useRef(false);
 
   const baseHeight = 56;
   const lineHeight = 24;
@@ -125,6 +133,7 @@ export function ChatTextarea({
               style={{
                 transitionDelay: isFocus ? `${300 + k * 50}ms` : undefined,
               }}
+              isKeepFocus={isKeepFocus}
             >
               {v.title}
             </PromptSuggestion>
@@ -173,6 +182,7 @@ export function ChatTextarea({
             invisibleScrollbar={lineCount <= maxLines}
             isFocus={isFocus}
             setIsFocus={setIsFocus}
+            isKeepFocus={isKeepFocus}
           ></PromptTextarea>
         </div>
         <button
