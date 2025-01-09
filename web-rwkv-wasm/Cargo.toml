@@ -7,7 +7,7 @@ exclude = ["assets/", "crates/", "screenshots/"]
 homepage = "https://github.com/cryscan/web-rwkv"
 keywords = ["deep-learning", "language", "model", "rwkv"]
 license = "MIT OR Apache-2.0"
-name = "web-rwkv-puzzles"
+name = "web-rwkv-wasm"
 repository = "https://github.com/cryscan/web-rwkv"
 version = "0.1.0"
 

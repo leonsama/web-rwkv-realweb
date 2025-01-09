@@ -1878,7 +1878,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "web-rwkv-puzzles"
+name = "web-rwkv-wasm"
 version = "0.1.0"
 dependencies = [
  "anyhow",
