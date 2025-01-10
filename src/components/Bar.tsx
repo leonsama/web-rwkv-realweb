@@ -16,7 +16,7 @@ function BarButtom({
   icon: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
-}) {
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const sessionStorage = useSessionStorage((s) => s);
   return (
     <button
@@ -47,7 +47,7 @@ export function Bar() {
   return (
     <>
       <button
-        className="top-4 left-4 w-12 h-12 rounded-full hover:bg-gray-100 active:bg-gray-200 transition-colors duration-200 overflow-hidden fixed z-20"
+        className="top-4 left-4 w-12 h-12 rounded-full md:hover:bg-gray-100 active:bg-gray-200 transition-colors duration-200 overflow-hidden fixed z-20"
         onClick={() => {
           sessionStorage.setIsBarOpen(!sessionStorage.isBarOpen);
         }}
@@ -189,6 +189,9 @@ export function Bar() {
           </div>
           <BarButtom
             className={cn("mt-auto")}
+            onClick={(e) => {
+              navigate("settings");
+            }}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"

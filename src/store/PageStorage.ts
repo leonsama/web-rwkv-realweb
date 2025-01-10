@@ -7,6 +7,7 @@ import { useShallow } from "zustand/react/shallow";
 
 import { StoreApi, UseBoundStore } from "zustand";
 import { useEffect, useRef, useState } from "react";
+import { dangerousUUIDV4 } from "../utils/utils";
 
 const LOCAL_SESSION_ID_LIST = "LOCAL_SESSION_ID_LIST";
 
@@ -119,7 +120,7 @@ export const useChatSessionStore = create<ChatStorage>()(
       },
       createNewSession: () => {
         const session = {
-          id: self.crypto.randomUUID(),
+          id: dangerousUUIDV4(),
           messageBlock: [],
           messageContent: [],
           samplerConfig: {

@@ -24,24 +24,32 @@ export function WebRWKVBanner() {
   return (
     <div
       className={cn(
-        "absolute top-0 select-none flex items-center",
-        sessionStorage.showLargeBanner ? "" : "left-0"
+        "pointer-events-none top-0 left-0 right-0 select-none",
+        sessionStorage.showLargeBanner
+          ? "flex flex-col items-center absolute px-4"
+          : "fixed md:absolute left-0"
       )}
     >
-      <Flipper flipKey={sessionStorage.showLargeBanner}>
-        <Flipped flipId="webrwkv">
-          <h1
-            className={cn(
-              "text-2xl font-medium leading-none break-keep mt-7 transition-colors duration-300 text-transparent gradientColor",
-              sessionStorage.showLargeBanner
-                ? "text-6xl xl:text-8xl mt-[7.5rem] xl:mt-30"
-                : "text-gray-300 ml-20 md:ml-7"
-            )}
-          >
-            Web RWKV
-          </h1>
-        </Flipped>
-      </Flipper>
+      <div
+        className={cn(
+          sessionStorage.showLargeBanner ? "w-full max-w-screen-md" : ""
+        )}
+      >
+        <Flipper flipKey={sessionStorage.showLargeBanner}>
+          <Flipped flipId="webrwkv">
+            <h1
+              className={cn(
+                "text-2xl font-medium leading-none break-keep mt-7 transition-colors duration-300 text-transparent gradientColor",
+                sessionStorage.showLargeBanner
+                  ? "text-6xl xl:text-8xl mt-[7.5rem] xl:mt-30"
+                  : "text-gray-300 ml-20 md:ml-7"
+              )}
+            >
+              Web RWKV
+            </h1>
+          </Flipped>
+        </Flipper>
+      </div>
     </div>
   );
 }

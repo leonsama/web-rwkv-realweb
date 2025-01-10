@@ -140,6 +140,7 @@ export const PromptTextarea = ({
   }, [value]);
 
   useEffect(() => {
+    console.log("detect", isFocus);
     if (isFocus) {
       textareaEle.current?.focus();
     }
@@ -166,18 +167,20 @@ export const PromptTextarea = ({
             placeholder={placeholder}
             disabled={disabled}
             ref={textareaEle}
-            onFocus={() => setIsFocus(true)}
+            onFocus={() => {
+              console.log("onfocus");
+              setIsFocus(true);
+            }}
             onBlur={() => {
-              console.log("isKeepFocus", isKeepFocus);
+              console.log("onblur");
               if (isKeepFocus && isKeepFocus.current === true) {
                 textareaEle.current?.focus();
                 return;
               }
               setTimeout(() => {
                 setContent((prev) => {
-                  setTimeout(() => {
-                    if (prev === "") setIsFocus(false);
-                  }, 0);
+                  console.log("call", prev);
+                  if (prev === "") setIsFocus(false);
                   return prev;
                 });
               }, 300);

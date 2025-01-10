@@ -1,10 +1,9 @@
 import { Suspense, useEffect } from "react";
-import { useLocation, useRoutes } from "react-router-dom";
+import { useLocation, useRoutes, useMatch } from "react-router";
 import routes from "~react-pages";
 import { Bar } from "./components/Bar";
 import { WebRWKVBanner } from "./components/WebRWKVBanner";
 import { useSessionStorage } from "./store/PageStorage";
-import { useMatch } from "react-router";
 import { isMobile } from "./utils/utils";
 
 function Placeholder() {
@@ -36,11 +35,9 @@ export function App() {
     <Suspense fallback={<Placeholder></Placeholder>}>
       <div className="h-screen w-screen flex bg-white text-black">
         <Bar></Bar>
-        <div className="flex-1 overflow-auto relative px-4 md:px-7 flex justify-center">
-          <div className="w-full h-full max-w-screen-md">
-            <WebRWKVBanner></WebRWKVBanner>
-            {useRoutes(routes)}
-          </div>
+        <div className="flex-1 overflow-auto relative">
+          <WebRWKVBanner></WebRWKVBanner>
+          {useRoutes(routes)}
         </div>
       </div>
     </Suspense>

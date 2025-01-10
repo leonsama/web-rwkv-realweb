@@ -1,16 +1,21 @@
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { ChatTextarea } from "../components/ChatTextarea";
 import { useChatSession, useSessionStorage } from "../store/PageStorage";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "../utils/utils";
+// import { WebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
+
+// const client = new WebRWKVChat()
 
 export default function Chat() {
   const sessionStorage = useSessionStorage((s) => s);
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { chatSessionId } = useParams();
+
   const { activeMessageList, submitMessage, updateChatSessionTitle } =
-    useChatSession(location.pathname.split("/")[2]);
+    useChatSession(chatSessionId!);
   const isSubmited = useRef(false);
 
   useEffect(() => {
@@ -27,30 +32,35 @@ export default function Chat() {
     submitMessage("user", prompt);
   };
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col items-stretch">
+      <div className="h-20"></div>
       <div
-        className={cn(
-          "flex-1 overflow-y-auto mt-20 p-4 flex flex-col gap-4 pb-20"
-        )}
+        className="flex-1 overflow-auto flex flex-col items-center flex-shrink-0 px-4 pb-24 md:pb-0"
+        style={{ scrollbarGutter: "stable both-edges" }}
       >
-        {activeMessageList.map((v, k) => {
-          return (
-            <div
-              key={k}
-              className="flex flex-col gap-2 motion-translate-x-in-[0%] motion-translate-y-in-[20%] motion-opacity-in-[0%] motion-duration-[0.4s]"
-            >
-              <div className="font-bold">{v.role}</div>
-              <div>{v.content}</div>
-            </div>
-          );
-        })}
+        <div className="w-full max-w-screen-md flex flex-col gap-4">
+          {activeMessageList.map((v, k) => {
+            return (
+              <div
+                key={`${chatSessionId}-${k}`}
+                className="flex flex-col gap-2 motion-translate-x-in-[0%] motion-translate-y-in-[20%] motion-opacity-in-[0%] motion-duration-[0.4s]"
+              >
+                <div className="font-bold">{v.role}</div>
+                <div>{v.content}</div>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <ChatTextarea
-        className="absolute bottom-2 left-2 right-2 bg-white md:static md:mt-auto md:mb-7"
-        onSubmit={(value) => {
-          submitPrompt(value);
-        }}
-      ></ChatTextarea>
+      <div className="w-full flex justify-center md:p-4 md:pb-10">
+        <ChatTextarea
+          key={`index-textarea`}
+          className="fixed md:static bottom-4 left-4 right-4 bg-white md:w-full max-w-screen-md"
+          onSubmit={(value) => {
+            submitPrompt(value);
+          }}
+        ></ChatTextarea>
+      </div>
     </div>
   );
 }

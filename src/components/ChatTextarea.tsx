@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { cn } from "../utils/utils";
+import { cleanPrompt, cn } from "../utils/utils";
 import { PromptTextarea } from "./PromptTextarea";
 
 interface Suggestion {
@@ -91,7 +91,8 @@ export function ChatTextarea({
   }, [value]);
 
   const submitPrompt = (value: string) => {
-    onSubmit(value);
+    if (cleanPrompt(value) === "") return;
+    onSubmit(cleanPrompt(value));
     setValue("");
     setIsFocus(false);
   };
@@ -188,7 +189,7 @@ export function ChatTextarea({
         <button
           className={cn(
             "h-10 w-10 self-end rounded-full p-2.5 m-2 text-slate-400 hover:bg-slate-100",
-            value !== "" && "text-slate-600"
+            cleanPrompt(value) !== "" && "text-slate-600"
           )}
           onClick={() => {
             submitPrompt(value);
