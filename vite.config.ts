@@ -6,8 +6,22 @@ import Pages from "vite-plugin-pages";
 export default defineConfig({
   base: "./",
   plugins: [
-    wasmPack("./web-rwkv-realweb"),
+    wasmPack("./web-rwkv-wasm"),
     react(),
-    Pages({ routeStyle: "remix" }),
+    Pages({
+      routeStyle: "remix",
+      importMode(filepath, options) {
+        // default resolver
+        for (const page of options.dirs) {
+          if (
+            (page.baseRoute === "" &&
+              filepath.startsWith(`/${page.dir}/index`)) ||
+            filepath.includes("chat")
+          )
+            return "sync";
+        }
+        return "async";
+      },
+    }),
   ],
 });
