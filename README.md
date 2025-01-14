@@ -23,7 +23,7 @@ Check the [live demo](https://cryscan.github.io/web-rwkv-realweb/)!
 To install `wasm-pack`, use
 
 ```bash
-cd web-rwkv-realweb
+cd web-rwkv-wasm
 cargo install wasm-pack
 ```
 

@@ -55,7 +55,7 @@ jobs:
 
       - name: Install wasm-pack
         run: |
-          cd web-rwkv-realweb
+          cd web-rwkv-wasm
           cargo install wasm-pack
 
       - name: Build project
