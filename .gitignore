@@ -10,3 +10,5 @@
 
 *.st
 *.safetensors
+
+rollup_visualization.html
