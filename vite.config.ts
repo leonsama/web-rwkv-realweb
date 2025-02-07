@@ -29,8 +29,9 @@ export default defineConfig({
       gzipSize: true,
       brotliSize: true,
       emitFile: false,
-      filename: "rollup_visualization.html", //分析图生成的文件名
-      open: true, //如果存在本地服务端口，将在打包后自动展示
+      filename: "rollup_visualization.html",
+      open: true,
+      template: "flamegraph",
     }),
   ],
 });

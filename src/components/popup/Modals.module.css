@@ -1,0 +1,61 @@
+.popup_root {
+  pointer-events: none;
+}
+.popup_root > * {
+  pointer-events: auto;
+}
+.modal_background_cover {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 0.2);
+  transition: opacity 300ms ease;
+}
+.modal_background_cover-enter {
+  opacity: 0;
+}
+.modal_background_cover-leave {
+  opacity: 0;
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  pointer-events: none !important;
+  transition:
+    opacity 300ms ease,
+    transform 300ms ease;
+}
+.modal > * {
+  pointer-events: auto;
+}
+.modal-enter {
+  transform: scale(0.8);
+  opacity: 0;
+}
+.modal-leave {
+  transform: scale(0.8);
+  opacity: 0;
+}
+@keyframes modal-scale-animation {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  75% {
+    transform: scale(0.99);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.modal-close-failure {
+  animation: modal-scale-animation 0.5s ease;
+}

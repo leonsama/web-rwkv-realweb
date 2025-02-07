@@ -21,12 +21,12 @@ interface TextComponent {
   cursorStrategy: (
     indexFrom: number,
     indexTo: number,
-    deltaDepth: number
+    deltaDepth: number,
   ) => number;
   selectionEditStrategy: (
     selectionStart: number,
     selectionEnd: number,
-    isCoverd: boolean
+    isCoverd: boolean,
   ) => number;
   re: RegExp;
   generateComponent: () => React.FC;
@@ -52,6 +52,7 @@ export const PromptTextarea = ({
   isFocus = false,
   setIsFocus = (status: boolean) => {},
   isKeepFocus,
+  className,
 }: {
   value: string;
   onChange?: (value: string) => void;
@@ -64,6 +65,7 @@ export const PromptTextarea = ({
   isFocus?: boolean;
   setIsFocus?: (status: boolean) => void;
   isKeepFocus?: React.MutableRefObject<boolean>;
+  className?: string;
 }) => {
   const [content, setContent] = useState(value);
   const [config, setConfig] = useState(globalConfig);
@@ -90,7 +92,7 @@ export const PromptTextarea = ({
     labelLeft: string,
     lableRight: string,
     newSubstring?: string,
-    selectNewSubstring?: boolean
+    selectNewSubstring?: boolean,
   ) => {
     if (
       textareaEle.current!.selectionStart ||
@@ -98,11 +100,11 @@ export const PromptTextarea = ({
     ) {
       const startPos = Math.min(
         textareaEle.current!.selectionStart,
-        textareaEle.current!.selectionEnd
+        textareaEle.current!.selectionEnd,
       );
       const endPos = Math.max(
         textareaEle.current!.selectionStart,
-        textareaEle.current!.selectionEnd
+        textareaEle.current!.selectionEnd,
       );
       setContent((prev) => {
         const newString = `${prev.substring(0, startPos)}${labelLeft}${
@@ -151,7 +153,7 @@ export const PromptTextarea = ({
       style={style}
       className={`${styles.PromptEditor} ${
         invisibleScrollbar ? styles.invisibleScrollbar : ""
-      }`}
+      } ${className || ""}`}
     >
       <div
         className={styles.PromptEditorInner}

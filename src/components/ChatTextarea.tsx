@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { cleanPrompt, cn } from "../utils/utils";
+import { cn } from "../utils/utils";
 import { PromptTextarea } from "./PromptTextarea";
+import { cleanChatPrompt } from "../web-rwkv-wasm-port/web-rwkv";
 
 interface Suggestion {
   prompt: string;
@@ -38,8 +39,8 @@ function PromptSuggestion({
   return (
     <button
       className={cn(
-        "text-xs rounded-3xl h-7 py-1.5 px-2 outline outline-1 outline-slate-400 hover:bg-gray-100 shadow-md select-none flex-shrink-0 transition-all duration-300",
-        className
+        "h-7 flex-shrink-0 select-none rounded-3xl px-2 py-1.5 text-xs shadow-md outline outline-1 outline-slate-400 transition-all duration-300 hover:bg-gray-100",
+        className,
       )}
       onClick={(e) => {
         onClick(promptContent);
@@ -91,8 +92,8 @@ export function ChatTextarea({
   }, [value]);
 
   const submitPrompt = (value: string) => {
-    if (cleanPrompt(value) === "") return;
-    onSubmit(cleanPrompt(value));
+    if (cleanChatPrompt(value) === "") return;
+    onSubmit(cleanChatPrompt(value));
     setValue("");
     setIsFocus(false);
   };
@@ -112,14 +113,14 @@ export function ChatTextarea({
   return (
     <div
       className={cn(
-        "rounded-[1.75rem] outline outline-1 outline-slate-400 flex transition-[height] ease-out flex-col overflow-hidden",
-        className
+        "flex flex-col overflow-hidden rounded-[1.75rem] outline outline-1 outline-slate-400 transition-[height] ease-out",
+        className,
       )}
     >
       <div
         className={cn(
-          "flex items-center overflow-auto overflow-y-hidden px-5 gap-3 invisibleScrollbar hideScrollbar transition-all duration-500 text-nowrap flex-nowrap",
-          isFocus ? "h-16" : "h-0"
+          "invisibleScrollbar hideScrollbar flex flex-nowrap items-center gap-3 overflow-auto overflow-y-hidden text-nowrap px-5 transition-all duration-500",
+          isFocus ? "h-16" : "h-0",
         )}
       >
         {suggestions.map((v: Suggestion, k: number) => {
@@ -143,7 +144,7 @@ export function ChatTextarea({
       </div>
       <div
         className={cn(
-          "rounded-[1.75rem] flex transition-[height] ease-out flex-shrink-0"
+          "flex flex-shrink-0 rounded-[1.75rem] transition-[height] ease-out",
         )}
         style={{
           height: `${
@@ -155,7 +156,7 @@ export function ChatTextarea({
       >
         <button
           className={cn(
-            "h-10 self-end w-10 rounded-full p-2.5 m-2 text-slate-500 hover:bg-slate-100"
+            "m-2 h-10 w-10 self-end rounded-full p-2.5 text-slate-500 hover:bg-slate-100",
           )}
         >
           <svg
@@ -171,7 +172,7 @@ export function ChatTextarea({
             />
           </svg>
         </button>
-        <div className={cn("flex-1 py-4 overflow-auto")}>
+        <div className={cn("flex-1 overflow-auto py-4")}>
           <PromptTextarea
             value={value}
             onChange={(e) => {
@@ -188,8 +189,8 @@ export function ChatTextarea({
         </div>
         <button
           className={cn(
-            "h-10 w-10 self-end rounded-full p-2.5 m-2 text-slate-400 hover:bg-slate-100",
-            cleanPrompt(value) !== "" && "text-slate-600"
+            "m-2 h-10 w-10 self-end rounded-full p-2.5 text-slate-400 hover:bg-slate-100",
+            cleanChatPrompt(value) !== "" && "text-slate-600",
           )}
           onClick={() => {
             submitPrompt(value);

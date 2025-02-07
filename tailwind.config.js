@@ -7,4 +7,5 @@ export default {
     extend: {},
   },
   plugins: [tailwindcssMotion],
+  darkMode: "class",
 };

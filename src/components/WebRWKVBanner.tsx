@@ -1,6 +1,6 @@
 import { useLocation } from "react-router";
 import { useSessionStorage } from "../store/PageStorage";
-import { cn } from "../utils/utils";
+import { cn, isEnterIndex } from "../utils/utils";
 
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { useEffect } from "react";
@@ -10,8 +10,8 @@ export function WebRWKVFixedBanner() {
   return (
     <div
       className={cn(
-        "fixed z-20 top-6 left-20 select-none opacity-0 transition-opacity duration-300 md:hidden",
-        sessionStorage.isBarOpen ? "opacity-100" : ""
+        "fixed left-20 top-4 z-20 select-none opacity-0 transition-opacity duration-300 md:left-20 md:top-6 md:hidden",
+        sessionStorage.isBarOpen ? "opacity-100" : "",
       )}
     >
       <h1 className="text-2xl font-medium text-gray-300">Web RWKV</h1>
@@ -24,25 +24,27 @@ export function WebRWKVBanner() {
   return (
     <div
       className={cn(
-        "pointer-events-none top-0 left-0 right-0 select-none",
+        "pointer-events-none left-0 right-0 top-0 z-[1] select-none",
+        // "[mask-image:linear-gradient(0deg,#0000,#ffff_4px)]",
         sessionStorage.showLargeBanner
-          ? "flex flex-col items-center absolute px-4"
-          : "fixed md:absolute left-0"
+          ? "absolute flex flex-col items-center px-4"
+          : "fixed left-0 md:absolute",
       )}
     >
       <div
         className={cn(
-          sessionStorage.showLargeBanner ? "w-full max-w-screen-md" : ""
+          sessionStorage.showLargeBanner ? "w-full max-w-screen-md" : "",
         )}
       >
         <Flipper flipKey={sessionStorage.showLargeBanner}>
           <Flipped flipId="webrwkv">
             <h1
               className={cn(
-                "text-2xl font-medium leading-none break-keep mt-7 transition-colors duration-300 text-transparent gradientColor",
+                "gradientColor break-keep box-decoration-slice text-2xl font-medium leading-none text-transparent transition-colors duration-300",
                 sessionStorage.showLargeBanner
-                  ? "text-6xl xl:text-8xl mt-[7.5rem] xl:mt-30"
-                  : "text-gray-300 ml-20 md:ml-7"
+                  ? "xl:mt-30 mt-32 text-6xl md:mt-[7.5rem] xl:text-8xl"
+                  : "ml-16 mt-5 text-gray-300 md:ml-7 md:mt-7",
+                isEnterIndex() && "animate-[banner-gradient_3.5s_ease]",
               )}
             >
               Web RWKV

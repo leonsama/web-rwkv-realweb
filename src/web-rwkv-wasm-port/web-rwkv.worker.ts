@@ -9,7 +9,6 @@ wasm_bindgen(wasmFileUrl);
 import {
   Session,
   SessionType,
-  StateVisual,
   NucleusSampler,
   SimpleSampler,
   Tensor,
@@ -27,7 +26,7 @@ const config = {
 function getUint64(
   dataview: DataView,
   byteOffset: number,
-  littleEndian?: boolean
+  littleEndian?: boolean,
 ) {
   // split 64-bit number into two 32-bit (4-byte) parts
   const left = dataview.getUint32(byteOffset, littleEndian);
@@ -54,7 +53,7 @@ async function initReader(blob: Blob) {
   const n = getUint64(
     new DataView(await blob.slice(0, 8).arrayBuffer()),
     0,
-    true
+    true,
   );
   if (n > 100000000) {
     throw "header too large";
@@ -64,7 +63,7 @@ async function initReader(blob: Blob) {
   }
 
   const str = new TextDecoder().decode(
-    new Uint8Array(await blob.slice(8, n + 8).arrayBuffer())
+    new Uint8Array(await blob.slice(8, n + 8).arrayBuffer()),
   );
   const metadata = JSON.parse(str);
 
@@ -77,7 +76,7 @@ async function initReader(blob: Blob) {
       const tensor = new Tensor(
         name,
         info.shape,
-        await blob.slice(start, end).arrayBuffer()
+        await blob.slice(start, end).arrayBuffer(),
       );
       tensors.push(tensor);
     }
@@ -114,7 +113,15 @@ async function initSession(blob: Blob) {
 
   const reader = await initReader(blob);
   // @HaloWang: 修改这里的参数
-  const session = await new Session(reader, 0, 0, config.session_type);
+  console.log(`📌 Loading Session`);
+  let session;
+  try {
+    session = await new Session(reader, 0, 0, config.session_type);
+  } catch (error) {
+    session = null;
+    console.log("Catch");
+    throw error;
+  }
   console.log("✅ Runtime loaded");
   return session;
 }
@@ -124,7 +131,7 @@ async function* pipeline(
   tokens: Uint16Array,
   sampler: SimpleSampler | NucleusSampler,
   stop_tokens: number[],
-  max_len: number
+  max_len: number,
 ) {
   const info = session.info();
   let output = new Float32Array(info.num_vocab);
@@ -176,52 +183,6 @@ async function* pipeline(
 
 var _session: undefined | Promise<Session> = undefined;
 var _tokenizers: Map<string, Tokenizer> = new Map();
-
-async function replay(message: string, window: Window) {
-  if ((await _session) === undefined) {
-    console.warn("⚠️ Model not loaded.");
-    return;
-  }
-
-  const options: Options = JSON.parse(message);
-  console.log(options);
-
-  const { prompt, vocab } = options;
-
-  const tokenizer = await initTokenizer(vocab);
-  const session = await _session!;
-  const info = session.info();
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
-
-  const state = new Float32Array(session.state_len());
-  session.load(state);
-
-  console.log(prompt);
-  const tokens = tokenizer.encode(encoder.encode(prompt));
-  const total = tokens.length;
-
-  await window.navigator.locks.request("model", async (lock) => {
-    const logits = new Float32Array(info.num_vocab);
-    for (const [index, token] of tokens.entries()) {
-      const word = decoder.decode(tokenizer.decode(new Uint16Array([token])));
-      await session.run(new Uint16Array([token]), logits);
-      await session.back(state);
-      const visual = JSON.parse(new StateVisual(info, state).json());
-      window.postMessage({
-        type: "replay",
-        index,
-        total,
-        token,
-        word,
-        state: new Float32Array(state),
-        visual,
-      });
-    }
-  });
-
-  window.postMessage({ type: "replay_end" });
-}
 
 async function abort(window: Window) {
   if ((await _session) === undefined) return;
@@ -294,8 +255,9 @@ async function load(data: Uint8Array[]) {
 // );
 
 export class WEB_RWKV_WASM_PORT {
-  load(model: Array<Uint8Array>) {
-    load(model);
+  private originConsoleLog: typeof console.log | null = null;
+  async load(model: Array<Uint8Array>) {
+    await load(model);
   }
   async *run(options: Options, signal?: AbortSignal) {
     if ((await _session) === undefined) throw new Error("Model not loaded.");
@@ -304,12 +266,14 @@ export class WEB_RWKV_WASM_PORT {
       max_len,
       prompt,
       stop_tokens,
+      stop_words,
       temperature,
       top_p,
       presence_penalty,
       count_penalty,
       penalty_decay,
       vocab,
+      stream,
     } = options;
 
     const tokenizer = await initTokenizer(vocab);
@@ -328,7 +292,7 @@ export class WEB_RWKV_WASM_PORT {
           top_p,
           presence_penalty,
           count_penalty,
-          penalty_decay
+          penalty_decay,
         );
         break;
       case SessionType.Puzzle:
@@ -343,11 +307,24 @@ export class WEB_RWKV_WASM_PORT {
 
     const p = pipeline(session, tokens, sampler, stop_tokens, max_len);
 
+    let result = "";
     for await (const token of p) {
       if (signal?.aborted) break;
       const word = decoder.decode(tokenizer.decode(new Uint16Array([token])));
-      yield { type: "token", word, token };
+      result += word;
+
+      if (stop_words.some((stop_word: string) => result.includes(stop_word)))
+        break;
+
+      if (stream) yield { type: "token", word, token };
     }
+
+    if (!stream)
+      yield {
+        type: "completion",
+        word: decoder.decode(tokenizer.decode(new Uint16Array(tokens))),
+        tokens: tokens,
+      };
 
     release();
 
@@ -372,6 +349,15 @@ export class WEB_RWKV_WASM_PORT {
 
   release() {
     self.close();
+  }
+
+  // console cb
+  async setConsoleLogCallback(cb: (...data: any[]) => void) {
+    if (!this.originConsoleLog) this.originConsoleLog = globalThis.console.log;
+    globalThis.console.log = (...data: any[]) => {
+      cb(...data);
+      this.originConsoleLog!(...data);
+    };
   }
 }
 

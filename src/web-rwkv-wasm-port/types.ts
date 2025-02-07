@@ -3,16 +3,26 @@ export interface TensorInfo {
   data_offsets: [number, number];
 }
 
+export interface Sampler {
+  temperature: number;
+  top_p: number;
+  presence_penalty: number;
+  count_penalty: number;
+  half_life: number;
+}
+
 export interface Options {
   max_len: number;
   prompt: string;
   stop_tokens: number[];
+  stop_words:string[];
   temperature: number;
   top_p: number;
   presence_penalty: number;
   count_penalty: number;
   penalty_decay: number;
   vocab: string;
+  stream:boolean;
 }
 
 export interface ChatCompletionChunk {
