@@ -13,14 +13,14 @@ import { useSessionStorage } from "./store/PageStorage";
 import { isMiddle } from "./utils/utils";
 
 import { HashRouter } from "react-router";
-const BASENAME = import.meta.env.DEV ? "/" : "/web-rwkv-realweb/";
-// const BASENAME = "/"
+// const BASENAME = import.meta.env.DEV ? "/" : "/web-rwkv-realweb/";
+const BASENAME = "/";
 
 function Placeholder() {
   return (
-    <div className="h-screen w-screen flex items-center justify-center flex-col select-none">
-      <p className="text-slate-50 text-3xl font-medium">WebRWKV</p>
-      <p className="text-slate-50 text-2xl font-medium">Loading...</p>
+    <div className="flex h-screen w-screen select-none flex-col items-center justify-center">
+      <p className="text-3xl font-medium text-slate-50">WebRWKV</p>
+      <p className="text-2xl font-medium text-slate-50">Loading...</p>
     </div>
   );
 }
@@ -53,7 +53,7 @@ function PageContent() {
     ) {
       navigate(
         sessionStorage.pageLocation.to,
-        sessionStorage.pageLocation.options
+        sessionStorage.pageLocation.options,
       );
     }
   }, [pageLocation]);
@@ -63,9 +63,9 @@ function PageContent() {
 export function App() {
   return (
     <Suspense fallback={<Placeholder></Placeholder>}>
-      <div className="h-screen w-screen flex bg-white text-black select-none">
+      <div className="flex h-screen w-screen select-none bg-white text-black">
         <Bar></Bar>
-        <div className="flex-1 overflow-auto relative">
+        <div className="relative flex-1 overflow-auto">
           <WebRWKVBanner></WebRWKVBanner>
           <HashRouter basename={BASENAME}>
             <PageContent></PageContent>
