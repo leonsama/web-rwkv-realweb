@@ -644,7 +644,10 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-stretch">
+    <div
+      className="flex h-full w-full flex-col items-stretch"
+      data-clarity-unmask="true"
+    >
       <div className="h-20"></div>
       <div
         className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-4 pb-24 md:pb-0"
