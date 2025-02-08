@@ -3,25 +3,59 @@ import { Comlink } from "./comlink-helper";
 import WebRWKVWorker from "./web-rwkv.worker?worker";
 import { WEB_RWKV_WASM_PORT } from "./web-rwkv.worker";
 import { Sampler } from "./types";
+import { CustomError } from "../utils/utils";
+
+export interface SessionConfiguration {
+  stopTokens: number[];
+  stopWords: string[];
+  maxTokens: number;
+  defaultSamplerConfig: Sampler;
+  systemPrompt: string | null;
+}
+
+export type CompletionMessage =
+  | { role: "User" | "Assistant" | string; content: string }
+  | { text: string };
 
 export const DEFAULT_STOP_TOKENS = [261, 0];
-export const DEFAULT_STIO_WORDS = ["\n\nUser"];
+export const DEFAULT_STOP_WORDS = ["\n\nUser"];
+
+export const DEFAULT_SAMPLER_CONFIG = {
+  temperature: 1.0,
+  top_p: 0.5,
+  presence_penalty: 0.5,
+  count_penalty: 0.5,
+  half_life: 200,
+};
+
+export const DEFAULT_SESSION_CONFIGURATION = {
+  stopTokens: DEFAULT_STOP_TOKENS,
+  stopWords: DEFAULT_STOP_WORDS,
+  maxTokens: 2048,
+  systemPrompt: null,
+  defaultSamplerConfig: DEFAULT_SAMPLER_CONFIG,
+};
 
 export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
   const [currentModelName, setCurrentModelName] = useState<string | null>(
     webRWKVInferPort.currentModelName,
   );
 
-  const defaultSamplerParam = useRef<Sampler | null>(null);
+  const defaultSessionConfiguration = useRef<SessionConfiguration>(null!);
 
+  const onChangeModelHook = (name: string | null) => {
+    setCurrentModelName(name);
+    defaultSessionConfiguration.current =
+      webRWKVInferPort.defaultSessionConfiguration;
+  };
   useEffect(() => {
-    const hook = (name: string | null) => setCurrentModelName(name);
-    webRWKVInferPort.onCurrentModelChange(hook);
+    webRWKVInferPort.onCurrentModelChange(onChangeModelHook);
 
-    defaultSamplerParam.current = webRWKVInferPort.defaultSamplerParam;
+    defaultSessionConfiguration.current =
+      webRWKVInferPort.defaultSessionConfiguration;
 
     return () => {
-      webRWKVInferPort.removeCurrentModelChange(hook);
+      webRWKVInferPort.removeCurrentModelChange(onChangeModelHook);
     };
   }, []);
 
@@ -33,20 +67,29 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
     name: string,
     chunks: Uint8Array[],
     vocal_url: string,
-    default_sampler_param?: Sampler,
+    modeldefaultSessionConfiguration: SessionConfiguration,
   ) => {
     webRWKVInferPort.vacalUrl = vocal_url;
 
-    defaultSamplerParam.current = {
-      temperature: 1.0,
-      top_p: 0.5,
-      presence_penalty: 0.5,
-      count_penalty: 0.5,
-      half_life: 200,
-      ...default_sampler_param,
-    };
-    webRWKVInferPort.defaultSamplerParam = defaultSamplerParam.current;
+    webRWKVInferPort.defaultSessionConfiguration =
+      modeldefaultSessionConfiguration;
+    defaultSessionConfiguration.current = modeldefaultSessionConfiguration;
+
     await webRWKVInferPort.loadModel(name, chunks);
+    warnup();
+  };
+
+  const warnup = async () => {
+    const stream = completion({
+      stream: true,
+      messages: [{ role: "User", content: "Who are you?" }],
+      max_tokens: 25,
+    });
+    let result = "";
+    for await (const chunk of stream) {
+      result += chunk;
+    }
+    console.log("warnup:", result);
   };
 
   const completion = async function* (
@@ -62,11 +105,11 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
       stream,
       new_message_role = "Assistant",
       stop_tokens = DEFAULT_STOP_TOKENS,
-      stop_words = DEFAULT_STIO_WORDS,
+      stop_words = DEFAULT_STOP_WORDS,
     }: {
       max_tokens?: number;
       prompt?: string;
-      messages?: { role: "User" | "Assistant" | string; content: string }[];
+      messages?: CompletionMessage[];
       temperature?: number;
       top_p?: number;
       presence_penalty?: number;
@@ -120,7 +163,7 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
 
   return {
     currentModelName,
-    defaultSamplerParam,
+    defaultSessionConfiguration,
 
     loadModel,
     unloadModel,
@@ -131,12 +174,16 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
   };
 }
 
-export function formatPromptObject(
-  prompt: { role: "User" | "Assistant" | string; content: string }[],
-) {
+export function formatPromptObject(prompt: CompletionMessage[]) {
   return prompt
     .map((v) => {
-      return `${v.role}: ${cleanChatPrompt(v.content)}`;
+      if ("text" in v && v.text.trim() !== "") {
+        return v.text.trim();
+      } else if ("role" in v) {
+        return `${v.role}: ${cleanChatPrompt(v.content)}`;
+      } else {
+        throw new CustomError("MessageError", v);
+      }
     })
     .join("\n\n");
 }
@@ -156,13 +203,15 @@ export class WebRWKVInferPort {
   isLoadingModel: boolean = false;
   currentModelName: string | null = null;
 
-  defaultSamplerParam: Sampler = {
-    temperature: 1.0,
-    top_p: 0.5,
-    presence_penalty: 0.5,
-    count_penalty: 0.5,
-    half_life: 200,
-  };
+  // defaultSamplerParam: Sampler = {
+  //   temperature: 1.0,
+  //   top_p: 0.5,
+  //   presence_penalty: 0.5,
+  //   count_penalty: 0.5,
+  //   half_life: 200,
+  // };
+  // defaultSystemPrompt: string | null = null;
+  defaultSessionConfiguration: SessionConfiguration = null!;
 
   vacalUrl: string | null = null;
 
@@ -276,16 +325,23 @@ export class WebRWKVInferPort {
         stop_tokens: options.stop_tokens || [],
         stop_words: options.stop_words || [],
         temperature:
-          options.temperature ?? this.defaultSamplerParam.temperature,
-        top_p: options.top_p ?? this.defaultSamplerParam.top_p,
+          options.temperature ??
+          this.defaultSessionConfiguration.defaultSamplerConfig.temperature,
+        top_p:
+          options.top_p ??
+          this.defaultSessionConfiguration.defaultSamplerConfig.top_p,
         presence_penalty:
-          options.presence_penalty ?? this.defaultSamplerParam.presence_penalty,
+          options.presence_penalty ??
+          this.defaultSessionConfiguration.defaultSamplerConfig
+            .presence_penalty,
         count_penalty:
-          options.count_penalty ?? this.defaultSamplerParam.count_penalty,
+          options.count_penalty ??
+          this.defaultSessionConfiguration.defaultSamplerConfig.count_penalty,
         penalty_decay: Math.exp(
           -0.69314718 /
             Math.max(
-              options.penalty_half_life ?? this.defaultSamplerParam.half_life,
+              options.penalty_half_life ??
+                this.defaultSessionConfiguration.defaultSamplerConfig.half_life,
               1,
             ),
         ),

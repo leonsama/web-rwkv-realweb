@@ -18,6 +18,7 @@ import {
   useModelStorage,
 } from "../store/ModelStorage";
 import { useChatSessionStore } from "../store/ChatSessionStorage";
+import { usePageStorage } from "../store/PageStorage";
 
 export default function Settings() {
   const webRWKVLLMInfer = useChatModelSession((s) => s.llmModel);
@@ -25,10 +26,14 @@ export default function Settings() {
 
   const { getTotalCacheSize, clearCache } = useIndexedDBCache((s) => s);
   const [totalCacheSize, setTotalCacheSize] = useState<number>(-1);
-
   const clearAllSession = useChatSessionStore((state) => state.clearAllSession);
 
   const { recentModels, deleteRecentModel } = useModelStorage((s) => s);
+
+  const {
+    alwaysOpenSessionConfigurationPannel,
+    setAlwaysOpenSessionConfigurationPannel,
+  } = usePageStorage((s) => s);
 
   const LanguageMenu = createContextMenu(
     <Menu>
@@ -64,7 +69,7 @@ export default function Settings() {
   }, [recentModels]);
   return (
     <div className="flex h-full w-full flex-col items-stretch">
-      <div className="h-20"></div>
+      <div className="sticky top-0 h-16"></div>
       <div
         className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-2 pb-24 md:px-4 md:pb-0"
         style={{ scrollbarGutter: "stable both-edges" }}
@@ -97,27 +102,29 @@ export default function Settings() {
               )}
             </Entry>
             <Modal
-              modal={({ close }) => {
+              trigger={
+                <div className="-mb-1 flex min-h-10 cursor-pointer items-center justify-start gap-2 rounded-xl bg-[image:var(--web-rwkv-title-gradient)] px-2 font-bold text-white transition-all active:scale-[0.98] md:active:scale-[0.98]">
+                  <div className="flex-1">Click To Load Chat Model</div>
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="size-5"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              }
+            >
+              {({ close }) => {
                 return <ModelLoaderCard close={close}></ModelLoaderCard>;
               }}
-            >
-              <div className="-mb-1 flex min-h-10 cursor-pointer items-center justify-start gap-2 rounded-xl bg-[image:var(--web-rwkv-title-gradient)] px-2 font-bold text-white transition-all active:scale-[0.98] md:active:scale-[0.98]">
-                <div className="flex-1">Click To Load Chat Model</div>
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="size-5"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-              </div>
             </Modal>
           </Card>
           <Card
@@ -152,6 +159,27 @@ export default function Settings() {
                 <RadioGroupOption value={"light"}>Light</RadioGroupOption>
                 <RadioGroupOption value={"dark"}>Dark</RadioGroupOption>
                 <RadioGroupOption value={"auto"}>Auto</RadioGroupOption>
+              </RadioGroup>
+            </Entry>
+            <Entry
+              label="Always open session configuration pannel"
+              className="max-md:text-sm"
+            >
+              <RadioGroup
+                className="-m-2 h-10 gap-1 bg-slate-200 p-1"
+                value={
+                  alwaysOpenSessionConfigurationPannel === null
+                    ? "unset"
+                    : alwaysOpenSessionConfigurationPannel
+                      ? "Yes"
+                      : "No"
+                }
+                onChange={(value) => {
+                  setAlwaysOpenSessionConfigurationPannel(value === "Yes");
+                }}
+              >
+                <RadioGroupOption value={"Yes"}>Yes</RadioGroupOption>
+                <RadioGroupOption value={"No"}>No</RadioGroupOption>
               </RadioGroup>
             </Entry>
           </Card>

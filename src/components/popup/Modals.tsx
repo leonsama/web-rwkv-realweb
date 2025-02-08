@@ -300,37 +300,58 @@ export function BaseModal({
   );
 }
 
+export interface ModalInterface {
+  setIsModalOpen: (isOpen: boolean) => void;
+}
+
 export function Modal({
+  ref = useRef({}),
   children,
-  modal,
+  trigger,
   clickToOpenModal = true,
+  onModalClose,
   ...baseModalProps
 }: {
-  children: React.ReactNode;
-  modal: React.ReactNode | React.FC<{ close: () => void }>;
+  ref?: React.MutableRefObject<ModalInterface | {}>;
+  children: React.ReactNode | React.FC<{ close: () => void }>;
+  trigger?: React.ReactNode;
   clickToOpenModal?: boolean;
+  onModalClose?: () => void;
 } & Omit<
   React.ComponentProps<typeof BaseModal>,
   "isOpen" | "onClose" | "children"
 >) {
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (ref) {
+      ref.current = {
+        setIsModalOpen(isOpen) {
+          setIsOpen(!!isOpen);
+        },
+      };
+    }
+  }, []);
+
   return (
     <>
       <BaseModal
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={() => {
+          setIsOpen(false);
+          onModalClose?.();
+        }}
         {...baseModalProps}
       >
-        {typeof modal === "function"
-          ? modal({ close: () => setIsOpen(false) })
-          : modal}
+        {typeof children === "function"
+          ? children({ close: () => setIsOpen(false) })
+          : children}
       </BaseModal>
 
       <DomEventListener
         events={{ click: () => clickToOpenModal && setIsOpen(true) }}
       >
-        {children}
+        {trigger}
       </DomEventListener>
     </>
   );

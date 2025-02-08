@@ -1,0 +1,92 @@
+/* input range */
+
+.input-range-root {
+  display: flex;
+  align-items: center;
+}
+
+.input-range {
+  flex: 1;
+}
+
+.input-range-number {
+  min-width: 30px;
+  text-align: center;
+}
+
+/* input text */
+
+.input-text-error {
+  background-color: rgb(255 162 162);
+}
+
+/* input list */
+
+.input-list-input {
+  flex: 1;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background-color: transparent;
+}
+
+.input-list-control {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 0;
+  flex: 1;
+}
+
+.input-list-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.input-list-item {
+  position: relative;
+  background-color: rgb(255 255 255 / 0.6);
+  border-radius: 4px;
+  padding: 4px 24px 4px 8px;
+  cursor: move;
+  transition: all 0.2s;
+  overflow: hidden;
+  border: 0.5px solid #666;
+  border-radius: 0.5rem;
+}
+
+.input-list-item:hover {
+  background: #e0e0e0;
+}
+
+.input-list-delete {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff4444;
+}
+
+.input-list-edit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 24px 4px 8px;
+}
+
+.input-list-edit-label {
+  opacity: 0;
+}
+
+.input-list-counter {
+  font-size: 0.9em;
+  color: #666;
+}

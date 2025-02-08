@@ -2,24 +2,34 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { ChatTextarea } from "../components/ChatTextarea";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { cn } from "../utils/utils";
-import { useWebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
+import { cn, useMaxWidthBreakpoint } from "../utils/utils";
+import {
+  DEFAULT_SESSION_CONFIGURATION,
+  SessionConfiguration,
+  useWebRWKVChat,
+} from "../web-rwkv-wasm-port/web-rwkv";
 import { useChatModelSession, useModelStorage } from "../store/ModelStorage";
 
 import Markdown from "../components/marked-react";
 import { RWKVOutputFormatter } from "../utils/RWKVOutputFormatter";
 import { RWKVMarkdown } from "../components/MarkdownRender";
-import { useSessionStorage } from "../store/PageStorage";
+import { usePageStorage } from "../store/PageStorage";
 import {
   CurrentMessageBlock,
   CurrentMessageContent,
   useChatSession,
 } from "../store/ChatSessionStorage";
 import { Sampler } from "../web-rwkv-wasm-port/types";
-import { Modal } from "../components/popup/Modals";
+import {
+  createModalForm,
+  Modal,
+  ModalInterface,
+} from "../components/popup/Modals";
 import { Card, CardTitle, Entry } from "../components/Cards";
 import { Button } from "../components/Button";
 import { PromptTextarea } from "../components/PromptTextarea";
+import { RadioGroup, RadioGroupOption } from "../components/RadioGroup";
+import { InputList, InputRange, InputText } from "../components/Input";
 
 // let colorbg = new BlurGradientBg({
 // 	dom: "box",
@@ -33,7 +43,6 @@ const ChatSession = createContext<
     isGenerating: boolean;
     setIsGenerating: (value: boolean) => void;
 
-    currentSamperConfig: React.RefObject<Sampler>;
     currentModelName: string | null;
 
     generator: React.MutableRefObject<AsyncGenerator<
@@ -174,7 +183,7 @@ function UserContent({
   currentMessageBlock: CurrentMessageBlock;
 }) {
   return (
-    <div className="flex flex-row-reverse motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s]">
+    <div className="flex flex-row-reverse motion-opacity-in-[0%] motion-duration-[0.4s]">
       <div className="ml-10 flex max-w-screen-sm flex-col">
         <div className="w-full select-text overflow-hidden rounded-3xl rounded-tr-md bg-slate-100 p-4">
           <span className="whitespace-pre-wrap">
@@ -199,8 +208,8 @@ function AssistantContent({
     isGenerating,
     setIsGenerating,
     activeMessageBlocks,
+    sessionConfiguration,
     updateCurrentMessageBlock,
-    currentSamperConfig,
     currentModelName,
     generator,
     completion,
@@ -221,7 +230,7 @@ function AssistantContent({
       activeNextMessageBlockIndex: -1,
       nextMessagesBlockIds: [],
       avatar: null,
-      samplerConfig: currentSamperConfig.current,
+      samplerConfig: sessionConfiguration.defaultSamplerConfig,
       isGenerating: true,
       rank: 0,
       modelName: currentModelName,
@@ -237,7 +246,10 @@ function AssistantContent({
 
     generator.current = completion({
       stream: true,
-      messages: getActiveMessages(true),
+      messages: getActiveMessages({
+        isGenerating: true,
+        systemPrompt: sessionConfiguration.systemPrompt || "",
+      }),
     });
 
     let result = "";
@@ -258,7 +270,7 @@ function AssistantContent({
   };
 
   return (
-    <div className="flex flex-col gap-4 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s] md:flex-row">
+    <div className="flex flex-col gap-4 motion-opacity-in-[0%] motion-duration-[0.4s] md:flex-row">
       <div className="mt-3">
         <div className="sticky top-0 flex items-center gap-5 md:flex-col">
           {/* avatar */}
@@ -301,7 +313,7 @@ function AssistantContent({
                 />
               </svg>
             </ToolButton>
-            <span className="w-9 text-center text-sm">
+            <span className="w-9 text-nowrap text-center text-sm">
               {currentMessageBlock.activeMessageContentIndex + 1}
               {" / "}
               {currentMessageBlock.messageContents.length}
@@ -339,7 +351,10 @@ function AssistantContent({
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-2 overflow-hidden">
-        <div className="min-h-10 select-text">
+        <div
+          className="min-h-10 select-text motion-opacity-in-[0%] motion-duration-[0.4s]"
+          key={`${currentMessageBlock.key}-${currentMessageBlock.activeMessageContentIndex}`}
+        >
           <RWKVMarkdown
             stream={
               currentMessageBlock.messageContents[
@@ -368,7 +383,27 @@ function AssistantContent({
         >
           {/* information */}
           <Modal
-            modal={({ close }) => {
+            trigger={
+              <ToolButton>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                  />
+                </svg>
+              </ToolButton>
+            }
+            closeWhenBackgroundOnClick={true}
+          >
+            {({ close }) => {
               return (
                 <MessageInformationViewer
                   close={close}
@@ -376,24 +411,6 @@ function AssistantContent({
                 ></MessageInformationViewer>
               );
             }}
-            closeWhenBackgroundOnClick={true}
-          >
-            <ToolButton>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
-                />
-              </svg>
-            </ToolButton>
           </Modal>
           {/* copy */}
           <ToolButton className="active:motion-preset-confetti">
@@ -555,8 +572,423 @@ function MessageBlock({
   );
 }
 
+function ChatSessionConfigurationCard({
+  isOpen,
+  setIsOpen,
+  sessionConfiguration,
+  updateSessionConfiguration,
+}: {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  sessionConfiguration: SessionConfiguration;
+  updateSessionConfiguration: ReturnType<
+    typeof useChatSession
+  >["updateSessionConfiguration"];
+}) {
+  return (
+    <Card
+      className={cn(
+        "h-full w-full overflow-auto transition-all md:h-3/4 md:w-2/3 min-[1345px]:h-full min-[1345px]:w-full",
+        isOpen ? "" : "scale-95 opacity-0",
+      )}
+    >
+      <CardTitle
+        icon={
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-5"
+          >
+            <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
+          </svg>
+        }
+      >
+        <span className="min-[1220px]:text-base">Session Configuration</span>
+
+        <Button
+          className="ml-auto rounded-full p-2"
+          onClick={() => setIsOpen(false)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            className="size-5"
+          >
+            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+          </svg>
+        </Button>
+      </CardTitle>
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
+        <span>Sampler Options</span>
+        <Button
+          className="ml-auto h-10 rounded-xl text-sm text-gray-500"
+          onClick={() => {
+            sessionConfiguration.defaultSamplerConfig =
+              DEFAULT_SESSION_CONFIGURATION.defaultSamplerConfig;
+            updateSessionConfiguration(
+              window.structuredClone(sessionConfiguration),
+            );
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+
+      <Entry label="Temperature">
+        {sessionConfiguration.defaultSamplerConfig.temperature}
+      </Entry>
+      <InputRange
+        min={0}
+        max={5}
+        step={0.1}
+        value={sessionConfiguration.defaultSamplerConfig.temperature}
+        onChange={(v) => {
+          sessionConfiguration.defaultSamplerConfig.temperature = v;
+          updateSessionConfiguration(sessionConfiguration);
+        }}
+      ></InputRange>
+
+      <Entry label="Top P">
+        {sessionConfiguration.defaultSamplerConfig.top_p}
+      </Entry>
+      <InputRange
+        min={0}
+        max={1}
+        step={0.01}
+        value={sessionConfiguration.defaultSamplerConfig.top_p}
+        onChange={(v) => {
+          sessionConfiguration.defaultSamplerConfig.top_p = v;
+          updateSessionConfiguration(sessionConfiguration);
+        }}
+      ></InputRange>
+
+      <Entry label="Presence Penalty">
+        {sessionConfiguration.defaultSamplerConfig.presence_penalty}
+      </Entry>
+      <InputRange
+        min={0}
+        max={5}
+        step={0.1}
+        value={sessionConfiguration.defaultSamplerConfig.presence_penalty}
+        onChange={(v) => {
+          sessionConfiguration.defaultSamplerConfig.presence_penalty = v;
+          updateSessionConfiguration(sessionConfiguration);
+        }}
+      ></InputRange>
+
+      <Entry label="Count Penalty">
+        {sessionConfiguration.defaultSamplerConfig.count_penalty}
+      </Entry>
+      <InputRange
+        min={0}
+        max={5}
+        step={0.1}
+        value={sessionConfiguration.defaultSamplerConfig.count_penalty}
+        onChange={(v) => {
+          sessionConfiguration.defaultSamplerConfig.count_penalty = v;
+          updateSessionConfiguration(sessionConfiguration);
+        }}
+      ></InputRange>
+
+      <Entry label="Half Life">
+        {sessionConfiguration.defaultSamplerConfig.half_life}
+      </Entry>
+      <InputRange
+        min={1}
+        max={2048}
+        step={1}
+        value={sessionConfiguration.defaultSamplerConfig.half_life}
+        onChange={(v) => {
+          sessionConfiguration.defaultSamplerConfig.half_life = v;
+          updateSessionConfiguration(sessionConfiguration);
+        }}
+      ></InputRange>
+
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
+        <span>Completion Options</span>
+        <Button
+          className="ml-auto h-10 rounded-xl text-sm text-gray-500"
+          onClick={() => {
+            sessionConfiguration.maxTokens =
+              DEFAULT_SESSION_CONFIGURATION.maxTokens;
+            updateSessionConfiguration(
+              window.structuredClone(sessionConfiguration),
+            );
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+
+      <Entry label="Max Output Tokens" className="text-nowrap">
+        <InputText
+          value={sessionConfiguration.maxTokens.toString()}
+          onChange={(v) => {
+            sessionConfiguration.maxTokens = parseInt(v);
+            updateSessionConfiguration(sessionConfiguration);
+          }}
+          verification={(v) => !isNaN(+v) && parseInt(v) > 0}
+          className="w-full rounded-xl bg-white/60 p-2"
+        ></InputText>
+      </Entry>
+
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
+        <span>System Prompt</span>
+        <Button
+          className="ml-auto h-10 rounded-xl text-sm text-gray-500"
+          onClick={() => {
+            sessionConfiguration.systemPrompt =
+              DEFAULT_SESSION_CONFIGURATION.systemPrompt;
+            updateSessionConfiguration(
+              window.structuredClone(sessionConfiguration),
+            );
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+      <Entry
+        label="System Prompt"
+        className="md:flex-col md:items-start md:justify-end"
+      >
+        <div className="h-full max-h-56 min-h-20 w-full">
+          <PromptTextarea
+            value={sessionConfiguration.systemPrompt || ""}
+            editable={true}
+            onChange={(v) => {
+              sessionConfiguration.systemPrompt = v;
+              updateSessionConfiguration(sessionConfiguration);
+            }}
+            // style={{ height: "100%" }}
+            className="h-full rounded-2xl bg-white/60 px-2"
+          ></PromptTextarea>
+        </div>
+      </Entry>
+
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
+        <span>Stop Words & Stop Tokens</span>
+        <Button
+          className="ml-auto h-10 rounded-xl text-sm text-gray-500"
+          onClick={() => {
+            sessionConfiguration.stopTokens =
+              DEFAULT_SESSION_CONFIGURATION.stopTokens;
+            sessionConfiguration.stopWords =
+              DEFAULT_SESSION_CONFIGURATION.stopWords;
+            updateSessionConfiguration(
+              window.structuredClone(sessionConfiguration),
+            );
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+      <Entry
+        label="Stop Words"
+        className="md:flex-col md:items-start md:justify-end"
+      >
+        <InputList
+          value={sessionConfiguration.stopWords.map((v) => {
+            console.log(v, v.replaceAll("\n", "\\n"));
+            return v.replaceAll("\n", "\\n");
+          })}
+          onChange={(v) => {
+            sessionConfiguration.stopWords = v.map((v) => {
+              console.log(v.replaceAll("\\n", "\n"));
+              return v.replaceAll("\\n", "\n");
+            });
+            updateSessionConfiguration(sessionConfiguration);
+          }}
+          className="w-full rounded-xl bg-white/60 p-2"
+        ></InputList>
+      </Entry>
+
+      <Entry
+        label="Stop Tokens"
+        className="mb-2 md:flex-col md:items-start md:justify-end"
+      >
+        <InputList
+          value={sessionConfiguration.stopTokens.map((v) => v.toString())}
+          onChange={(v) => {
+            sessionConfiguration.stopTokens = v.map((v) => parseInt(v));
+            updateSessionConfiguration(sessionConfiguration);
+          }}
+          className="w-full rounded-xl bg-white/60 p-2"
+        ></InputList>
+      </Entry>
+    </Card>
+  );
+}
+
+function ChatSessionConfigurationBar({
+  isOpen,
+  setIsOpen,
+  sessionConfiguration,
+  updateSessionConfiguration,
+}: {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  sessionConfiguration: SessionConfiguration;
+  updateSessionConfiguration: ReturnType<
+    typeof useChatSession
+  >["updateSessionConfiguration"];
+}) {
+  const [showConfigurationCard, setShowConfigurationCard] =
+    useState<boolean>(false);
+  const [isDivExpanded, setIsDivExpanded] = useState<boolean>(false);
+  const isMobile = useMaxWidthBreakpoint({ breakpoint: 1345 });
+
+  const {
+    alwaysOpenSessionConfigurationPannel,
+    setAlwaysOpenSessionConfigurationPannel,
+  } = usePageStorage((s) => s);
+
+  const timmer = useRef(-1);
+
+  const modalOperation = useRef<ModalInterface>(null!);
+
+  useEffect(() => {
+    clearTimeout(timmer.current);
+    if (isOpen) {
+      if (isMobile) {
+        setShowConfigurationCard(true);
+        modalOperation.current.setIsModalOpen(true);
+      } else {
+        setIsDivExpanded(true);
+        timmer.current = setTimeout(() => {
+          setShowConfigurationCard(true);
+          timmer.current = -1;
+        }, 300);
+      }
+    } else {
+      clearTimeout(timmer.current);
+      setShowConfigurationCard(false);
+      if (!isMobile) {
+        timmer.current = setTimeout(() => {
+          setIsDivExpanded(false);
+          timmer.current = -1;
+        }, 300);
+      }
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (showConfigurationCard) {
+      shouldAlwaysDisplayPannel();
+    } else {
+      setIsOpen(false);
+    }
+  }, [showConfigurationCard]);
+
+  useEffect(() => {
+    clearTimeout(timmer.current);
+    setIsOpen(false);
+    setIsDivExpanded(false);
+    setShowConfigurationCard(false);
+  }, [isMobile]);
+
+  const shouldAlwaysDisplayPannel = async () => {
+    if (alwaysOpenSessionConfigurationPannel === null) {
+      setTimeout(async () => {
+        try {
+          const { isAlwaysShow } = await createModalForm(
+            <Card className="max-w-sm bg-white">
+              <CardTitle className="bg-white">
+                <span className="text-lg font-bold">Always Display Pannel</span>
+              </CardTitle>
+              <div className="flex flex-col gap-0.5 text-wrap text-sm text-gray-600">
+                <p>
+                  Always display the session configuration pannel when entering
+                  a chat session?
+                </p>
+                <p>You can adjust this preference in the settings.</p>
+                <p className="mt-2 text-gray-400">Default: No</p>
+              </div>
+              <div className="-mb-1 flex justify-end gap-2">
+                <Button
+                  type="submit"
+                  className="cursor-pointer rounded-xl bg-transparent px-4 py-2 font-semibold active:scale-95"
+                  name="isAlwaysShow"
+                  value={"No"}
+                >
+                  No
+                </Button>
+                <Button
+                  type="submit"
+                  className="cursor-pointer rounded-xl bg-transparent px-4 py-2 active:scale-95"
+                  name="isAlwaysShow"
+                  value={"Yes"}
+                >
+                  Yes
+                </Button>
+              </div>
+            </Card>,
+            { closeOnBackgroundClick: true },
+          ).open();
+          setAlwaysOpenSessionConfigurationPannel(isAlwaysShow === "Yes");
+        } catch (error) {
+          setAlwaysOpenSessionConfigurationPannel(false);
+        }
+      }, 300);
+    }
+  };
+
+  const openTimmer = useRef(-1);
+  useEffect(() => {
+    clearTimeout(openTimmer.current);
+    if (alwaysOpenSessionConfigurationPannel && isMobile === false) {
+      openTimmer.current = setTimeout(() => {
+        setIsOpen(true);
+      }, 300);
+    }
+  }, [isMobile]);
+
+  return isMobile ? (
+    <Modal
+      ref={modalOperation}
+      backgroundCover={true}
+      closeWhenBackgroundOnClick={true}
+      onModalClose={() => {
+        setIsOpen(false);
+        setShowConfigurationCard(false);
+      }}
+    >
+      {({ close }) => {
+        useEffect(() => {
+          if (!showConfigurationCard) {
+            close();
+          }
+        }, [showConfigurationCard]);
+        return (
+          <ChatSessionConfigurationCard
+            isOpen={showConfigurationCard}
+            setIsOpen={setShowConfigurationCard}
+            sessionConfiguration={sessionConfiguration}
+            updateSessionConfiguration={updateSessionConfiguration}
+          ></ChatSessionConfigurationCard>
+        );
+      }}
+    </Modal>
+  ) : (
+    <div
+      className={cn(
+        "flex h-full flex-shrink-0 items-center justify-center overflow-hidden transition-all duration-300",
+        isDivExpanded ? "w-[26rem] pb-10 pl-4 pr-4" : "w-0",
+      )}
+    >
+      <ChatSessionConfigurationCard
+        isOpen={showConfigurationCard}
+        setIsOpen={setShowConfigurationCard}
+        sessionConfiguration={sessionConfiguration}
+        updateSessionConfiguration={updateSessionConfiguration}
+      ></ChatSessionConfigurationCard>
+    </div>
+  );
+}
+
 export default function Chat() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -567,23 +999,26 @@ export default function Chat() {
     updateCurrentMessageBlock,
     updateChatSessionTitle,
     getActiveMessages,
+    sessionConfiguration,
+    updateSessionConfiguration,
   } = useChatSession(chatSessionId!);
 
   const webRWKVLLMInfer = useChatModelSession((s) => s.llmModel);
 
-  const { currentModelName, completion, defaultSamplerParam } =
+  const { currentModelName, completion, defaultSessionConfiguration } =
     useWebRWKVChat(webRWKVLLMInfer);
 
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
+  const [showSessionConfigurationBar, setShowSessionConfigurationBar] =
+    useState(false);
+
   const generator = useRef<AsyncGenerator<string, void, unknown> | null>(null);
 
-  const currentSamperConfig = useRef<Sampler | null>(null!);
   const isSubmited = useRef(false);
 
   useEffect(() => {
     if (!isSubmited.current) {
-      currentSamperConfig.current = defaultSamplerParam.current;
       if (location.state?.prompt!) {
         window.history.replaceState({}, "");
         startGenerationTask(location.state.prompt, true);
@@ -601,20 +1036,20 @@ export default function Chat() {
       ? createNewMessasgeBlock({
           initialMessage: { role: "User", content: prompt },
           parentBlockId: null,
-          samplerConfig: currentSamperConfig.current,
+          samplerConfig: sessionConfiguration.defaultSamplerConfig,
           isGenerating: false,
         })
       : createNewMessasgeBlock({
           initialMessage: { role: "User", content: prompt },
           parentBlockId: activeMessageBlocks[activeMessageBlocks.length - 1].id,
-          samplerConfig: currentSamperConfig.current,
+          samplerConfig: sessionConfiguration.defaultSamplerConfig,
           isGenerating: false,
         });
 
     const resultBlock = createNewMessasgeBlock({
       initialMessage: { role: "Assistant", content: "" },
       parentBlockId: promptBlock.id,
-      samplerConfig: currentSamperConfig.current,
+      samplerConfig: sessionConfiguration.defaultSamplerConfig,
       isGenerating: true,
     });
 
@@ -624,7 +1059,10 @@ export default function Chat() {
 
     generator.current = completion({
       stream: true,
-      messages: getActiveMessages(true),
+      messages: getActiveMessages({
+        isGenerating: true,
+        systemPrompt: sessionConfiguration.systemPrompt || "",
+      }),
     });
     resultBlock.messageContents[activeMessageContentIndex].modelName =
       currentModelName;
@@ -644,59 +1082,94 @@ export default function Chat() {
   };
 
   return (
-    <div
-      className="flex h-full w-full flex-col items-stretch"
-      data-clarity-unmask="true"
-    >
-      <div className="h-20"></div>
+    <div className="flex h-full w-full">
       <div
-        className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-4 pb-24 md:pb-0"
-        style={{ scrollbarGutter: "stable both-edges" }}
+        className="flex h-full w-full flex-col items-stretch"
+        data-clarity-unmask="true"
       >
-        <div className="flex w-full max-w-screen-md flex-col gap-4">
-          <ChatSession.Provider
-            value={{
-              activeMessageBlocks,
-              createNewMessasgeBlock,
-              updateCurrentMessageBlock,
-              updateChatSessionTitle,
-              getActiveMessages,
-
-              generator,
-
-              startGenerationTask,
-              isGenerating,
-              setIsGenerating,
-
-              currentSamperConfig,
-              currentModelName,
-
-              completion,
-            }}
-          >
-            {activeMessageBlocks.map((v) => {
-              return (
-                <MessageBlock
-                  currentMessageBlock={v}
-                  key={v.key}
-                  // 惨痛教训：用 chatSessionId 和 index 拼接 key ，
-                  // 但 chatSessionId 和 activeMessageList 刷新时序不同，导致在较慢的设备上出现两次渲染，导致错误组件缓存
-                ></MessageBlock>
-              );
-            })}
-          </ChatSession.Provider>
+        <div className="sticky top-0 flex h-16 items-center">
+          <div className="ml-auto flex size-16 items-center justify-center">
+            <button
+              className="flex size-10 items-center justify-center rounded-full text-slate-600 transition-all active:bg-slate-300 md:hover:bg-slate-300/50 md:active:bg-slate-300"
+              onClick={() => {
+                setShowSessionConfigurationBar(!showSessionConfigurationBar);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-6 md:size-7"
+              >
+                <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
-      <div
-        key={`chat-textarea`}
-        className="flex w-full justify-center md:p-4 md:pb-10"
-      >
-        <ChatTextarea
-          className="fixed bottom-4 left-4 right-4 max-w-screen-md bg-white md:static md:w-full"
-          onSubmit={(value) => {
-            startGenerationTask(value);
-          }}
-        ></ChatTextarea>
+        <div className="flex flex-1 flex-shrink-0 overflow-hidden">
+          <div className="flex h-full w-full flex-col">
+            <div
+              className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-4 pb-24 md:pb-0"
+              style={{ scrollbarGutter: "stable both-edges" }}
+            >
+              <div
+                className="flex w-full max-w-screen-md flex-col gap-4 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s]"
+                key={chatSessionId}
+              >
+                <ChatSession.Provider
+                  value={{
+                    activeMessageBlocks,
+                    createNewMessasgeBlock,
+                    updateCurrentMessageBlock,
+                    updateChatSessionTitle,
+                    getActiveMessages,
+
+                    sessionConfiguration,
+                    updateSessionConfiguration,
+
+                    generator,
+
+                    startGenerationTask,
+                    isGenerating,
+                    setIsGenerating,
+
+                    currentModelName,
+
+                    completion,
+                  }}
+                >
+                  {activeMessageBlocks.map((v) => {
+                    return (
+                      <MessageBlock
+                        currentMessageBlock={v}
+                        key={v.key}
+                        // 惨痛教训：用 chatSessionId 和 index 拼接 key ，
+                        // 但 chatSessionId 和 activeMessageList 刷新时序不同，导致在较慢的设备上出现两次渲染，导致错误组件缓存
+                      ></MessageBlock>
+                    );
+                  })}
+                </ChatSession.Provider>
+              </div>
+            </div>
+            <div
+              key={`chat-textarea`}
+              className="flex w-full justify-center p-2 pt-1 md:px-4 md:pb-10"
+            >
+              <ChatTextarea
+                className="bottom-4 w-full max-w-screen-md bg-white"
+                onSubmit={(value) => {
+                  startGenerationTask(value);
+                }}
+              ></ChatTextarea>
+            </div>
+          </div>
+          <ChatSessionConfigurationBar
+            isOpen={showSessionConfigurationBar}
+            setIsOpen={setShowSessionConfigurationBar}
+            sessionConfiguration={sessionConfiguration}
+            updateSessionConfiguration={updateSessionConfiguration}
+          ></ChatSessionConfigurationBar>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
 import { create } from "zustand";
-import { WebRWKVInferPort } from "../web-rwkv-wasm-port/web-rwkv";
+import {
+  SessionConfiguration,
+  WebRWKVInferPort,
+} from "../web-rwkv-wasm-port/web-rwkv";
 import { createJSONStorage, persist, StateStorage } from "zustand/middleware";
 
 import * as idb from "idb-keyval";
@@ -31,9 +34,9 @@ interface RecentModel {
   cached: boolean;
   cacheItemKey: string | null;
   loadFromWebParam: RWKVModelWeb | null;
-  sampler: Sampler;
   vocal_url: string;
   vocalCacheItemKey: string | null;
+  defaultSessionConfiguration: SessionConfiguration;
 }
 
 interface ModelStorage {
@@ -43,20 +46,20 @@ interface ModelStorage {
     name,
     from,
     cached,
-    sampler,
     vocal_url,
     loadFromWebParam,
     size,
     cacheItemKey,
     vocalCacheItemKey,
+    defaultSessionConfiguration,
   }: {
     name: string;
     from: "web" | "device" | "URL";
-    sampler: Sampler;
     vocal_url: string;
     vocalCacheItemKey?: string;
     cached: boolean;
     size: number;
+    defaultSessionConfiguration: SessionConfiguration;
     loadFromWebParam?: RWKVModelWeb;
     cacheItemKey?: string;
   }) => Promise<void>;
@@ -80,12 +83,12 @@ export const useModelStorage = create<ModelStorage>()(
           name,
           from,
           cached,
-          sampler,
           vocal_url,
           vocalCacheItemKey,
           loadFromWebParam,
           size,
           cacheItemKey,
+          defaultSessionConfiguration,
         }) {
           set((prev) => ({
             ...prev,
@@ -99,7 +102,7 @@ export const useModelStorage = create<ModelStorage>()(
                 loadFromWebParam: loadFromWebParam || null,
                 size: size,
                 lastLoadedTimestamp: Date.now(),
-                sampler,
+                defaultSessionConfiguration,
                 vocal_url,
                 vocalCacheItemKey: vocalCacheItemKey || null,
               },

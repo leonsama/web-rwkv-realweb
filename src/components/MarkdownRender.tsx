@@ -95,12 +95,14 @@ function FadeText({
 export const RWKVMarkedRenderer: CustomReactRenderer = {
   code(snippet: string, lang: string) {
     return (
-      <Lowlight
-        key={this.elementId}
-        language={Lowlight.hasLanguage(lang) ? lang : "plaintext"}
-        value={snippet}
-        markers={[]}
-      />
+      <div className="flex w-full flex-1 overflow-auto" key={this.elementId}>
+        <Lowlight
+          language={Lowlight.hasLanguage(lang) ? lang : "plaintext"}
+          value={snippet}
+          markers={[]}
+          className="w-0 flex-1"
+        />
+      </div>
     );
   },
   heading(children: ReactNode, level: HeadingLevels) {
@@ -159,11 +161,15 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
   },
   list(children: ReactNode, ordered: boolean, start: number | undefined) {
     return ordered ? (
-      <ol start={start} className="list-decimal list-inside" key={this.elementId}>
+      <ol
+        start={start}
+        className="list-inside list-decimal"
+        key={this.elementId}
+      >
         {children}
       </ol>
     ) : (
-      <ul className="list-disc list-inside" key={this.elementId}>
+      <ul className="list-inside list-disc" key={this.elementId}>
         {children}
       </ul>
     );

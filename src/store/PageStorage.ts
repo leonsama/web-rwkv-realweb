@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { StoreApi, UseBoundStore } from "zustand";
 import { isEnterIndex } from "../utils/utils";
 import { To } from "react-router";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 type WithSelectors<S> = S extends { getState: () => infer T }
   ? S & { use: { [K in keyof T]: () => T[K] } }
@@ -29,17 +30,38 @@ interface SessionStorage {
   setIsFunctionBarOpen: (isOpen: boolean) => void;
   setShowLargeBanner: (showLargeBanner: boolean) => void;
   setPageLocation: (to: To, options?: any) => void;
+
+  alwaysOpenSessionConfigurationPannel: boolean | null;
+  setAlwaysOpenSessionConfigurationPannel: (show: boolean) => void;
 }
 
-export const useSessionStorage = create<SessionStorage>((set) => ({
-  isBarOpen: true,
-  isFunctionBarOpen: false,
-  showLargeBanner: isEnterIndex(),
-  pageLocation: { to: false },
-  setShowLargeBanner: (showLargeBanner: boolean) =>
-    set({ showLargeBanner: showLargeBanner }),
-  setIsBarOpen: (isOpen: boolean) => set({ isBarOpen: isOpen }),
-  setIsFunctionBarOpen: (isOpen: boolean) => set({ isFunctionBarOpen: isOpen }),
-  setPageLocation: (to: To, options?: any) =>
-    set({ pageLocation: { to, options } }),
-}));
+export const usePageStorage = create<SessionStorage>()(
+  persist(
+    (set) => ({
+      isBarOpen: true,
+      isFunctionBarOpen: false,
+      showLargeBanner: isEnterIndex(),
+      pageLocation: { to: false },
+      setShowLargeBanner: (showLargeBanner: boolean) =>
+        set({ showLargeBanner: showLargeBanner }),
+      setIsBarOpen: (isOpen: boolean) => set({ isBarOpen: isOpen }),
+      setIsFunctionBarOpen: (isOpen: boolean) =>
+        set({ isFunctionBarOpen: isOpen }),
+      setPageLocation: (to: To, options?: any) =>
+        set({ pageLocation: { to, options } }),
+
+      alwaysOpenSessionConfigurationPannel: null,
+      setAlwaysOpenSessionConfigurationPannel(show) {
+        set({ alwaysOpenSessionConfigurationPannel: !!show });
+      },
+    }),
+    {
+      name: "webrwkv-page-config",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        alwaysOpenSessionConfigurationPannel:
+          state.alwaysOpenSessionConfigurationPannel,
+      }),
+    },
+  ),
+);

@@ -9,7 +9,7 @@ import {
 import routes from "~react-pages";
 import { Bar } from "./components/Bar";
 import { WebRWKVBanner } from "./components/WebRWKVBanner";
-import { useSessionStorage } from "./store/PageStorage";
+import { usePageStorage } from "./store/PageStorage";
 import { isMiddle } from "./utils/utils";
 
 import { HashRouter } from "react-router";
@@ -26,8 +26,8 @@ function Placeholder() {
 }
 
 function PageContent() {
-  const sessionStorage = useSessionStorage((s) => s);
-  const pageLocation = useSessionStorage((s) => s.pageLocation);
+  const sessionStorage = usePageStorage((s) => s);
+  const pageLocation = usePageStorage((s) => s.pageLocation);
 
   const isLocationRoot = useMatch("");
   const location = useLocation();

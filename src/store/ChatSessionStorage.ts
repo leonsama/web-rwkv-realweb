@@ -4,13 +4,20 @@ import { useShallow } from "zustand/react/shallow";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { dangerousUUIDV4 } from "../utils/utils";
 import { create } from "zustand";
+import {
+  CompletionMessage,
+  DEFAULT_SESSION_CONFIGURATION,
+  DEFAULT_STOP_WORDS,
+  SessionConfiguration,
+  useWebRWKVChat,
+} from "../web-rwkv-wasm-port/web-rwkv";
+import { useChatModelSession } from "./ModelStorage";
 
 export interface ChatSession {
   id: string;
   title: string;
   messageBlock: MessageBlock[];
-  stop_tokens: number[];
-  max_len: number;
+  sessionConfiguration: SessionConfiguration;
   updateTimestamp: number;
 }
 
@@ -44,7 +51,10 @@ export interface ChatStorage {
   sessionInformations: ChatSessionInfomation[];
 
   setSessionById: (id: string, session: ChatSession) => void;
-  createNewSession: (title?: string) => string;
+  createNewSession: (
+    title: string,
+    sessionConfiguration: SessionConfiguration,
+  ) => string;
   deleteSessionById: (id: string) => void;
   clearAllSession: () => void;
 }
@@ -80,14 +90,16 @@ export const useChatSessionStore = create<ChatStorage>()(
           };
         });
       },
-      createNewSession: (title?: string) => {
+      createNewSession: (
+        title: string,
+        sessionConfiguration: SessionConfiguration,
+      ) => {
         const session: ChatSession = {
           id: dangerousUUIDV4(),
           messageBlock: [],
-          stop_tokens: [],
-          max_len: 2048,
           title: title || "New Session",
           updateTimestamp: Date.now(),
+          sessionConfiguration: sessionConfiguration,
         };
         const sessionInformations: ChatSessionInfomation[] = [
           ...get().sessionInformations,
@@ -163,6 +175,9 @@ export function useChatSession(id: string) {
   const [activeMessageBlocks, setActiveMessageBlocks] = useState<
     CurrentMessageBlock[]
   >([]);
+  const [sessionConfiguration, setSessionConfiguration] =
+    useState<SessionConfiguration>(DEFAULT_SESSION_CONFIGURATION);
+
   const activeSession = useRef<CurrentChatSession>(
     sessions[id] as CurrentChatSession,
   );
@@ -300,6 +315,9 @@ export function useChatSession(id: string) {
           };
         },
       ),
+      sessionConfiguration: window.structuredClone(
+        activeSession.current.sessionConfiguration,
+      ),
     });
   };
 
@@ -315,13 +333,23 @@ export function useChatSession(id: string) {
       (v) => (v.id === currentMessageBlock.id ? currentMessageBlock : v),
     );
     updateActiveMessageList();
+  };
+
+  const updateSessionConfiguration = (
+    sessionConfiguration: SessionConfiguration,
+  ) => {
+    activeSession.current.sessionConfiguration = sessionConfiguration;
+    setSessionConfiguration(activeSession.current.sessionConfiguration);
     syncSession();
   };
 
-  const getActiveMessages: (isGenerating?: true) => {
-    role: "User" | "Assistant" | string;
-    content: string;
-  }[] = (isGenerating?: true) => {
+  const getActiveMessages: ({
+    isGenerating,
+    systemPrompt,
+  }: {
+    isGenerating?: boolean;
+    systemPrompt?: string;
+  }) => CompletionMessage[] = ({ isGenerating, systemPrompt }) => {
     const messages = getActiveMessageBlocks().map((v) => {
       const message = v.messageContents[v.activeMessageContentIndex];
       return {
@@ -331,33 +359,48 @@ export function useChatSession(id: string) {
       };
     });
 
+    const systemPromptList: CompletionMessage[] =
+      systemPrompt && systemPrompt?.trim() !== ""
+        ? [{ text: systemPrompt }]
+        : [];
+
     if (isGenerating) {
       if (messages[messages.length - 1].isGenerating !== true)
         throw new Error(
           `\`isGenerating\` is true but the \`isGenerating\` value of the last CurrentMessageContent is false. ${JSON.stringify(messages[messages.length - 1])}`,
         );
-      return messages
-        .map(({ role, content }) => ({ role, content }))
-        .slice(0, messages.length - 1);
+      return [
+        ...systemPromptList,
+        ...messages
+          .map(({ role, content }) => ({ role, content }))
+          .slice(0, messages.length - 1),
+      ];
     } else {
       if (messages[messages.length - 1].isGenerating !== false)
         throw new Error(
           `\`isGenerating\` is false but the The \`isGenerating\` value of the last CurrentMessageContent is true. ${JSON.stringify(messages[messages.length - 1])}`,
         );
-      return messages.map(({ role, content }) => ({ role, content }));
+      return [
+        ...systemPromptList,
+        ...messages.map(({ role, content }) => ({ role, content })),
+      ];
     }
   };
 
   useEffect(() => {
     activeSession.current = sessions[id] as CurrentChatSession;
+    setSessionConfiguration(activeSession.current.sessionConfiguration);
     updateActiveMessageList();
   }, [id]);
 
   return {
     activeMessageBlocks,
+    sessionConfiguration,
+
     getActiveMessages,
     createNewMessasgeBlock,
     updateCurrentMessageBlock,
     updateChatSessionTitle,
+    updateSessionConfiguration,
   };
 }

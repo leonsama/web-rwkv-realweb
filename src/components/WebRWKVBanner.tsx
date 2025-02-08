@@ -1,12 +1,12 @@
 import { useLocation } from "react-router";
-import { useSessionStorage } from "../store/PageStorage";
+import { usePageStorage } from "../store/PageStorage";
 import { cn, isEnterIndex } from "../utils/utils";
 
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { useEffect } from "react";
 
 export function WebRWKVFixedBanner() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
   return (
     <div
       className={cn(
@@ -20,14 +20,14 @@ export function WebRWKVFixedBanner() {
 }
 
 export function WebRWKVBanner() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
   return (
     <div
       className={cn(
         "pointer-events-none left-0 right-0 top-0 z-[1] select-none",
         // "[mask-image:linear-gradient(0deg,#0000,#ffff_4px)]",
         sessionStorage.showLargeBanner
-          ? "absolute flex flex-col items-center px-4"
+          ? "absolute flex flex-col items-center px-2 md:px-4"
           : "fixed left-0 md:absolute",
       )}
     >

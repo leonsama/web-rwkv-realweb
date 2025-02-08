@@ -158,12 +158,15 @@ export const PromptTextarea = ({
   };
 
   const onBlur = () => {
-    if (isKeepFocus?.current) return;
-    clearTimeout(blurTimmer.current);
-    blurTimmer.current = setTimeout(() => {
-      setIsFocus(false);
-      blurTimmer.current = -1;
-    }, blurDelay);
+    if (isKeepFocus?.current) {
+      textareaEle.current?.focus();
+    } else {
+      clearTimeout(blurTimmer.current);
+      blurTimmer.current = setTimeout(() => {
+        setIsFocus(false);
+        blurTimmer.current = -1;
+      }, blurDelay);
+    }
   };
 
   return (

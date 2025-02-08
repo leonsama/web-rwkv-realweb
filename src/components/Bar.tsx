@@ -7,7 +7,7 @@ import {
   useNavigate,
   useNavigation,
 } from "react-router";
-import { useSessionStorage } from "../store/PageStorage";
+import { usePageStorage } from "../store/PageStorage";
 import { cn, isEnterIndex } from "../utils/utils";
 import { WebRWKVFixedBanner } from "./WebRWKVBanner";
 import { useEffect } from "react";
@@ -30,7 +30,7 @@ import { Flipped, Flipper, spring } from "react-flip-toolkit";
 import { useShallow } from "zustand/react/shallow";
 
 function usePageNavigate() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
 
   // useEffect(()=>{
   //   console.log(sessionStorage.pageLocation)
@@ -78,7 +78,7 @@ function BarButtom({
   children?: React.ReactNode;
   className?: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
   return (
     <button
       className={cn(
@@ -97,7 +97,7 @@ function BarButtom({
 }
 
 export function Bar() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
 
   return (
     <>
@@ -144,7 +144,7 @@ export function Bar() {
 }
 
 function BarRoute() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
 
   const barLocation = useLocation();
   const barNavigate = useNavigate();
@@ -204,7 +204,7 @@ function BarRoute() {
 }
 
 function BarFunctionMenu() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
   return (
     <div
       className={cn(
@@ -263,9 +263,9 @@ function BarFunctionMenu() {
 }
 
 function BarChatRouter() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
 
-  const pageLocation = useSessionStorage((s) => s.pageLocation);
+  const pageLocation = usePageStorage((s) => s.pageLocation);
 
   const chatSessionInformations = useChatSessionStore(
     useShallow((s) => s.sessionInformations),

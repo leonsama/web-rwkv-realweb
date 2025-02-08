@@ -6,6 +6,7 @@ import { redirect } from "react-router";
 import { RWKVMarkdown } from "../components/MarkdownRender";
 import { RWKVOutputFormatter } from "../utils/RWKVOutputFormatter";
 import { createModalForm } from "../components/popup/Modals";
+import { InputList } from "../components/Input";
 
 const DEFAULT_MD_CONTENT = `# Web RWKV Markdown render test
 ## inline
@@ -86,6 +87,8 @@ export default function Test() {
     console.log(formData);
   };
 
+  const [testList, setTestList] = useState<string[]>([]);
+
   return (
     <div className="flex h-full w-full flex-col items-stretch">
       <div className="h-20"></div>
@@ -145,6 +148,10 @@ export default function Test() {
                 className="rounded-lg border"
               ></input>
               <Button onClick={openModal}>Open Modal</Button>
+              <InputList
+                value={testList}
+                onChange={(v) => setTestList(v)}
+              ></InputList>
             </div>
             <div className="h-80 select-text overflow-auto rounded-lg border border-slate-600">
               <RWKVMarkdown>

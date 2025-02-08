@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { ChatTextarea } from "../components/ChatTextarea";
-import { useSessionStorage } from "../store/PageStorage";
+import { usePageStorage } from "../store/PageStorage";
 import { Flipped, Flipper } from "react-flip-toolkit";
 import { useState } from "react";
 import { cn, isEnterIndex } from "../utils/utils";
@@ -14,7 +14,7 @@ import { useWebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
 import { RadioGroup, RadioGroupOption } from "../components/RadioGroup";
 
 export default function Home() {
-  const sessionStorage = useSessionStorage((s) => s);
+  const sessionStorage = usePageStorage((s) => s);
   const navigate = useNavigate();
 
   const chatSessionStorage = useChatSessionStore((state) => state);
@@ -23,7 +23,8 @@ export default function Home() {
   const { fromCache, fromWeb } = useModelLoader();
 
   const { llmModel, loadingModelName } = useChatModelSession((s) => s);
-  const { currentModelName } = useWebRWKVChat(llmModel);
+  const { currentModelName, defaultSessionConfiguration } =
+    useWebRWKVChat(llmModel);
 
   const [showCachedOnly, setShowCachedOnly] = useState(true);
   const [showUI, setShowUI] = useState(true);
@@ -62,7 +63,10 @@ export default function Home() {
     sessionStorage.setShowLargeBanner(false);
     setShowUI(false);
 
-    const newSessionId = chatSessionStorage.createNewSession();
+    const newSessionId = chatSessionStorage.createNewSession(
+      prompt,
+      defaultSessionConfiguration.current,
+    );
 
     setTimeout(() => {
       navigate(`/chat/${newSessionId}`, { state: { prompt } });
@@ -71,7 +75,7 @@ export default function Home() {
 
   return (
     <div className="flex h-full w-full flex-col items-stretch">
-      <div className="h-20"></div>
+      <div className="sticky top-0 h-16"></div>
       <div
         className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-2 md:px-4"
         style={{ scrollbarGutter: "stable" }}
@@ -84,7 +88,7 @@ export default function Home() {
         <div className="flex h-full w-full max-w-screen-md flex-1 flex-col gap-4">
           <h1
             className={cn(
-              "mt-40 select-none text-6xl font-medium text-slate-300 min-[370px]:mt-28 xl:mt-36 xl:text-7xl",
+              "mt-40 select-none text-6xl font-medium text-slate-300 min-[345px]:mt-28 xl:mt-36 xl:text-7xl",
               showUI
                 ? "motion-translate-y-in-75 motion-opacity-in-0"
                 : "motion-translate-y-out-75 motion-opacity-out-0",
@@ -236,32 +240,34 @@ export default function Home() {
                   )}
 
                   <Modal
-                    modal={({ close }) => {
-                      return <ModelLoaderCard close={close}></ModelLoaderCard>;
-                    }}
+                    trigger={
+                      <div
+                        className={cn(
+                          "-mb-1 flex min-h-10 cursor-pointer items-center justify-start gap-2 rounded-xl bg-[image:var(--web-rwkv-title-gradient)] px-2 font-bold text-white transition-all active:scale-[0.98] md:active:scale-[0.98]",
+                        )}
+                      >
+                        <div className="flex-1">Open Model Loader</div>
+                        <div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="size-5"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    }
                     closeWhenBackgroundOnClick={true}
                   >
-                    <div
-                      className={cn(
-                        "-mb-1 flex min-h-10 cursor-pointer items-center justify-start gap-2 rounded-xl bg-[image:var(--web-rwkv-title-gradient)] px-2 font-bold text-white transition-all active:scale-[0.98] md:active:scale-[0.98]",
-                      )}
-                    >
-                      <div className="flex-1">Open Model Loader</div>
-                      <div>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className="size-5"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                    </div>
+                    {({ close }) => {
+                      return <ModelLoaderCard close={close}></ModelLoaderCard>;
+                    }}
                   </Modal>
                 </div>
               </Card>
@@ -330,7 +336,7 @@ export default function Home() {
       >
         <ChatTextarea
           className={cn(
-            "fixed bottom-4 left-4 right-4 max-w-screen-md bg-white md:static md:w-full",
+            "fixed bottom-2 left-2 right-2 z-10 max-w-screen-md bg-white md:static md:w-full",
           )}
           onSubmit={(value) => {
             createNewConversation(value);

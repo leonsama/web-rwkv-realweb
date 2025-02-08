@@ -77,8 +77,11 @@ export function ChatTextarea({
   const textDisplayAreaRef = useRef<HTMLDivElement>(null);
 
   const [lineCount, setLineCount] = useState(1);
-
   const [isFocus, setIsFocus] = useState(false);
+
+  const [textareaPlaceholder, setTextareaPlaceholder] = useState(
+    "What can I help you today?",
+  );
 
   const isKeepFocus = useRef(false);
 
@@ -178,7 +181,7 @@ export function ChatTextarea({
             onChange={(e) => {
               setValue(e);
             }}
-            placeholder={"测试"}
+            placeholder={textareaPlaceholder}
             editable={true}
             innerRef={textDisplayAreaRef}
             invisibleScrollbar={lineCount <= maxLines}

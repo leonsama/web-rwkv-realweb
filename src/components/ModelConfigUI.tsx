@@ -1,5 +1,11 @@
 import React, { useRef, useState } from "react";
-import { useWebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
+import {
+  DEFAULT_SESSION_CONFIGURATION,
+  DEFAULT_STOP_TOKENS,
+  DEFAULT_STOP_WORDS,
+  SessionConfiguration,
+  useWebRWKVChat,
+} from "../web-rwkv-wasm-port/web-rwkv";
 import { Button } from "./Button";
 import { Card, CardTitle, Entry } from "./Cards";
 import { ComponentLoadLevel } from "./popup/Popup.d";
@@ -32,11 +38,13 @@ export interface RWKVModelWeb {
   dataset: string;
   update: string;
   fetchParams: Parameters<typeof fetch>;
-  sampler: Sampler;
   vocal_url: string;
+  defaultSessionConfiguration: SessionConfiguration;
 }
 
 // const DEFAULT_VOVAL_URL = "/assets/rwkv_vocab_v20230424.json";
+
+const DEFAULT_SYSTEM_PROMPT = `system: You are an AI assistant powered by the RWKV7 model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`;
 
 const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
   {
@@ -55,14 +63,20 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
         },
       },
     ],
-    sampler: {
-      temperature: 2.0,
-      top_p: 0.5,
-      presence_penalty: 0.5,
-      count_penalty: 0.5,
-      half_life: 200,
-    },
     vocal_url: DEFAULT_VOVAL_URL,
+    defaultSessionConfiguration: {
+      stopTokens: DEFAULT_STOP_TOKENS,
+      stopWords: DEFAULT_STOP_WORDS,
+      maxTokens: 2048,
+      systemPrompt: `system: You are an AI assistant powered by the RWKV7 0.1B model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`,
+      defaultSamplerConfig: {
+        temperature: 2.0,
+        top_p: 0.5,
+        presence_penalty: 0.5,
+        count_penalty: 0.5,
+        half_life: 200,
+      },
+    },
   },
   {
     name: "RWKV x070 World",
@@ -80,21 +94,27 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
         },
       },
     ],
-    sampler: {
-      temperature: 1.0,
-      top_p: 0.5,
-      presence_penalty: 0.5,
-      count_penalty: 0.5,
-      half_life: 200,
-    },
     vocal_url: DEFAULT_VOVAL_URL,
+    defaultSessionConfiguration: {
+      stopTokens: DEFAULT_STOP_TOKENS,
+      stopWords: DEFAULT_STOP_WORDS,
+      maxTokens: 2048,
+      systemPrompt: `system: You are an AI assistant powered by the RWKV7 0.4B model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`,
+      defaultSamplerConfig: {
+        temperature: 1.0,
+        top_p: 0.5,
+        presence_penalty: 0.5,
+        count_penalty: 0.5,
+        half_life: 200,
+      },
+    },
   },
 ];
 
 export function useModelLoader() {
   const { createCacheItem, readCacheItem } = useIndexedDBCache((s) => s);
   const { setRecentModel, getRecentModel } = useModelStorage((s) => s);
-  const { loadModel, defaultSamplerParam } = useWebRWKVChat(
+  const { loadModel, defaultSessionConfiguration } = useWebRWKVChat(
     useChatModelSession((s) => s.llmModel),
   );
   const { setLoadingModelName } = useChatModelSession((s) => s);
@@ -221,14 +241,23 @@ export function useModelLoader() {
     }
   };
 
-  const commonLoadHandler = async (
-    name: string,
-    chunks: Uint8Array[],
-    from: "web" | "device" | "URL",
-    size: number,
-    cacheItemKey: string | undefined,
-    loadFromWebParam: RWKVModelWeb | undefined,
-  ) => {
+  const commonLoadHandler = async ({
+    name,
+    chunks,
+    from,
+    size,
+    cacheItemKey,
+    loadFromWebParam,
+    defaultSessionConfiguration,
+  }: {
+    name: string;
+    chunks: Uint8Array[];
+    from: "web" | "device" | "URL";
+    size: number;
+    cacheItemKey: string | undefined;
+    loadFromWebParam: RWKVModelWeb | undefined;
+    defaultSessionConfiguration: SessionConfiguration;
+  }) => {
     toast.update(modelLoadTaster.current, {
       progress: 0.99,
       render: "Loading Model",
@@ -240,15 +269,15 @@ export function useModelLoader() {
       cached: !!cacheItemKey,
       cacheItemKey,
       size: size,
-      sampler: defaultSamplerParam.current!,
+      defaultSessionConfiguration,
       vocal_url: DEFAULT_VOVAL_URL,
       loadFromWebParam: loadFromWebParam,
     });
 
     try {
       await promiseWithTimeout(
-        loadModel(name, chunks, DEFAULT_VOVAL_URL),
-        15000,
+        loadModel(name, chunks, DEFAULT_VOVAL_URL, defaultSessionConfiguration),
+        20 * 1000,
       );
     } catch (error) {
       toast.update(modelLoadTaster.current, {
@@ -261,7 +290,7 @@ export function useModelLoader() {
         if (error.name === TIMEOUT_ERROR) {
           await showError(
             new CustomError(
-              "WASM Panic",
+              "WASM Timemout",
               "Model loading failed, possibly due to memory constraints. Try using a smaller model.",
             ),
           );
@@ -308,12 +337,21 @@ export function useModelLoader() {
 
     await cacheItem?.close();
     await commonLoadHandler(
-      file.name,
-      chunks,
-      "device",
-      receivedLength,
-      cacheItem?.key,
-      undefined,
+      // file.name,
+      // chunks,
+      // "device",
+      // receivedLength,
+      // cacheItem?.key,
+      // undefined,
+      {
+        name: file.name,
+        chunks: chunks,
+        from: "device",
+        size: receivedLength,
+        cacheItemKey: cacheItem?.key,
+        defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
+        loadFromWebParam: undefined,
+      },
     );
     setLoadingModelName(null);
   };
@@ -376,12 +414,21 @@ export function useModelLoader() {
       }
       await cacheItem?.close();
       await commonLoadHandler(
-        modelName,
-        chunks,
-        customUrl ? "URL" : "web",
-        receivedLength,
-        cacheItem?.key,
-        model,
+        // modelName,
+        // chunks,
+        // customUrl ? "URL" : "web",
+        // receivedLength,
+        // cacheItem?.key,
+        // model,
+        {
+          name: modelName,
+          chunks: chunks,
+          from: customUrl ? "URL" : "web",
+          size: receivedLength,
+          cacheItemKey: cacheItem?.key,
+          defaultSessionConfiguration: model.defaultSessionConfiguration,
+          loadFromWebParam: model,
+        },
       );
     } catch (error) {
       toast.update(modelLoadTaster.current, {
@@ -403,6 +450,10 @@ export function useModelLoader() {
     modelLoadTaster.current = toast.loading("Loading from Cache");
     setLoadingModelName(modelName);
 
+    const { defaultSessionConfiguration, loadFromWebParam } = getRecentModel({
+      name: modelName,
+    })!;
+
     try {
       const chunks: Uint8Array[] = [];
       const generator = readCacheItem({ key: modelName });
@@ -419,12 +470,21 @@ export function useModelLoader() {
       }
 
       await commonLoadHandler(
-        modelName,
-        chunks,
-        "device",
-        receivedLength,
-        modelName,
-        undefined,
+        // modelName,
+        // chunks,
+        // "device",
+        // receivedLength,
+        // modelName,
+        // undefined,
+        {
+          name: modelName,
+          chunks: chunks,
+          from: "device",
+          size: receivedLength,
+          cacheItemKey: modelName,
+          defaultSessionConfiguration: defaultSessionConfiguration,
+          loadFromWebParam: loadFromWebParam || undefined,
+        },
       );
     } catch (error) {
       toast.update(modelLoadTaster.current, {
@@ -601,14 +661,8 @@ export function ModelLoaderCard({
         ctx: "-",
         update: "-",
         fetchParams: [modelUrl, { ...JSON.parse(fetchOptions) }],
-        sampler: {
-          temperature: 2.0,
-          top_p: 0.5,
-          presence_penalty: 0.5,
-          count_penalty: 0.5,
-          half_life: 200,
-        },
         vocal_url: vocalUrl,
+        defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
       };
       fromWeb(customFileParame, modelName, true);
     } catch (error) {

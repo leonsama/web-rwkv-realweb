@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -141,4 +142,26 @@ export function promiseWithTimeout<T>(
       reject(error);
     }
   });
+}
+
+const MOBILE_BREAKPOINT = 768;
+
+export function useMaxWidthBreakpoint({
+  breakpoint = MOBILE_BREAKPOINT,
+}: {
+  breakpoint?: number;
+}) {
+  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const onChange = () => {
+      setIsMobile(window.innerWidth < breakpoint);
+    };
+    mql.addEventListener("change", onChange);
+    setIsMobile(window.innerWidth < breakpoint);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return !!isMobile;
 }
