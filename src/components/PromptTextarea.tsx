@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { TextareaHTMLAttributes, useEffect, useRef, useState } from "react";
 
 import styles from "./PromptTextarea.module.css";
 
@@ -52,6 +52,7 @@ export const PromptTextarea = ({
   isFocus = false,
   setIsFocus = (status: boolean) => {},
   isKeepFocus,
+  blurDelay = 300,
   className,
 }: {
   value: string;
@@ -65,11 +66,14 @@ export const PromptTextarea = ({
   isFocus?: boolean;
   setIsFocus?: (status: boolean) => void;
   isKeepFocus?: React.MutableRefObject<boolean>;
+  blurDelay?: number;
   className?: string;
 }) => {
   const [content, setContent] = useState(value);
   const [config, setConfig] = useState(globalConfig);
   const textareaEle = useRef<HTMLTextAreaElement>(null);
+
+  const blurTimmer = useRef<number>(-1);
 
   const render = (value: string) => {
     [
@@ -142,11 +146,25 @@ export const PromptTextarea = ({
   }, [value]);
 
   useEffect(() => {
-    console.log("detect", isFocus);
     if (isFocus) {
       textareaEle.current?.focus();
     }
   }, [isFocus]);
+
+  const onFocus = () => {
+    clearTimeout(blurTimmer.current);
+    blurTimmer.current = -1;
+    setIsFocus(true);
+  };
+
+  const onBlur = () => {
+    if (isKeepFocus?.current) return;
+    clearTimeout(blurTimmer.current);
+    blurTimmer.current = setTimeout(() => {
+      setIsFocus(false);
+      blurTimmer.current = -1;
+    }, blurDelay);
+  };
 
   return (
     <div
@@ -169,24 +187,8 @@ export const PromptTextarea = ({
             placeholder={placeholder}
             disabled={disabled}
             ref={textareaEle}
-            onFocus={() => {
-              console.log("onfocus");
-              setIsFocus(true);
-            }}
-            onBlur={() => {
-              console.log("onblur");
-              if (isKeepFocus && isKeepFocus.current === true) {
-                textareaEle.current?.focus();
-                return;
-              }
-              setTimeout(() => {
-                setContent((prev) => {
-                  console.log("call", prev);
-                  if (prev === "") setIsFocus(false);
-                  return prev;
-                });
-              }, 300);
-            }}
+            onFocus={onFocus}
+            onBlur={onBlur}
             onKeyDown={handleKeyDown}
           ></textarea>
         )}
