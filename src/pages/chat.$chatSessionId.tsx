@@ -1151,17 +1151,24 @@ export default function Chat() {
   useEffect(() => {
     resizeObserver.current = new ResizeObserver((entries) => {
       if (
-        containerEle.current?.scrollTop &&
+        containerEle.current !== null &&
         containerEle.current.scrollHeight <
           containerEle.current.scrollTop +
             containerEle.current.clientHeight +
             messageLineHeight.current * 4
       ) {
+        console.log("scrolled");
         setTimeout(() => {
           scrollerEle.current?.scrollIntoView({
             behavior: "smooth",
           });
         }, 50);
+        // setTimeout(() => {
+        //   if (containerEle.current && messagesEle.current) {
+        //     console.log("scroll");
+        //     containerEle.current.scrollTop = messagesEle.current?.scrollHeight;
+        //   }
+        // }, 0);
       }
     });
     if (messagesEle.current) {
@@ -1269,7 +1276,7 @@ export default function Chat() {
                   })}
                 </ChatSession.Provider>
                 <div
-                  className="sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] md:-mt-8 md:h-8"
+                  className="pointer-events-none sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] md:-mt-8 md:h-8"
                   ref={scrollerEle}
                 ></div>
               </div>

@@ -197,8 +197,10 @@ export function ChatTextarea({
       {/* current model info  */}
       <div
         className={cn(
-          "flex items-center px-5 text-xs text-gray-300 transition-all duration-500",
-          isPannelExpaned && lineCount < 2 ? "h-3" : "pointer-events-none h-0",
+          "flex items-center text-nowrap px-5 text-xs text-gray-300 transition-all duration-500",
+          isPannelExpaned && lineCount < 2
+            ? "h-5 overflow-x-auto"
+            : "pointer-events-none h-0",
         )}
       >
         <span
@@ -341,7 +343,7 @@ export function ChatTextarea({
                 <span className="font-semibold underline transition-all group-active:scale-95">
                   Loading... Sit back and relax!
                 </span>
-                <span className="ml-2 text-xs text-slate-300 transition-all group-active:scale-95">
+                <span className="ml-2 hidden text-xs text-slate-300 transition-all group-active:scale-95 md:static">
                   {loadingModelName}
                 </span>
               </>
