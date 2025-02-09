@@ -262,6 +262,15 @@ function AssistantContent({
         isGenerating: true,
         systemPrompt: sessionConfiguration.systemPrompt || "",
       }),
+      max_tokens: sessionConfiguration.maxTokens,
+      stop_tokens: sessionConfiguration.stopTokens,
+      stop_words: sessionConfiguration.stopWords,
+      temperature: sessionConfiguration.defaultSamplerConfig.temperature,
+      top_p: sessionConfiguration.defaultSamplerConfig.top_p,
+      presence_penalty:
+        sessionConfiguration.defaultSamplerConfig.presence_penalty,
+      count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
+      penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
     });
 
     let result = "";
@@ -1110,6 +1119,15 @@ export default function Chat() {
         isGenerating: true,
         systemPrompt: sessionConfiguration.systemPrompt || "",
       }),
+      max_tokens: sessionConfiguration.maxTokens,
+      stop_tokens: sessionConfiguration.stopTokens,
+      stop_words: sessionConfiguration.stopWords,
+      temperature: sessionConfiguration.defaultSamplerConfig.temperature,
+      top_p: sessionConfiguration.defaultSamplerConfig.top_p,
+      presence_penalty:
+        sessionConfiguration.defaultSamplerConfig.presence_penalty,
+      count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
+      penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
     });
     resultBlock.messageContents[activeMessageContentIndex].modelName =
       currentModelName;

@@ -299,7 +299,7 @@ export class WEB_RWKV_WASM_PORT {
         sampler = new SimpleSampler(info);
         break;
     }
-
+    console.log("Options", options);
     console.log(prompt);
     let tokens = tokenizer.encode(encoder.encode(prompt));
 
