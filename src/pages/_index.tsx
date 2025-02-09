@@ -138,14 +138,14 @@ export default function Home() {
                   </svg>
                 }
               >
-                <div className="flex flex-shrink-0 flex-col gap-0">
+                <div className="flex flex-1 flex-shrink-0 flex-col gap-0">
                   {recentModels
                     .sort((a, b) =>
                       a.lastLoadedTimestamp < b.lastLoadedTimestamp ? 1 : -1,
                     )
                     .filter((v) => (showCachedOnly ? v.cached === true : true))
                     .length === 0 ? (
-                    <div className="-mt-2 flex h-28 flex-col items-center justify-center px-1 py-2 lg:h-40">
+                    <div className="-mt-2 flex flex-col items-center justify-center px-1 py-2 max-md:h-28 md:flex-1">
                       <svg
                         className="icon"
                         viewBox="0 0 1024 1024"
@@ -173,7 +173,7 @@ export default function Home() {
                       <span>No Recent Models</span>
                     </div>
                   ) : (
-                    <div className="-mt-2 flex h-28 w-full flex-col gap-1 overflow-auto px-1 py-2 [mask-image:linear-gradient(0deg,_#0000_0px_,#ffff_8px,_#ffff_calc(100%_-_8px),_#0000_100%)] lg:h-40">
+                    <div className="-mt-2 flex w-full flex-col gap-1 overflow-auto px-1 py-2 [mask-image:linear-gradient(0deg,_#0000_0px_,#ffff_8px,_#ffff_calc(100%_-_8px),_#0000_100%)] max-md:h-28 md:flex-1">
                       {recentModels
                         .filter((v) =>
                           showCachedOnly ? v.cached === true : true,
@@ -273,6 +273,7 @@ export default function Home() {
               <Card
                 title="RWKV"
                 className={cn(
+                  "cursor-pointer transition-all hover:scale-[1.03]",
                   isEnterIndex()
                     ? "motion-delay-[1000ms]"
                     : showUI && "motion-delay-[300ms]",
@@ -294,12 +295,19 @@ export default function Home() {
                     ></path>
                   </svg>
                 }
+                onClick={(e) => {
+                  window.open("https://github.com/BlinkDL/RWKV-LM", "_blank");
+                }}
               >
-                Learn more about RWKV7
+                <p>A Cutting-Edge, RNN-Inspired Large Language Model</p>
+                <p className="text-xs text-gray-500 underline">
+                  Learn more about RWKV7
+                </p>
               </Card>
               <Card
                 title={"WEB RWKV"}
                 className={cn(
+                  "cursor-pointer transition-all hover:scale-[1.03]",
                   isEnterIndex()
                     ? "motion-delay-[1150ms]"
                     : showUI && "motion-delay-[350ms]",
@@ -315,8 +323,14 @@ export default function Home() {
                     }}
                   ></div>
                 }
+                onClick={(e) => {
+                  window.open("https://github.com/cryscan/web-rwkv", "_blank");
+                }}
               >
-                Learn more about WEB RWKV
+                <p>Inference engine for RWKV implemented in pure WebGPU</p>
+                <p className="text-xs text-gray-500 underline">
+                  Learn more about WEBRWKV
+                </p>
               </Card>
             </div>
           </div>

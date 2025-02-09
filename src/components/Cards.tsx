@@ -6,14 +6,16 @@ export function Card({
   title,
   icon,
   className,
+  ...prop
 }: {
   children?: React.ReactNode;
   title?: React.ReactNode;
   icon?: React.ReactNode;
   className?: string;
-}) {
+} & Omit<React.HtmlHTMLAttributes<HTMLDivElement>, "title" | "className">) {
   return (
     <div
+      {...prop}
       className={cn(
         "flex select-none flex-col rounded-3xl bg-slate-100",
         className,
