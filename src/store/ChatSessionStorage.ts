@@ -141,7 +141,7 @@ export const useChatSessionStore = create<ChatStorage>()(
       },
     }),
     {
-      name: "webrwkv-storage",
+      name: "webrwkv-session-storage",
       storage: createJSONStorage(() => localStorage),
     },
   ),

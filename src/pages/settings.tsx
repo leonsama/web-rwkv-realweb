@@ -3,14 +3,14 @@ import { useWebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
 import { loadFile } from "../utils/loadModels";
 import { cn, formatFileSize } from "../utils/utils";
 import { RadioGroup, RadioGroupOption } from "../components/RadioGroup";
-import { Modal } from "../components/popup/Modals";
+import { createModalForm, Modal } from "../components/popup/Modals";
 import { ComponentLoadLevel } from "../components/popup/Popup.d";
 import {
   createContextMenu,
   Menu,
   MenuItem,
 } from "../components/popup/ContentMenu";
-import { Card, Entry } from "../components/Cards";
+import { Card, CardTitle, Entry } from "../components/Cards";
 import { ModelLoaderCard } from "../components/ModelConfigUI";
 import {
   useChatModelSession,
@@ -54,6 +54,50 @@ export default function Settings() {
     </Menu>,
   );
 
+  const resetAllData = async () => {
+    try {
+      const { isReset } = await createModalForm(
+        <Card className="max-w-sm bg-white">
+          <CardTitle className="bg-white text-red-500">
+            <span className="text-lg font-bold">Reset</span>
+          </CardTitle>
+          <div className="flex flex-col gap-1 text-wrap text-sm text-gray-600">
+            <p>
+              This will clear your chat history and cache, and may resolve some
+              issues. This is irreversible.
+            </p>
+            <p className="mt-4 text-gray-400">Default: No</p>
+          </div>
+          <div className="-mb-1 flex justify-end gap-2">
+            <Button
+              type="submit"
+              className="cursor-pointer rounded-xl bg-transparent px-4 py-2 font-semibold active:scale-95"
+              name="isReset"
+              value={"No"}
+            >
+              No
+            </Button>
+            <Button
+              type="submit"
+              className="cursor-pointer rounded-xl bg-transparent px-4 py-2 active:scale-95"
+              name="isReset"
+              value={"Yes"}
+            >
+              Yes
+            </Button>
+          </div>
+        </Card>,
+        { closeOnBackgroundClick: true },
+      ).open();
+      if (isReset === "Yes") {
+        await clearAllCache();
+        clearAllSession();
+        localStorage.clear();
+        window.location.reload();
+      }
+    } catch (error) {}
+  };
+
   const clearAllCache = async () => {
     recentModels.forEach((v) => {
       deleteRecentModel({ name: v.name, deleteCacheOnly: true });
@@ -71,7 +115,7 @@ export default function Settings() {
     <div className="flex h-full w-full flex-col items-stretch">
       <div className="sticky top-0 h-16"></div>
       <div
-        className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-2 pb-24 md:px-4 md:pb-0"
+        className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-2 pb-4 md:px-4 md:pb-0"
         style={{ scrollbarGutter: "stable both-edges" }}
       >
         <div className="flex w-full max-w-screen-md flex-col gap-4 px-2 pb-20 motion-translate-y-in-[20%] motion-opacity-in-[0%] motion-duration-[0.4s] md:gap-8">
@@ -224,6 +268,12 @@ export default function Settings() {
             <Entry label="Clear Cache">
               <Button className="text-red-500" onClick={clearAllCache}>
                 Clear
+              </Button>
+            </Entry>
+            <hr className="border-1"></hr>
+            <Entry label="Reset All Data">
+              <Button className="text-red-500" onClick={resetAllData}>
+                Reset
               </Button>
             </Entry>
           </Card>

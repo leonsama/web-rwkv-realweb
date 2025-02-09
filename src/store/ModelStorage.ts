@@ -142,7 +142,7 @@ export const useModelStorage = create<ModelStorage>()(
       };
     },
     {
-      name: "web-rwkv-model-storage",
+      name: "webrwkv-model-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ recentModels: state.recentModels }),
     },

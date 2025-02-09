@@ -12,6 +12,8 @@ import { WebRWKVBanner } from "./components/WebRWKVBanner";
 import { usePageStorage } from "./store/PageStorage";
 import { isMiddle } from "./utils/utils";
 
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+
 import { HashRouter } from "react-router";
 // const BASENAME = import.meta.env.DEV ? "/" : "/web-rwkv-realweb/";
 const BASENAME = "/";
@@ -60,16 +62,34 @@ function PageContent() {
   return useRoutes(routes);
 }
 
+function fallbackRender({ error, resetErrorBoundary }: FallbackProps) {
+  // Call resetErrorBoundary() to reset the error boundary and retry the render.
+
+  return (
+    <div
+      role="alert"
+      className="flex h-full w-full items-center justify-center"
+    >
+      <p>OOPS..</p>
+      <p>Something went wrong:</p>
+      <pre style={{ color: "red" }}>{error.message}</pre>
+    </div>
+  );
+}
+
 export function App() {
   return (
     <Suspense fallback={<Placeholder></Placeholder>}>
       <div className="flex h-screen w-screen select-none bg-white text-black">
         <Bar></Bar>
+
         <div className="relative flex-1 overflow-auto">
-          <WebRWKVBanner></WebRWKVBanner>
-          <HashRouter basename={BASENAME}>
-            <PageContent></PageContent>
-          </HashRouter>
+          <ErrorBoundary fallbackRender={fallbackRender}>
+            <WebRWKVBanner></WebRWKVBanner>
+            <HashRouter basename={BASENAME}>
+              <PageContent></PageContent>
+            </HashRouter>
+          </ErrorBoundary>
         </div>
       </div>
     </Suspense>
