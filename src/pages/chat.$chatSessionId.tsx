@@ -2,7 +2,11 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import { ChatTextarea } from "../components/ChatTextarea";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { cn, useMaxWidthBreakpoint } from "../utils/utils";
+import {
+  cn,
+  useMaxWidthBreakpoint,
+  useSuspendUntilValid,
+} from "../utils/utils";
 import {
   DEFAULT_SESSION_CONFIGURATION,
   SessionConfiguration,
@@ -29,6 +33,7 @@ import { Card, CardTitle, Entry } from "../components/Cards";
 import { Button } from "../components/Button";
 import { PromptTextarea } from "../components/PromptTextarea";
 import { InputList, InputRange, InputText } from "../components/Input";
+import { ModelLoaderCard } from "../components/ModelConfigUI";
 
 // let colorbg = new BlurGradientBg({
 // 	dom: "box",
@@ -43,6 +48,7 @@ const ChatSession = createContext<
     setIsGenerating: (value: boolean) => void;
 
     currentModelName: string | null;
+    loadingModelName: string | null;
 
     generator: React.MutableRefObject<AsyncGenerator<
       string,
@@ -50,6 +56,10 @@ const ChatSession = createContext<
       unknown
     > | null>;
     completion: ReturnType<typeof useWebRWKVChat>["completion"];
+
+    checkIsModelLoaded: (
+      validate: (currentState: string | null) => boolean,
+    ) => Promise<void>;
   }
 >(null!);
 
@@ -182,7 +192,7 @@ function UserContent({
   currentMessageBlock: CurrentMessageBlock;
 }) {
   return (
-    <div className="flex flex-row-reverse motion-opacity-in-[0%] motion-duration-[0.4s]">
+    <div className="z-10 flex flex-row-reverse motion-opacity-in-[0%] motion-duration-[0.4s]">
       <div className="ml-10 flex max-w-screen-sm flex-col">
         <div className="w-full select-text overflow-hidden rounded-3xl rounded-tr-md bg-slate-100 p-4">
           <span className="whitespace-pre-wrap">
@@ -210,9 +220,11 @@ function AssistantContent({
     sessionConfiguration,
     updateCurrentMessageBlock,
     currentModelName,
+    loadingModelName,
     generator,
     completion,
     getActiveMessages,
+    checkIsModelLoaded,
   } = useContext(ChatSession);
 
   const avatarEle = useRef<HTMLDivElement>(null);
@@ -243,6 +255,8 @@ function AssistantContent({
 
     setIsGenerating(true);
 
+    await checkIsModelLoaded((modelName) => modelName !== null);
+
     generator.current = completion({
       stream: true,
       messages: getActiveMessages({
@@ -269,8 +283,8 @@ function AssistantContent({
   };
 
   return (
-    <div className="flex flex-col gap-4 pb-6 motion-opacity-in-[0%] motion-duration-[0.4s] md:flex-row">
-      <div className="mt-3">
+    <div className="flex flex-col gap-4 motion-opacity-in-[0%] motion-duration-[0.4s] md:flex-row">
+      <div className="z-20 mt-3">
         <div className="sticky top-0 flex items-center gap-5 md:flex-col">
           {/* avatar */}
           <div
@@ -349,11 +363,22 @@ function AssistantContent({
           </div>
         </div>
       </div>
-      <div className="flex flex-1 flex-col gap-2 overflow-hidden">
+      <div className="flex flex-1 flex-col gap-2">
+        <div className="sticky top-0 z-10 -mt-8 h-6 bg-white [mask-image:linear-gradient(0deg,#0000,#ffff)]"></div>
         <div
           className="min-h-10 select-text motion-opacity-in-[0%] motion-duration-[0.4s]"
           key={`${currentMessageBlock.key}-${currentMessageBlock.activeMessageContentIndex}`}
         >
+          {currentMessageBlock.messageContents[
+            currentMessageBlock.activeMessageContentIndex
+          ].isGenerating &&
+            currentModelName === null && (
+              <div className="text-sm text-gray-400 my-5">
+                {loadingModelName === null
+                  ? "Load a model to interact"
+                  : "Loading model... Sit back and relax!"}
+              </div>
+            )}
           <RWKVMarkdown
             stream={
               currentMessageBlock.messageContents[
@@ -587,7 +612,7 @@ function ChatSessionConfigurationCard({
   return (
     <Card
       className={cn(
-        "h-full w-full overflow-auto transition-all md:h-3/4 md:w-2/3 min-[1250px]:h-full min-[1250px]:w-full",
+        "h-full w-full overflow-auto transition-all md:h-3/4 md:w-2/3 md:max-w-md min-[1250px]:h-full min-[1250px]:w-full",
         isOpen ? "" : "scale-95 opacity-0",
       )}
     >
@@ -853,6 +878,7 @@ function ChatSessionConfigurationBar({
 
   useEffect(() => {
     clearTimeout(timmer.current);
+    // 先展开侧边栏再显示面板，收回倒放
     if (isOpen) {
       if (isMobile) {
         setShowConfigurationCard(true);
@@ -1011,7 +1037,9 @@ export default function Chat() {
     currentChatSessionId,
   } = useChatSession(chatSessionId!);
 
-  const webRWKVLLMInfer = useChatModelSession((s) => s.llmModel);
+  const { llmModel: webRWKVLLMInfer, loadingModelName } = useChatModelSession(
+    (s) => s,
+  );
   const { currentModelName, completion, defaultSessionConfiguration } =
     useWebRWKVChat(webRWKVLLMInfer);
 
@@ -1020,6 +1048,11 @@ export default function Chat() {
 
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const generator = useRef<AsyncGenerator<string, void, unknown> | null>(null);
+
+  const loadModelModal = useRef<ModalInterface>(null!);
+  const checkIsModelLoaded = useSuspendUntilValid(currentModelName, () => {
+    loadModelModal.current.setIsModalOpen(true);
+  });
 
   const containerEle = useRef<HTMLDivElement>(null);
   const messagesEle = useRef<HTMLDivElement>(null);
@@ -1093,7 +1126,6 @@ export default function Chat() {
 
   const scrollToTimmer = useRef(-1);
   useEffect(() => {
-    console.log(currentChatSessionId);
     resizeObserver.current = new ResizeObserver((entries) => {
       if (
         containerEle.current?.scrollTop &&
@@ -1117,11 +1149,6 @@ export default function Chat() {
         window.getComputedStyle(messagesEle.current).lineHeight,
       );
       clearTimeout(scrollToTimmer.current);
-      console.log(
-        "scroll",
-        containerEle.current?.scrollTop,
-        containerEle.current?.scrollHeight,
-      );
       scrollToTimmer.current = setTimeout(() => {
         containerEle.current?.scrollTo({
           top: containerEle.current.scrollHeight,
@@ -1131,7 +1158,6 @@ export default function Chat() {
     }
 
     return () => {
-      console.log("out");
       resizeObserver.current.disconnect();
     };
   }, [currentChatSessionId]);
@@ -1176,12 +1202,12 @@ export default function Chat() {
         <div className="flex flex-1 flex-shrink-0 overflow-hidden">
           <div className="flex h-full w-full flex-col">
             <div
-              className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-4 pb-24 md:pb-0"
+              className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-4 pb-0"
               style={{ scrollbarGutter: "stable both-edges" }}
               ref={containerEle}
             >
               <div
-                className="flex w-full max-w-screen-md flex-col gap-4 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s]"
+                className="flex w-full max-w-screen-md flex-col gap-6 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s]"
                 key={chatSessionId}
                 ref={messagesEle}
               >
@@ -1203,8 +1229,11 @@ export default function Chat() {
                     setIsGenerating,
 
                     currentModelName,
+                    loadingModelName,
 
                     completion,
+
+                    checkIsModelLoaded,
                   }}
                 >
                   {activeMessageBlocks.map((v) => {
@@ -1218,14 +1247,20 @@ export default function Chat() {
                     );
                   })}
                 </ChatSession.Provider>
+                <div className="sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] md:-mt-8 md:h-8"></div>
               </div>
             </div>
             <div
               key={`chat-textarea`}
-              className="flex w-full justify-center p-2 pt-1 md:px-4 md:pb-10"
+              className="flex w-full justify-center px-2 pt-1 md:px-4 md:pb-6"
             >
+              <Modal ref={loadModelModal}>
+                {({ close }) => {
+                  return <ModelLoaderCard close={close}></ModelLoaderCard>;
+                }}
+              </Modal>
               <ChatTextarea
-                className="bottom-4 w-full max-w-screen-md bg-white"
+                className="bottom-2 w-full max-w-screen-md bg-white md:bottom-4"
                 onSubmit={(value) => {
                   startGenerationTask(value);
                 }}

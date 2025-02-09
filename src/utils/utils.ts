@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -164,4 +164,49 @@ export function useMaxWidthBreakpoint({
   }, []);
 
   return !!isMobile;
+}
+
+export function useSuspendUntilValid<T>(state: T, onSuspend?: () => void) {
+  const pendingChecks = useRef<
+    Array<{
+      validate: (currentState: T) => boolean;
+      resolve: () => void;
+      reject: (reason?: any) => void;
+    }>
+  >([]);
+
+  // 状态变化时触发挂起检查
+  useEffect(() => {
+    pendingChecks.current = pendingChecks.current.filter((check) => {
+      const isValid = check.validate(state);
+      if (isValid) check.resolve();
+      return !isValid;
+    });
+  }, [state]);
+
+  // 组件卸载时清理未完成检查
+  useEffect(
+    () => () => {
+      pendingChecks.current.forEach((check) =>
+        check.reject(new Error("Component unmounted")),
+      );
+      pendingChecks.current = [];
+    },
+    [],
+  );
+
+  const suspendUntilValid = useCallback(
+    async (validate: (currentState: T) => boolean) => {
+      if (validate(state)) return;
+
+      onSuspend?.();
+
+      return new Promise<void>((resolve, reject) => {
+        pendingChecks.current.push({ validate, resolve, reject });
+      });
+    },
+    [state, onSuspend],
+  );
+
+  return suspendUntilValid;
 }

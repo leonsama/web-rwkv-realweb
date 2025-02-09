@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "../utils/utils";
 import { PromptTextarea } from "./PromptTextarea";
-import { cleanChatPrompt } from "../web-rwkv-wasm-port/web-rwkv";
+import {
+  cleanChatPrompt,
+  useWebRWKVChat,
+} from "../web-rwkv-wasm-port/web-rwkv";
+import { useChatModelSession } from "../store/ModelStorage";
+import { Modal, ModalInterface } from "./popup/Modals";
+import { ModelLoaderCard } from "./ModelConfigUI";
 
 interface Suggestion {
   prompt: string;
@@ -78,10 +84,18 @@ export function ChatTextarea({
 
   const [lineCount, setLineCount] = useState(1);
   const [isFocus, setIsFocus] = useState(false);
+  const [isPannelExpaned, setIsPannelExpaned] = useState(false);
+
+  const { llmModel, loadingModelName } = useChatModelSession((s) => s);
+  const { currentModelName, unloadModel } = useWebRWKVChat(llmModel);
 
   const [textareaPlaceholder, setTextareaPlaceholder] = useState(
     "What can I help you today?",
   );
+
+  const rootEle = useRef<HTMLDivElement>(null);
+
+  const loadModelModal = useRef<ModalInterface>(null!);
 
   const isKeepFocus = useRef(false);
 
@@ -113,6 +127,30 @@ export function ChatTextarea({
     }
   };
 
+  const openModal = () => {
+    loadModelModal.current.setIsModalOpen(true);
+  };
+
+  const blurTimmer = useRef<number>(-1);
+
+  const hidePannel = (delay: number) => {
+    clearTimeout(blurTimmer.current);
+    blurTimmer.current = setTimeout(() => {
+      setIsPannelExpaned(false);
+      blurTimmer.current = -1;
+    }, delay);
+  };
+
+  useEffect(() => {
+    clearTimeout(blurTimmer.current);
+    if (isFocus) {
+      setIsPannelExpaned(true);
+      blurTimmer.current = -1;
+    } else if (value === "") {
+      hidePannel(300);
+    }
+  }, [isFocus, value]);
+
   return (
     <div
       className={cn(
@@ -120,10 +158,15 @@ export function ChatTextarea({
         className,
       )}
     >
+      <Modal ref={loadModelModal}>
+        {({ close }) => {
+          return <ModelLoaderCard close={close}></ModelLoaderCard>;
+        }}
+      </Modal>
       <div
         className={cn(
           "invisibleScrollbar hideScrollbar flex flex-nowrap items-center gap-3 overflow-auto overflow-y-hidden text-nowrap px-5 transition-all duration-500",
-          isFocus ? "h-16" : "h-0",
+          isPannelExpaned ? "h-16" : "h-0",
         )}
       >
         {suggestions.map((v: Suggestion, k: number) => {
@@ -134,9 +177,11 @@ export function ChatTextarea({
               onClick={(e) => {
                 setValue(e);
               }}
-              className={cn(isFocus ? "opacity-100" : "opacity-0")}
+              className={cn(isPannelExpaned ? "opacity-100" : "opacity-0")}
               style={{
-                transitionDelay: isFocus ? `${300 + k * 50}ms` : undefined,
+                transitionDelay: isPannelExpaned
+                  ? `${400 + k * 50}ms`
+                  : undefined,
               }}
               isKeepFocus={isKeepFocus}
             >
@@ -144,6 +189,28 @@ export function ChatTextarea({
             </PromptSuggestion>
           );
         })}
+      </div>
+      <div
+        className={cn(
+          "flex items-center px-5 text-xs text-gray-300 transition-all duration-500",
+          isPannelExpaned && lineCount < 2 ? "h-3" : "pointer-events-none h-0",
+        )}
+      >
+        <span
+          className={cn(
+            "transition-all",
+            isPannelExpaned && lineCount < 2 ? "opacity-100" : "opacity-0",
+          )}
+          style={{
+            transitionDelay:
+              isPannelExpaned && lineCount < 2 ? `350ms` : undefined,
+          }}
+        >
+          Current Model: {currentModelName}{" "}
+          <button className="underline" onClick={unloadModel}>
+            Unload
+          </button>
+        </span>
       </div>
       <div
         className={cn(
@@ -175,7 +242,12 @@ export function ChatTextarea({
             />
           </svg>
         </button>
-        <div className={cn("flex-1 overflow-auto py-4")}>
+        <div
+          className={cn("flex-1 cursor-text overflow-auto py-4")}
+          onClick={() => {
+            setIsFocus(true);
+          }}
+        >
           <PromptTextarea
             value={value}
             onChange={(e) => {
@@ -208,6 +280,54 @@ export function ChatTextarea({
             <path d="M3.105 2.288a.75.75 0 0 0-.826.95l1.414 4.926A1.5 1.5 0 0 0 5.135 9.25h6.115a.75.75 0 0 1 0 1.5H5.135a1.5 1.5 0 0 0-1.442 1.086l-1.414 4.926a.75.75 0 0 0 .826.95 28.897 28.897 0 0 0 15.293-7.155.75.75 0 0 0 0-1.114A28.897 28.897 0 0 0 3.105 2.288Z" />
           </svg>
         </button>
+      </div>
+      {/* load model hint */}
+      <div
+        className={cn(
+          "group absolute bottom-0 left-0 right-0 top-0 flex items-center backdrop-blur-sm transition-all duration-300 cursor-pointer",
+          currentModelName === null
+            ? ""
+            : "pointer-events-none scale-95 opacity-0",
+        )}
+        onClick={() => {
+          if (loadingModelName === null) openModal();
+        }}
+      >
+        <div
+          className={cn(
+            "m-2 flex h-10 w-10 items-center justify-center self-end rounded-full text-slate-800",
+          )}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6"
+          >
+            <path
+              fillRule="evenodd"
+              d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+        <div className="flex h-14 w-0 flex-1 cursor-pointer items-center self-end p-2">
+          {currentModelName === null &&
+            (loadingModelName === null ? (
+              <span className="transition-all group-active:scale-95">
+                Model not loaded. Load to interact.
+              </span>
+            ) : (
+              <>
+                <span className="font-semibold underline transition-all group-active:scale-95">
+                  Loading... Sit back and relax!
+                </span>
+                <span className="ml-2 text-sm text-slate-300 transition-all group-active:scale-95">
+                  {loadingModelName}
+                </span>
+              </>
+            ))}
+        </div>
       </div>
     </div>
   );

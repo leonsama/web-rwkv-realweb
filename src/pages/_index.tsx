@@ -224,7 +224,6 @@ export default function Home() {
                                       return;
                                     }
                                   }
-                                  close!();
                                 }}
                               >
                                 {loadingModelName === v.name
@@ -329,15 +328,13 @@ export default function Home() {
       <div
         key={`chat-textarea`}
         className={cn(
-          "flex w-full justify-center md:p-4 md:pb-10",
+          "bottom-0 left-0 right-0 flex w-full justify-center max-md:fixed max-md:px-2 md:p-4 md:pb-8",
           isEnterIndex() &&
             "motion-preset-fade motion-duration-1000 motion-delay-[1100ms]",
         )}
       >
         <ChatTextarea
-          className={cn(
-            "fixed bottom-2 left-2 right-2 z-10 max-w-screen-md bg-white md:static md:w-full",
-          )}
+          className={cn("bottom-2 z-10 max-w-screen-md bg-white md:w-full")}
           onSubmit={(value) => {
             createNewConversation(value);
           }}

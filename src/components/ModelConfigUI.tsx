@@ -336,23 +336,15 @@ export function useModelLoader() {
     }
 
     await cacheItem?.close();
-    await commonLoadHandler(
-      // file.name,
-      // chunks,
-      // "device",
-      // receivedLength,
-      // cacheItem?.key,
-      // undefined,
-      {
-        name: file.name,
-        chunks: chunks,
-        from: "device",
-        size: receivedLength,
-        cacheItemKey: cacheItem?.key,
-        defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
-        loadFromWebParam: undefined,
-      },
-    );
+    await commonLoadHandler({
+      name: file.name,
+      chunks: chunks,
+      from: "device",
+      size: receivedLength,
+      cacheItemKey: cacheItem?.key,
+      defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
+      loadFromWebParam: undefined,
+    });
     setLoadingModelName(null);
   };
 
@@ -413,23 +405,15 @@ export function useModelLoader() {
         });
       }
       await cacheItem?.close();
-      await commonLoadHandler(
-        // modelName,
-        // chunks,
-        // customUrl ? "URL" : "web",
-        // receivedLength,
-        // cacheItem?.key,
-        // model,
-        {
-          name: modelName,
-          chunks: chunks,
-          from: customUrl ? "URL" : "web",
-          size: receivedLength,
-          cacheItemKey: cacheItem?.key,
-          defaultSessionConfiguration: model.defaultSessionConfiguration,
-          loadFromWebParam: model,
-        },
-      );
+      await commonLoadHandler({
+        name: modelName,
+        chunks: chunks,
+        from: customUrl ? "URL" : "web",
+        size: receivedLength,
+        cacheItemKey: cacheItem?.key,
+        defaultSessionConfiguration: model.defaultSessionConfiguration,
+        loadFromWebParam: model,
+      });
     } catch (error) {
       toast.update(modelLoadTaster.current, {
         type: "error",
@@ -469,23 +453,15 @@ export function useModelLoader() {
         });
       }
 
-      await commonLoadHandler(
-        // modelName,
-        // chunks,
-        // "device",
-        // receivedLength,
-        // modelName,
-        // undefined,
-        {
-          name: modelName,
-          chunks: chunks,
-          from: "device",
-          size: receivedLength,
-          cacheItemKey: modelName,
-          defaultSessionConfiguration: defaultSessionConfiguration,
-          loadFromWebParam: loadFromWebParam || undefined,
-        },
-      );
+      await commonLoadHandler({
+        name: modelName,
+        chunks: chunks,
+        from: "device",
+        size: receivedLength,
+        cacheItemKey: modelName,
+        defaultSessionConfiguration: defaultSessionConfiguration,
+        loadFromWebParam: loadFromWebParam || undefined,
+      });
     } catch (error) {
       toast.update(modelLoadTaster.current, {
         type: "error",

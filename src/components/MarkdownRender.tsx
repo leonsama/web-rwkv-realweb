@@ -185,7 +185,7 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
       <code
         key={this.elementId}
         className={cn(
-          "mx-0.5 text-wrap break-words rounded-md bg-stone-200 box-decoration-clone p-0.5 font-[Fira_Code] text-stone-800/90",
+          "mx-0.5 text-wrap break-words rounded-md bg-stone-200 box-decoration-clone px-0.5 text-stone-800/90",
           className,
         )}
       >
@@ -196,15 +196,17 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
   code(snippet: string, lang: string) {
     return (
       <div
-        className="flex w-full flex-1 overflow-auto rounded-2xl font-[Fira_Code]"
+        className="group/code z-20 flex w-full flex-1 flex-col rounded-2xl bg-neutral-100 will-change-scroll"
         key={this.elementId}
       >
-        <Lowlight
-          language={Lowlight.hasLanguage(lang) ? lang : "plaintext"}
-          value={snippet}
-          markers={[]}
-          className="w-0 flex-1"
-        />
+        <div className="flex w-full overflow-auto">
+          <Lowlight
+            language={Lowlight.hasLanguage(lang) ? lang : "plaintext"}
+            value={snippet}
+            markers={[]}
+            className="w-0 flex-1"
+          />
+        </div>
       </div>
     );
   },

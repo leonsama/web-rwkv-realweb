@@ -177,7 +177,9 @@ export function useChatSession(id: string) {
   >([]);
   const [sessionConfiguration, setSessionConfiguration] =
     useState<SessionConfiguration>(DEFAULT_SESSION_CONFIGURATION);
-  const [currentChatSessionId, setCurrentChatSessionId] = useState<string>(id);
+  const [currentChatSessionId, setCurrentChatSessionId] = useState<
+    string | null
+  >(null);
 
   const activeSession = useRef<CurrentChatSession>(
     sessions[id] as CurrentChatSession,

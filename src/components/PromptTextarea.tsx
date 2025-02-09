@@ -52,7 +52,6 @@ export const PromptTextarea = ({
   isFocus = false,
   setIsFocus = (status: boolean) => {},
   isKeepFocus,
-  blurDelay = 300,
   className,
 }: {
   value: string;
@@ -66,14 +65,11 @@ export const PromptTextarea = ({
   isFocus?: boolean;
   setIsFocus?: (status: boolean) => void;
   isKeepFocus?: React.MutableRefObject<boolean>;
-  blurDelay?: number;
   className?: string;
 }) => {
   const [content, setContent] = useState(value);
   const [config, setConfig] = useState(globalConfig);
   const textareaEle = useRef<HTMLTextAreaElement>(null);
-
-  const blurTimmer = useRef<number>(-1);
 
   const render = (value: string) => {
     [
@@ -152,8 +148,6 @@ export const PromptTextarea = ({
   }, [isFocus]);
 
   const onFocus = () => {
-    clearTimeout(blurTimmer.current);
-    blurTimmer.current = -1;
     setIsFocus(true);
   };
 
@@ -161,11 +155,7 @@ export const PromptTextarea = ({
     if (isKeepFocus?.current) {
       textareaEle.current?.focus();
     } else {
-      clearTimeout(blurTimmer.current);
-      blurTimmer.current = setTimeout(() => {
-        setIsFocus(false);
-        blurTimmer.current = -1;
-      }, blurDelay);
+      setIsFocus(false);
     }
   };
 

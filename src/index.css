@@ -7,6 +7,9 @@
   ol {
     list-style: revert;
   }
+  code {
+    font-family: "Fira Code";
+  }
 }
 
 html,
@@ -147,3 +150,11 @@ body,
   overflow: hidden;
   white-space: nowrap;
 }
+
+code.hljs {
+  background-color: transparent;
+}
+/* pre code.hljs {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+} */
