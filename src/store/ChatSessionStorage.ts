@@ -177,6 +177,7 @@ export function useChatSession(id: string) {
   >([]);
   const [sessionConfiguration, setSessionConfiguration] =
     useState<SessionConfiguration>(DEFAULT_SESSION_CONFIGURATION);
+  const [currentChatSessionId, setCurrentChatSessionId] = useState<string>(id);
 
   const activeSession = useRef<CurrentChatSession>(
     sessions[id] as CurrentChatSession,
@@ -391,11 +392,13 @@ export function useChatSession(id: string) {
     activeSession.current = sessions[id] as CurrentChatSession;
     setSessionConfiguration(activeSession.current.sessionConfiguration);
     updateActiveMessageList();
+    setCurrentChatSessionId(id);
   }, [id]);
 
   return {
     activeMessageBlocks,
     sessionConfiguration,
+    currentChatSessionId,
 
     getActiveMessages,
     createNewMessasgeBlock,

@@ -93,18 +93,6 @@ function FadeText({
 }
 
 export const RWKVMarkedRenderer: CustomReactRenderer = {
-  code(snippet: string, lang: string) {
-    return (
-      <div className="flex w-full flex-1 overflow-auto" key={this.elementId}>
-        <Lowlight
-          language={Lowlight.hasLanguage(lang) ? lang : "plaintext"}
-          value={snippet}
-          markers={[]}
-          className="w-0 flex-1"
-        />
-      </div>
-    );
-  },
   heading(children: ReactNode, level: HeadingLevels) {
     switch (level) {
       case 1:
@@ -197,12 +185,27 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
       <code
         key={this.elementId}
         className={cn(
-          "mx-0.5 text-wrap break-words rounded-md bg-stone-200 box-decoration-clone p-0.5",
+          "mx-0.5 text-wrap break-words rounded-md bg-stone-200 box-decoration-clone p-0.5 font-[Fira_Code] text-stone-800/90",
           className,
         )}
       >
         {code}
       </code>
+    );
+  },
+  code(snippet: string, lang: string) {
+    return (
+      <div
+        className="flex w-full flex-1 overflow-auto rounded-2xl font-[Fira_Code]"
+        key={this.elementId}
+      >
+        <Lowlight
+          language={Lowlight.hasLanguage(lang) ? lang : "plaintext"}
+          value={snippet}
+          markers={[]}
+          className="w-0 flex-1"
+        />
+      </div>
     );
   },
 };

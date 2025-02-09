@@ -28,7 +28,6 @@ import {
 import { Card, CardTitle, Entry } from "../components/Cards";
 import { Button } from "../components/Button";
 import { PromptTextarea } from "../components/PromptTextarea";
-import { RadioGroup, RadioGroupOption } from "../components/RadioGroup";
 import { InputList, InputRange, InputText } from "../components/Input";
 
 // let colorbg = new BlurGradientBg({
@@ -270,7 +269,7 @@ function AssistantContent({
   };
 
   return (
-    <div className="flex flex-col gap-4 motion-opacity-in-[0%] motion-duration-[0.4s] md:flex-row">
+    <div className="flex flex-col gap-4 pb-6 motion-opacity-in-[0%] motion-duration-[0.4s] md:flex-row">
       <div className="mt-3">
         <div className="sticky top-0 flex items-center gap-5 md:flex-col">
           {/* avatar */}
@@ -588,7 +587,7 @@ function ChatSessionConfigurationCard({
   return (
     <Card
       className={cn(
-        "h-full w-full overflow-auto transition-all md:h-3/4 md:w-2/3 min-[1345px]:h-full min-[1345px]:w-full",
+        "h-full w-full overflow-auto transition-all md:h-3/4 md:w-2/3 min-[1250px]:h-full min-[1250px]:w-full",
         isOpen ? "" : "scale-95 opacity-0",
       )}
     >
@@ -636,76 +635,82 @@ function ChatSessionConfigurationCard({
         </Button>
       </div>
 
-      <Entry label="Temperature">
-        {sessionConfiguration.defaultSamplerConfig.temperature}
-      </Entry>
-      <InputRange
-        min={0}
-        max={5}
-        step={0.1}
-        value={sessionConfiguration.defaultSamplerConfig.temperature}
-        onChange={(v) => {
-          sessionConfiguration.defaultSamplerConfig.temperature = v;
-          updateSessionConfiguration(sessionConfiguration);
-        }}
-      ></InputRange>
+      <div className="flex flex-col">
+        <Entry label="Temperature" className="min-h-0 flex-row">
+          {sessionConfiguration.defaultSamplerConfig.temperature}
+        </Entry>
+        <InputRange
+          min={0}
+          max={5}
+          step={0.1}
+          value={sessionConfiguration.defaultSamplerConfig.temperature}
+          onChange={(v) => {
+            sessionConfiguration.defaultSamplerConfig.temperature = v;
+            updateSessionConfiguration(sessionConfiguration);
+          }}
+          className="mb-10 text-xs text-gray-500"
+        ></InputRange>
 
-      <Entry label="Top P">
-        {sessionConfiguration.defaultSamplerConfig.top_p}
-      </Entry>
-      <InputRange
-        min={0}
-        max={1}
-        step={0.01}
-        value={sessionConfiguration.defaultSamplerConfig.top_p}
-        onChange={(v) => {
-          sessionConfiguration.defaultSamplerConfig.top_p = v;
-          updateSessionConfiguration(sessionConfiguration);
-        }}
-      ></InputRange>
+        <Entry label="Top P" className="min-h-0 flex-row">
+          {sessionConfiguration.defaultSamplerConfig.top_p}
+        </Entry>
+        <InputRange
+          min={0}
+          max={1}
+          step={0.01}
+          value={sessionConfiguration.defaultSamplerConfig.top_p}
+          onChange={(v) => {
+            sessionConfiguration.defaultSamplerConfig.top_p = v;
+            updateSessionConfiguration(sessionConfiguration);
+          }}
+          className="mb-10 text-xs text-gray-500"
+        ></InputRange>
 
-      <Entry label="Presence Penalty">
-        {sessionConfiguration.defaultSamplerConfig.presence_penalty}
-      </Entry>
-      <InputRange
-        min={0}
-        max={5}
-        step={0.1}
-        value={sessionConfiguration.defaultSamplerConfig.presence_penalty}
-        onChange={(v) => {
-          sessionConfiguration.defaultSamplerConfig.presence_penalty = v;
-          updateSessionConfiguration(sessionConfiguration);
-        }}
-      ></InputRange>
+        <Entry label="Presence Penalty" className="min-h-0 flex-row">
+          {sessionConfiguration.defaultSamplerConfig.presence_penalty}
+        </Entry>
+        <InputRange
+          min={0}
+          max={5}
+          step={0.1}
+          value={sessionConfiguration.defaultSamplerConfig.presence_penalty}
+          onChange={(v) => {
+            sessionConfiguration.defaultSamplerConfig.presence_penalty = v;
+            updateSessionConfiguration(sessionConfiguration);
+          }}
+          className="mb-10 text-xs text-gray-500"
+        ></InputRange>
 
-      <Entry label="Count Penalty">
-        {sessionConfiguration.defaultSamplerConfig.count_penalty}
-      </Entry>
-      <InputRange
-        min={0}
-        max={5}
-        step={0.1}
-        value={sessionConfiguration.defaultSamplerConfig.count_penalty}
-        onChange={(v) => {
-          sessionConfiguration.defaultSamplerConfig.count_penalty = v;
-          updateSessionConfiguration(sessionConfiguration);
-        }}
-      ></InputRange>
+        <Entry label="Count Penalty" className="min-h-0 flex-row">
+          {sessionConfiguration.defaultSamplerConfig.count_penalty}
+        </Entry>
+        <InputRange
+          min={0}
+          max={5}
+          step={0.1}
+          value={sessionConfiguration.defaultSamplerConfig.count_penalty}
+          onChange={(v) => {
+            sessionConfiguration.defaultSamplerConfig.count_penalty = v;
+            updateSessionConfiguration(sessionConfiguration);
+          }}
+          className="mb-10 text-xs text-gray-500"
+        ></InputRange>
 
-      <Entry label="Half Life">
-        {sessionConfiguration.defaultSamplerConfig.half_life}
-      </Entry>
-      <InputRange
-        min={1}
-        max={2048}
-        step={1}
-        value={sessionConfiguration.defaultSamplerConfig.half_life}
-        onChange={(v) => {
-          sessionConfiguration.defaultSamplerConfig.half_life = v;
-          updateSessionConfiguration(sessionConfiguration);
-        }}
-      ></InputRange>
-
+        <Entry label="Half Life" className="min-h-0 flex-row">
+          {sessionConfiguration.defaultSamplerConfig.half_life}
+        </Entry>
+        <InputRange
+          min={1}
+          max={2048}
+          step={1}
+          value={sessionConfiguration.defaultSamplerConfig.half_life}
+          onChange={(v) => {
+            sessionConfiguration.defaultSamplerConfig.half_life = v;
+            updateSessionConfiguration(sessionConfiguration);
+          }}
+          className="mb-10 text-xs text-gray-500"
+        ></InputRange>
+      </div>
       <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
         <span>Completion Options</span>
         <Button
@@ -767,7 +772,7 @@ function ChatSessionConfigurationCard({
         </div>
       </Entry>
 
-      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 text-sm">
         <span>Stop Words & Stop Tokens</span>
         <Button
           className="ml-auto h-10 rounded-xl text-sm text-gray-500"
@@ -790,12 +795,10 @@ function ChatSessionConfigurationCard({
       >
         <InputList
           value={sessionConfiguration.stopWords.map((v) => {
-            console.log(v, v.replaceAll("\n", "\\n"));
             return v.replaceAll("\n", "\\n");
           })}
           onChange={(v) => {
             sessionConfiguration.stopWords = v.map((v) => {
-              console.log(v.replaceAll("\\n", "\n"));
               return v.replaceAll("\\n", "\n");
             });
             updateSessionConfiguration(sessionConfiguration);
@@ -837,7 +840,7 @@ function ChatSessionConfigurationBar({
   const [showConfigurationCard, setShowConfigurationCard] =
     useState<boolean>(false);
   const [isDivExpanded, setIsDivExpanded] = useState<boolean>(false);
-  const isMobile = useMaxWidthBreakpoint({ breakpoint: 1345 });
+  const isMobile = useMaxWidthBreakpoint({ breakpoint: 1250 });
 
   const {
     alwaysOpenSessionConfigurationPannel,
@@ -895,15 +898,17 @@ function ChatSessionConfigurationBar({
           const { isAlwaysShow } = await createModalForm(
             <Card className="max-w-sm bg-white">
               <CardTitle className="bg-white">
-                <span className="text-lg font-bold">Always Display Pannel</span>
+                <span className="text-lg font-bold">
+                  Always Display Pannel?
+                </span>
               </CardTitle>
-              <div className="flex flex-col gap-0.5 text-wrap text-sm text-gray-600">
+              <div className="flex flex-col gap-1 text-wrap text-sm text-gray-600">
                 <p>
                   Always display the session configuration pannel when entering
                   a chat session?
                 </p>
                 <p>You can adjust this preference in the settings.</p>
-                <p className="mt-2 text-gray-400">Default: No</p>
+                <p className="mt-4 text-gray-400">Default: No</p>
               </div>
               <div className="-mb-1 flex justify-end gap-2">
                 <Button
@@ -974,7 +979,7 @@ function ChatSessionConfigurationBar({
     <div
       className={cn(
         "flex h-full flex-shrink-0 items-center justify-center overflow-hidden transition-all duration-300",
-        isDivExpanded ? "w-[26rem] pb-10 pl-4 pr-4" : "w-0",
+        isDivExpanded ? "w-[22rem] pb-10 pl-4 pr-4" : "w-0",
       )}
     >
       <ChatSessionConfigurationCard
@@ -993,6 +998,8 @@ export default function Chat() {
   const location = useLocation();
 
   const { chatSessionId } = useParams();
+  const prevChatSessionId = useRef<string>(chatSessionId!);
+
   const {
     activeMessageBlocks,
     createNewMessasgeBlock,
@@ -1001,22 +1008,25 @@ export default function Chat() {
     getActiveMessages,
     sessionConfiguration,
     updateSessionConfiguration,
+    currentChatSessionId,
   } = useChatSession(chatSessionId!);
 
   const webRWKVLLMInfer = useChatModelSession((s) => s.llmModel);
-
   const { currentModelName, completion, defaultSessionConfiguration } =
     useWebRWKVChat(webRWKVLLMInfer);
-
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   const [showSessionConfigurationBar, setShowSessionConfigurationBar] =
     useState(false);
 
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const generator = useRef<AsyncGenerator<string, void, unknown> | null>(null);
 
-  const isSubmited = useRef(false);
+  const containerEle = useRef<HTMLDivElement>(null);
+  const messagesEle = useRef<HTMLDivElement>(null);
+  const messageLineHeight = useRef<number>(0);
+  const resizeObserver = useRef<ResizeObserver>(null!);
 
+  const isSubmited = useRef(false);
   useEffect(() => {
     if (!isSubmited.current) {
       if (location.state?.prompt!) {
@@ -1081,6 +1091,63 @@ export default function Chat() {
     setIsGenerating(false);
   };
 
+  const scrollToTimmer = useRef(-1);
+  useEffect(() => {
+    console.log(currentChatSessionId);
+    resizeObserver.current = new ResizeObserver((entries) => {
+      if (
+        containerEle.current?.scrollTop &&
+        containerEle.current.scrollHeight <
+          containerEle.current.scrollTop +
+            containerEle.current.clientHeight +
+            messageLineHeight.current * 3
+      ) {
+        // setTimeout(() => {
+        containerEle.current?.scrollTo({
+          top: containerEle.current.scrollHeight,
+          behavior: "smooth",
+        });
+        // }, 50);
+      }
+    });
+    if (messagesEle.current) {
+      resizeObserver.current.observe(messagesEle.current);
+
+      messageLineHeight.current = parseInt(
+        window.getComputedStyle(messagesEle.current).lineHeight,
+      );
+      clearTimeout(scrollToTimmer.current);
+      console.log(
+        "scroll",
+        containerEle.current?.scrollTop,
+        containerEle.current?.scrollHeight,
+      );
+      scrollToTimmer.current = setTimeout(() => {
+        containerEle.current?.scrollTo({
+          top: containerEle.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 100);
+    }
+
+    return () => {
+      console.log("out");
+      resizeObserver.current.disconnect();
+    };
+  }, [currentChatSessionId]);
+
+  useEffect(() => {
+    clearTimeout(scrollToTimmer.current);
+    if (isGenerating) {
+      scrollToTimmer.current = setTimeout(() => {
+        containerEle.current?.scrollTo({
+          top: containerEle.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 100);
+    }
+  }, [isGenerating]);
+
   return (
     <div className="flex h-full w-full">
       <div
@@ -1111,14 +1178,17 @@ export default function Chat() {
             <div
               className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-4 pb-24 md:pb-0"
               style={{ scrollbarGutter: "stable both-edges" }}
+              ref={containerEle}
             >
               <div
                 className="flex w-full max-w-screen-md flex-col gap-4 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s]"
                 key={chatSessionId}
+                ref={messagesEle}
               >
                 <ChatSession.Provider
                   value={{
                     activeMessageBlocks,
+                    currentChatSessionId,
                     createNewMessasgeBlock,
                     updateCurrentMessageBlock,
                     updateChatSessionTitle,
@@ -1128,7 +1198,6 @@ export default function Chat() {
                     updateSessionConfiguration,
 
                     generator,
-
                     startGenerationTask,
                     isGenerating,
                     setIsGenerating,

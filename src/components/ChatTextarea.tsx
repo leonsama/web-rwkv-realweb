@@ -116,7 +116,7 @@ export function ChatTextarea({
   return (
     <div
       className={cn(
-        "flex flex-col overflow-hidden rounded-[1.75rem] outline outline-1 outline-slate-400 transition-[height] ease-out",
+        "relative flex flex-col overflow-hidden rounded-[1.75rem] outline outline-1 outline-slate-400 transition-[height] ease-out",
         className,
       )}
     >

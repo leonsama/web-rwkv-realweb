@@ -74,7 +74,7 @@ export default function Settings() {
         className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-2 pb-24 md:px-4 md:pb-0"
         style={{ scrollbarGutter: "stable both-edges" }}
       >
-        <div className="flex w-full max-w-screen-md flex-col gap-4 px-2 motion-translate-y-in-[20%] motion-opacity-in-[0%] motion-duration-[0.4s] md:gap-8">
+        <div className="flex w-full max-w-screen-md flex-col gap-4 px-2 pb-20 motion-translate-y-in-[20%] motion-opacity-in-[0%] motion-duration-[0.4s] md:gap-8">
           <h1 className="py-2 pb-8 pl-4 text-5xl">Settings</h1>
           <Card
             title="Language Model"

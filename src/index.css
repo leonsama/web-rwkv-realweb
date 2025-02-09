@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @layer base {
+@layer base {
   ul,
   ol {
     list-style: revert;
   }
-} */
+}
 
 html,
 body,
