@@ -50,11 +50,10 @@ const ChatSession = createContext<
     currentModelName: string | null;
     loadingModelName: string | null;
 
-    generator: React.MutableRefObject<AsyncGenerator<
-      string,
-      void,
-      unknown
-    > | null>;
+    generator: React.MutableRefObject<{
+      controller: { abort(): void };
+      [Symbol.asyncIterator]: () => AsyncGenerator<string, void, unknown>;
+    }>;
     completion: ReturnType<typeof useWebRWKVChat>["completion"];
 
     checkIsModelLoaded: (
@@ -257,7 +256,7 @@ function AssistantContent({
 
     await checkIsModelLoaded((modelName) => modelName !== null);
 
-    generator.current = completion({
+    generator.current = await completion({
       stream: true,
       messages: getActiveMessages({
         isGenerating: true,
@@ -373,7 +372,7 @@ function AssistantContent({
             currentMessageBlock.activeMessageContentIndex
           ].isGenerating &&
             currentModelName === null && (
-              <div className="text-sm text-gray-400 my-5">
+              <div className="my-5 text-sm text-gray-400">
                 {loadingModelName === null
                   ? "Load a model to interact"
                   : "Loading model... Sit back and relax!"}
@@ -1018,6 +1017,8 @@ function ChatSessionConfigurationBar({
   );
 }
 
+type UnwrapPromise<T> = T extends Promise<infer U> ? UnwrapPromise<U> : T;
+
 export default function Chat() {
   const sessionStorage = usePageStorage((s) => s);
   const navigate = useNavigate();
@@ -1047,7 +1048,10 @@ export default function Chat() {
     useState(false);
 
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const generator = useRef<AsyncGenerator<string, void, unknown> | null>(null);
+  const generator = useRef<{
+    controller: { abort(): void };
+    [Symbol.asyncIterator]: () => AsyncGenerator<string, void, unknown>;
+  }>(null!);
 
   const loadModelModal = useRef<ModalInterface>(null!);
   const checkIsModelLoaded = useSuspendUntilValid(currentModelName, () => {
@@ -1100,7 +1104,7 @@ export default function Chat() {
 
     setIsGenerating(true);
 
-    generator.current = completion({
+    generator.current = await completion({
       stream: true,
       messages: getActiveMessages({
         isGenerating: true,
@@ -1207,7 +1211,7 @@ export default function Chat() {
               ref={containerEle}
             >
               <div
-                className="flex w-full max-w-screen-md flex-col gap-6 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s]"
+                className="flex w-full max-w-screen-md flex-col gap-6 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s] md:pb-5"
                 key={chatSessionId}
                 ref={messagesEle}
               >
@@ -1252,8 +1256,34 @@ export default function Chat() {
             </div>
             <div
               key={`chat-textarea`}
-              className="flex w-full justify-center px-2 pt-1 md:px-4 md:pb-6"
+              className="relative flex w-full justify-center px-2 pt-1 md:px-4 md:pb-6"
             >
+              <button
+                className={cn(
+                  "absolute left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border bg-white py-1.5 pl-2 pr-4 transition-all",
+                  isGenerating ? "-top-16 shadow-lg" : "-top-0 scale-95",
+                )}
+                onClick={() => {
+                  if (isGenerating) {
+                    console.log(generator.current);
+                    generator.current.controller.abort();
+                  }
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm6-2.438c0-.724.588-1.312 1.313-1.312h4.874c.725 0 1.313.588 1.313 1.313v4.874c0 .725-.588 1.313-1.313 1.313H9.564a1.312 1.312 0 0 1-1.313-1.313V9.564Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>Stop</span>
+              </button>
               <Modal ref={loadModelModal}>
                 {({ close }) => {
                   return <ModelLoaderCard close={close}></ModelLoaderCard>;

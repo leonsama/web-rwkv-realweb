@@ -341,7 +341,7 @@ export function ChatTextarea({
                 <span className="font-semibold underline transition-all group-active:scale-95">
                   Loading... Sit back and relax!
                 </span>
-                <span className="ml-2 text-sm text-slate-300 transition-all group-active:scale-95">
+                <span className="ml-2 text-xs text-slate-300 transition-all group-active:scale-95">
                   {loadingModelName}
                 </span>
               </>

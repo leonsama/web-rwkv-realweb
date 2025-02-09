@@ -80,19 +80,21 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
   };
 
   const warnup = async () => {
-    const stream = completion({
+    const stream = await completion({
       stream: true,
       messages: [{ role: "User", content: "Who are you?" }],
       max_tokens: 25,
     });
     let result = "";
+    console.log(stream);
+
     for await (const chunk of stream) {
       result += chunk;
     }
     console.log("warnup:", result);
   };
 
-  const completion = async function* (
+  const completion = async function (
     {
       max_tokens,
       prompt,
@@ -121,7 +123,12 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
       stop_words?: string[];
     },
     controller: AbortController = new AbortController(),
-  ) {
+  ): Promise<{
+    [Symbol.asyncIterator]: () => AsyncGenerator<string, void, unknown>;
+    controller: {
+      abort(): void;
+    };
+  }> {
     if (!messages && !prompt) {
       throw new Error("messages or prompt is required");
     }
@@ -135,30 +142,36 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
         ? prompt
         : `${formatPromptObject(messages!)}\n\n${new_message_role}:`;
 
-    const generator = await (async function* () {
-      yield* webRWKVInferPort.completion(
-        {
-          max_tokens,
-          prompt: formattedPrompt,
-          temperature,
-          top_p,
-          presence_penalty,
-          count_penalty,
-          penalty_half_life,
-          stream,
-          stop_tokens,
-          stop_words,
-        },
-        controller.signal,
-      );
-    })();
+    const generator = {
+      [Symbol.asyncIterator]: async function* () {
+        const innerCompletion = webRWKVInferPort.completion(
+          {
+            max_tokens,
+            prompt: formattedPrompt,
+            temperature,
+            top_p,
+            presence_penalty,
+            count_penalty,
+            penalty_half_life,
+            stream,
+            stop_tokens,
+            stop_words,
+          },
+          controller.signal,
+        );
 
-    // 添加controller.abort方法到生成器对象
-    (generator as any).controller = {
-      abort: () => controller.abort(),
+        for await (const result of innerCompletion) {
+          yield result;
+        }
+      },
+      controller: {
+        abort() {
+          controller.abort();
+        },
+      },
     };
 
-    yield* generator;
+    return generator;
   };
 
   return {
