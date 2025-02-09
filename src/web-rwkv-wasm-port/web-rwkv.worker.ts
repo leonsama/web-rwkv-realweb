@@ -105,23 +105,16 @@ async function initTokenizer(url: string) {
 }
 
 async function initSession(blob: Blob) {
-  // await wasm_bindgen("web_rwkv_puzzles_bg.wasm");
-
-  // var req = await fetch("assets/models/RWKV-5-World-0.4B-v2-20231113-ctx4096.st");
-  // var bin = await req.arrayBuffer();
-  // console.log("model: ", bin.byteLength);
-
-  const reader = await initReader(blob);
-  // @HaloWang: 修改这里的参数
-  console.log(`📌 Loading Session`);
   let session;
   try {
-    session = await new Session(reader, 0, 0, config.session_type);
-  } catch (error) {
-    session = null;
-    console.log("Catch");
-    throw error;
+    const reader = await initReader(blob);
+    session = await new Session(reader, 0, 0, 0, config.session_type);
+  } catch (e) {
+    console.log("📌 Load as prefab");
+    const buffer = new Uint8Array(await blob.arrayBuffer());
+    session = await Session.from_prefab(buffer, config.session_type);
   }
+
   console.log("✅ Runtime loaded");
   return session;
 }
@@ -183,13 +176,6 @@ async function* pipeline(
 
 var _session: undefined | Promise<Session> = undefined;
 var _tokenizers: Map<string, Tokenizer> = new Map();
-
-async function abort(window: Window) {
-  if ((await _session) === undefined) return;
-
-  const session = await _session!;
-  session.clear_cache();
-}
 
 async function load(data: Uint8Array[]) {
   console.log("🔄 Loading model");
@@ -296,6 +282,7 @@ export class WEB_RWKV_WASM_PORT {
         );
         break;
       case SessionType.Puzzle:
+      case SessionType.Othello:
         sampler = new SimpleSampler(info);
         break;
     }

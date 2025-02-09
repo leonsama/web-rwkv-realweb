@@ -146,7 +146,7 @@ export function useModelLoader() {
       { closeOnBackgroundClick: true },
     )
       .open()
-      .catch();
+      .catch(() => {});
   };
 
   const shouldSaveModel = async () => {
@@ -277,9 +277,11 @@ export function useModelLoader() {
     });
 
     try {
-      await promiseWithTimeout(
-        loadModel(name, chunks, DEFAULT_VOVAL_URL, defaultSessionConfiguration),
-        120 * 1000,
+      await loadModel(
+        name,
+        chunks,
+        DEFAULT_VOVAL_URL,
+        defaultSessionConfiguration,
       );
     } catch (error) {
       toast.update(modelLoadTaster.current, {
@@ -288,6 +290,7 @@ export function useModelLoader() {
         autoClose: 5000,
         isLoading: false,
       });
+      console.log(error, error instanceof Error);
       if (error instanceof Error)
         if (error.name === TIMEOUT_ERROR) {
           await showError(
@@ -299,8 +302,11 @@ export function useModelLoader() {
         } else {
           await showError(error);
         }
+      else {
+        await showError(new CustomError("WASM ERROR", error));
+      }
     } finally {
-      toast.done(modelLoadTaster.current);
+      toast.dismiss(modelLoadTaster.current);
       modelLoadTaster.current = -1;
     }
   };
