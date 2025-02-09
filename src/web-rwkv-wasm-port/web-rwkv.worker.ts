@@ -17,7 +17,7 @@ import {
 } from "web-rwkv-wasm";
 
 import { TensorInfo, Options } from "./types";
-import { dangerousUUIDV4, lock } from "./utils";
+import { dangerousUUIDV4, fetchWithRetry, lock } from "./utils";
 
 const config = {
   session_type: SessionType.Chat,
@@ -91,7 +91,7 @@ async function initTokenizer(url: string) {
   // await wasm_bindgen("web_rwkv_puzzles_bg.wasm");
 
   console.log("Attempting to load tokenizer from:", url);
-  const req = await fetch(url);
+  const req = await fetchWithRetry(url, {}, 5, 100);
   if (!req.ok) {
     console.error(`Failed to load tokenizer: ${req.status} ${req.statusText}`);
     throw new Error(`Failed to load tokenizer from ${url}`);
