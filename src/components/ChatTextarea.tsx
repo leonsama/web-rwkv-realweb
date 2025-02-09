@@ -8,6 +8,7 @@ import {
 import { useChatModelSession } from "../store/ModelStorage";
 import { Modal, ModalInterface } from "./popup/Modals";
 import { ModelLoaderCard } from "./ModelConfigUI";
+import { Slide, toast } from "react-toastify";
 
 interface Suggestion {
   prompt: string;
@@ -112,6 +113,8 @@ export function ChatTextarea({
     if (cleanChatPrompt(value) === "") return;
     onSubmit(cleanChatPrompt(value));
     setValue("");
+    hidePannel(0);
+    setIsPannelExpaned(false);
     setIsFocus(false);
   };
 
@@ -163,6 +166,7 @@ export function ChatTextarea({
           return <ModelLoaderCard close={close}></ModelLoaderCard>;
         }}
       </Modal>
+      {/* suggestions */}
       <div
         className={cn(
           "invisibleScrollbar hideScrollbar flex flex-nowrap items-center gap-3 overflow-auto overflow-y-hidden text-nowrap px-5 transition-all duration-500",
@@ -190,6 +194,7 @@ export function ChatTextarea({
           );
         })}
       </div>
+      {/* current model info  */}
       <div
         className={cn(
           "flex items-center px-5 text-xs text-gray-300 transition-all duration-500",
@@ -212,6 +217,7 @@ export function ChatTextarea({
           </button>
         </span>
       </div>
+      {/* edit area */}
       <div
         className={cn(
           "flex flex-shrink-0 rounded-[1.75rem] transition-[height] ease-out",
@@ -228,6 +234,19 @@ export function ChatTextarea({
           className={cn(
             "m-2 h-10 w-10 self-end rounded-full p-2.5 text-slate-500 hover:bg-slate-100",
           )}
+          onClick={() => {
+            toast("🧷 File Upload is comming soon！", {
+              position: "top-right",
+              autoClose: 2500,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+              transition: Slide,
+            });
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -284,7 +303,7 @@ export function ChatTextarea({
       {/* load model hint */}
       <div
         className={cn(
-          "group absolute bottom-0 left-0 right-0 top-0 flex items-center backdrop-blur-sm transition-all duration-300 cursor-pointer",
+          "group absolute bottom-0 left-0 right-0 top-0 flex cursor-pointer items-center backdrop-blur-sm transition-all duration-300",
           currentModelName === null
             ? ""
             : "pointer-events-none scale-95 opacity-0",

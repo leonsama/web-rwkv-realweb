@@ -70,7 +70,7 @@ export default function Home() {
 
     setTimeout(() => {
       navigate(`/chat/${newSessionId}`, { state: { prompt } });
-    }, 400);
+    }, 420);
   };
 
   return (

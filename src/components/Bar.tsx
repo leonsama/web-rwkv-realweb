@@ -13,7 +13,6 @@ import { WebRWKVFixedBanner } from "./WebRWKVBanner";
 import { useEffect } from "react";
 import { Navigate } from "react-router";
 import { RadioGroup, RadioGroupOption } from "./RadioGroup";
-import { Tooltip } from "./popup/Popup";
 import {
   CloseAllMenu,
   createContextMenu,
@@ -28,6 +27,7 @@ import {
 import URANUS_SVG from "../../assets/icons/SVG/uranus.svg";
 import { Flipped, Flipper, spring } from "react-flip-toolkit";
 import { useShallow } from "zustand/react/shallow";
+import { Slide, toast } from "react-toastify";
 
 function usePageNavigate() {
   const sessionStorage = usePageStorage((s) => s);
@@ -51,22 +51,6 @@ function usePageNavigate() {
   };
   return navigate;
 }
-
-const onListExit = () => (el, index, removeElement) => {
-  spring({
-    config: { overshootClamping: true },
-    onUpdate: (val) => {
-      el.style.transform = `scaleY}(${1 - val})`;
-    },
-    delay: index * 50,
-    onComplete: removeElement,
-  });
-
-  return () => {
-    el.style.opacity = "";
-    removeElement();
-  };
-};
 
 function BarButtom({
   icon,
@@ -228,7 +212,22 @@ function BarFunctionMenu() {
           />
         </svg>
       </button>
-      <button className="flex h-12 w-12 items-center justify-center rounded-full text-slate-500 transition-all duration-200 active:scale-90 md:hover:bg-slate-200">
+      <button
+        className="flex h-12 w-12 items-center justify-center rounded-full text-slate-500 transition-all duration-200 active:scale-90 md:hover:bg-slate-200"
+        onClick={() => {
+          toast("⌨️ Writer is comming soon！", {
+            position: "top-right",
+            autoClose: 2500,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Slide,
+          });
+        }}
+      >
         <svg
           viewBox="0 0 1024 1024"
           version="1.1"
@@ -244,7 +243,22 @@ function BarFunctionMenu() {
           ></path>
         </svg>
       </button>
-      <button className="flex h-12 w-12 items-center justify-center rounded-full text-slate-500 transition-all duration-200 active:scale-90 md:hover:bg-slate-200">
+      <button
+        className="flex h-12 w-12 items-center justify-center rounded-full text-slate-500 transition-all duration-200 active:scale-90 md:hover:bg-slate-200"
+        onClick={() => {
+          toast("❤️ Translation is comming soon！", {
+            position: "top-right",
+            autoClose: 2500,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Slide,
+          });
+        }}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -346,88 +360,85 @@ function BarChatRouter() {
                 </button>
               </div>
 
-              <Flipper
+              <div
                 className={cn(
                   "mt-4 flex flex-1 flex-col overflow-auto transition-opacity",
                   sessionStorage.isBarOpen
                     ? "opacity-100"
                     : "pointer-events-none opacity-0",
                 )}
-                // style={{ scrollbarGutter: "stable" }}
-                flipKey={chatSessionInformations.length}
+                style={{ scrollbarGutter: "stable" }}
               >
                 {[...chatSessionInformations].reverse().map((v, k) => {
                   return (
-                    <Flipped key={v.id} onExit={onListExit}>
-                      <sessionMenu.ContextMenuTrigger
-                        data={v.id}
-                        key={v.id}
-                        click={true}
+                    <sessionMenu.ContextMenuTrigger
+                      data={v.id}
+                      key={v.id}
+                      click={true}
+                    >
+                      <div
+                        onClick={() =>
+                          pageNavigate(`/chat/${v.id}`, {
+                            state: { prompt: null },
+                          })
+                        }
+                        className={
+                          "group/item ml-3 flex cursor-pointer items-center gap-1 rounded-lg p-1 pl-2 pr-2 text-left hover:bg-slate-100"
+                        }
                       >
-                        <div
-                          onClick={() =>
-                            pageNavigate(`/chat/${v.id}`, {
-                              state: { prompt: null },
-                            })
-                          }
-                          className={
-                            "group/item flex cursor-pointer items-center gap-1 rounded-lg p-1 pl-4 pr-2 text-left hover:bg-slate-100"
-                          }
-                        >
-                          {/* <Tooltip
+                        {/* <Tooltip
                           tooltip={<span className="text-sm">{v.title}</span>}
                           position={"right center"}
                           hoverHideDelay={0}
                           padding={{ left: 30, right: 0, top: 0, bottom: 0 }}
                         > */}
-                          <span
-                            className={"text-fadeout flex-1 text-nowrap py-1"}
+                        <span
+                          className={"text-fadeout flex-1 text-nowrap py-1"}
+                        >
+                          {v.title}
+                        </span>
+                        {/* </Tooltip> */}
+                        <span
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            CloseAllMenu();
+                          }}
+                        >
+                          <sessionMenu.ContextMenuTrigger
+                            click={true}
+                            position="bottom right"
+                            stopPropagation={true}
+                            data={v.id}
                           >
-                            {v.title}
-                          </span>
-                          {/* </Tooltip> */}
-                          <span
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              CloseAllMenu();
-                            }}
-                          >
-                            <sessionMenu.ContextMenuTrigger
-                              click={true}
-                              position="bottom right"
-                              stopPropagation={true}
-                              data={v.id}
+                            <div
+                              className={
+                                "trnasition-[background-color] flex gap-1 group-hover/item:motion-preset-fade group-hover/item:flex group-hover/item:motion-duration-200 md:hidden md:rounded-lg md:hover:bg-white/80"
+                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                CloseAllMenu();
+                              }}
                             >
-                              <div
-                                className={
-                                  "trnasition-[background-color] flex gap-1 group-hover/item:motion-preset-fade group-hover/item:flex group-hover/item:motion-duration-200 md:hidden md:rounded-lg md:hover:bg-white/80"
-                                }
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  e.preventDefault();
-                                  CloseAllMenu();
-                                }}
-                              >
-                                <div className="h-7 w-7 rounded-full p-1">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    className="size-5"
-                                  >
-                                    <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
-                                  </svg>
-                                </div>
+                              <div className="h-7 w-7 rounded-full p-1">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                  className="size-5"
+                                >
+                                  <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+                                </svg>
                               </div>
-                            </sessionMenu.ContextMenuTrigger>
-                          </span>
-                        </div>
-                      </sessionMenu.ContextMenuTrigger>
-                    </Flipped>
+                            </div>
+                          </sessionMenu.ContextMenuTrigger>
+                        </span>
+                      </div>
+                    </sessionMenu.ContextMenuTrigger>
                   );
                 })}
-              </Flipper>
+              </div>
               <div className="flex flex-col px-2 md:px-4">
                 <BarButtom
                   className={cn("mt-auto")}
