@@ -124,14 +124,16 @@ export function useModelLoader() {
     await createModalForm(
       <Card className="bg-white">
         <CardTitle className="bg-white">
-          <span className="text-lg font-bold">Error</span>
+          <span className="text-lg font-bold text-red-500">Error</span>
         </CardTitle>
         <Entry label="Name">{error.name}</Entry>
         <Entry label="Message">{error.message}</Entry>
-        <details>
-          <summary>Stack</summary>
-          <pre>{error.stack}</pre>
-        </details>
+        {error.stack && (
+          <details>
+            <summary>Stack</summary>
+            <pre>{error.stack}</pre>
+          </details>
+        )}
         <div className="-mb-1 flex justify-end gap-2">
           <Button
             type="submit"
@@ -328,7 +330,20 @@ export function useModelLoader() {
 
       receivedLength += value.length;
       chunks.push(value);
-      await cacheItem?.pushChunk(value);
+      if (cacheItem?.isOpen()) {
+        try {
+          await cacheItem?.pushChunk(value);
+        } catch (error) {
+          cacheItem.cancel();
+          console.error(error);
+          showError(
+            new CustomError(
+              "Cache Failure",
+              "Model cache failed, loading model directly.",
+            ),
+          );
+        }
+      }
 
       toast.update(modelLoadTaster.current, {
         progress: (receivedLength / file.size) * 0.9,
@@ -341,7 +356,7 @@ export function useModelLoader() {
       chunks: chunks,
       from: "device",
       size: receivedLength,
-      cacheItemKey: cacheItem?.key,
+      cacheItemKey: cacheItem?.isOpen() ? cacheItem?.key : undefined,
       defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
       loadFromWebParam: undefined,
     });
@@ -388,7 +403,21 @@ export function useModelLoader() {
 
         receivedLength += value.length;
         chunks.push(value);
-        await cacheItem?.pushChunk(value);
+
+        if (cacheItem?.isOpen()) {
+          try {
+            await cacheItem?.pushChunk(value);
+          } catch (error) {
+            cacheItem.cancel();
+            console.error(error);
+            showError(
+              new CustomError(
+                "Cache Failure",
+                "Model cache failed, loading model directly.",
+              ),
+            );
+          }
+        }
 
         toast.update(modelLoadTaster.current, {
           progress: contentLength
@@ -410,7 +439,7 @@ export function useModelLoader() {
         chunks: chunks,
         from: customUrl ? "URL" : "web",
         size: receivedLength,
-        cacheItemKey: cacheItem?.key,
+        cacheItemKey: cacheItem?.isOpen() ? cacheItem?.key : undefined,
         defaultSessionConfiguration: model.defaultSessionConfiguration,
         loadFromWebParam: model,
       });
@@ -493,6 +522,7 @@ export function ModelLoaderCard({
   const { currentModelName } = useWebRWKVChat(llmModel);
 
   const [activeTab, setActiveTab] = useState(enterTabValue || "recent");
+  const [isDragOver, setIsDragOver] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -674,6 +704,18 @@ export function ModelLoaderCard({
     e.target.value = "";
     close?.();
     await fromDevice(file);
+  };
+
+  const handelFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    if (e.dataTransfer.files.length !== 1) {
+      toast.error("Single file only");
+      return;
+    } else if (!e.dataTransfer.files[0].name.endsWith(".st")) {
+      toast.error(".st file only");
+      return;
+    }
+    close?.();
+    fromDevice(e.dataTransfer.files[0]);
   };
 
   const RecordManagement = createContextMenu(
@@ -951,9 +993,33 @@ export function ModelLoaderCard({
 
             <TabsContent value="device">
               <div
-                className="flex h-80 cursor-pointer flex-col items-center justify-center rounded-lg bg-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-white/50"
+                className={cn(
+                  "flex h-80 cursor-pointer flex-col items-center justify-center rounded-lg bg-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-white/50",
+                  isDragOver &&
+                    "scale-[1.03] border border-green-500 bg-green-200",
+                )}
                 onClick={() => {
                   inputRef.current?.click();
+                }}
+                onDragEnter={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setIsDragOver(true);
+                }}
+                onDragOver={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+                onDrop={(e) => {
+                  setIsDragOver(false);
+                  handelFileDrop(e);
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+                onDragLeave={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setIsDragOver(false);
                 }}
               >
                 <svg
@@ -968,7 +1034,7 @@ export function ModelLoaderCard({
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Click to open model</span>
+                <span>Select / Drop to load a .st model file</span>
               </div>
               <input
                 className="hidden"

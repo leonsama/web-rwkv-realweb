@@ -187,6 +187,7 @@ interface IndexedDBCache {
       }) => Promise<T> | T,
     ) => Promise<T>;
     cancel: () => Promise<void>;
+    isOpen: () => boolean;
   };
   readCacheItem: ({
     key,
@@ -297,6 +298,7 @@ export const useIndexedDBCache = create<IndexedDBCache>()(
             cancel,
             key,
             withOpen,
+            isOpen: () => open,
           };
         },
 
