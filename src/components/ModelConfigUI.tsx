@@ -322,6 +322,8 @@ export function useModelLoader() {
     let chunks: Uint8Array[] = [];
     let cacheItem = isCacheModel ? createCacheItem({ key: file.name }) : null;
 
+    let isError = false;
+
     modelLoadTaster.current = toast.loading("Reading Model", { progress: 0 });
 
     while (true) {
@@ -336,6 +338,7 @@ export function useModelLoader() {
         } catch (error) {
           cacheItem.cancel();
           console.error(error);
+          isError = true;
           showError(
             new CustomError(
               "Cache Failure",
@@ -356,7 +359,7 @@ export function useModelLoader() {
       chunks: chunks,
       from: "device",
       size: receivedLength,
-      cacheItemKey: cacheItem?.isOpen() ? cacheItem?.key : undefined,
+      cacheItemKey: !isError ? cacheItem?.key : undefined,
       defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
       loadFromWebParam: undefined,
     });
@@ -397,6 +400,8 @@ export function useModelLoader() {
         response.headers.get("Content-Length") || "0",
       );
 
+      let isError = false;
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -410,6 +415,7 @@ export function useModelLoader() {
           } catch (error) {
             cacheItem.cancel();
             console.error(error);
+            isError = true;
             showError(
               new CustomError(
                 "Cache Failure",
@@ -439,7 +445,7 @@ export function useModelLoader() {
         chunks: chunks,
         from: customUrl ? "URL" : "web",
         size: receivedLength,
-        cacheItemKey: cacheItem?.isOpen() ? cacheItem?.key : undefined,
+        cacheItemKey: !isError ? cacheItem?.key : undefined,
         defaultSessionConfiguration: model.defaultSessionConfiguration,
         loadFromWebParam: model,
       });
