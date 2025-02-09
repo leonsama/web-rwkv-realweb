@@ -1071,6 +1071,7 @@ export default function Chat() {
   const messagesEle = useRef<HTMLDivElement>(null);
   const messageLineHeight = useRef<number>(0);
   const resizeObserver = useRef<ResizeObserver>(null!);
+  const scrollerEle = useRef<HTMLDivElement>(null);
 
   const isSubmited = useRef(false);
   useEffect(() => {
@@ -1154,14 +1155,13 @@ export default function Chat() {
         containerEle.current.scrollHeight <
           containerEle.current.scrollTop +
             containerEle.current.clientHeight +
-            messageLineHeight.current * 3
+            messageLineHeight.current * 4
       ) {
         // setTimeout(() => {
-        containerEle.current?.scrollTo({
-          top: containerEle.current.scrollHeight,
+        scrollerEle.current?.scrollIntoView({
           behavior: "smooth",
         });
-        // }, 50);
+        // }, 0);
       }
     });
     if (messagesEle.current) {
@@ -1172,8 +1172,7 @@ export default function Chat() {
       );
       clearTimeout(scrollToTimmer.current);
       scrollToTimmer.current = setTimeout(() => {
-        containerEle.current?.scrollTo({
-          top: containerEle.current.scrollHeight,
+        scrollerEle.current?.scrollIntoView({
           behavior: "smooth",
         });
       }, 100);
@@ -1269,7 +1268,10 @@ export default function Chat() {
                     );
                   })}
                 </ChatSession.Provider>
-                <div className="sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] md:-mt-8 md:h-8"></div>
+                <div
+                  className="sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] md:-mt-8 md:h-8"
+                  ref={scrollerEle}
+                ></div>
               </div>
             </div>
             <div

@@ -109,41 +109,41 @@ body,
   scrollbar-color: transparent transparent;
 }
 
-@media (pointer: fine) {
-  ::-webkit-scrollbar-button {
-    height: 0;
-    width: 0;
-  }
+/* @media (pointer: fine) { */
+*::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
 }
-@media (pointer: fine) {
-  ::-webkit-scrollbar,
-  ::-webkit-scrollbar-corner {
-    background: transparent;
-    height: 12px;
-    width: 12px;
-  }
+/* } */
+/* @media (pointer: fine) { */
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-corner {
+  background: transparent;
+  height: 12px;
+  width: 12px;
 }
-@media (pointer: fine) {
-  ::-webkit-scrollbar-thumb {
-    background: content-box transparent;
-    border: 4px solid transparent;
-    border-radius: 9999px;
-    min-height: 48px;
-    min-width: 48px;
-  }
+/* } */
+/* @media (pointer: fine) { */
+*::-webkit-scrollbar-thumb {
+  background: content-box transparent;
+  border: 4px solid transparent;
+  border-radius: 9999px;
+  min-height: 48px;
+  min-width: 48px;
 }
-@media (pointer: fine) {
-  :hover::-webkit-scrollbar-thumb {
-    background: content-box rgb(144 161 185 / 20%);
-  }
+/* } */
+/* @media (pointer: fine) { */
+*:hover::-webkit-scrollbar-thumb {
+  background: content-box rgb(144 161 185 / 20%);
 }
-@media (pointer: fine) {
-  ::-webkit-scrollbar-thumb:active,
-  ::-webkit-scrollbar-thumb:hover {
-    background: content-box rgb(144 161 185 / 40%);
-    border: 3.5px solid transparent;
-  }
+/* } */
+/* @media (pointer: fine) { */
+*::-webkit-scrollbar-thumb:active,
+*::-webkit-scrollbar-thumb:hover {
+  background: content-box rgb(144 161 185 / 40%);
+  border: 3.5px solid transparent;
 }
+/* } */
 
 .text-fadeout {
   mask-image: linear-gradient(90deg, #ffff calc(100% - 2rem), #0000);
