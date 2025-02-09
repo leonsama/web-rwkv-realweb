@@ -279,7 +279,7 @@ export function useModelLoader() {
     try {
       await promiseWithTimeout(
         loadModel(name, chunks, DEFAULT_VOVAL_URL, defaultSessionConfiguration),
-        30 * 1000,
+        120 * 1000,
       );
     } catch (error) {
       toast.update(modelLoadTaster.current, {
