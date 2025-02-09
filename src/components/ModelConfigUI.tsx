@@ -68,7 +68,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
       stopTokens: DEFAULT_STOP_TOKENS,
       stopWords: DEFAULT_STOP_WORDS,
       maxTokens: 2048,
-      systemPrompt: `system: You are an AI assistant powered by the RWKV7 0.1B model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`,
+      systemPrompt: null,
       defaultSamplerConfig: {
         temperature: 2.0,
         top_p: 0.5,
@@ -99,7 +99,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
       stopTokens: DEFAULT_STOP_TOKENS,
       stopWords: DEFAULT_STOP_WORDS,
       maxTokens: 2048,
-      systemPrompt: `system: You are an AI assistant powered by the RWKV7 0.4B model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`,
+      systemPrompt: null,
       defaultSamplerConfig: {
         temperature: 1.0,
         top_p: 0.5,
