@@ -1157,11 +1157,11 @@ export default function Chat() {
             containerEle.current.clientHeight +
             messageLineHeight.current * 4
       ) {
-        // setTimeout(() => {
-        scrollerEle.current?.scrollIntoView({
-          behavior: "smooth",
-        });
-        // }, 0);
+        setTimeout(() => {
+          scrollerEle.current?.scrollIntoView({
+            behavior: "smooth",
+          });
+        }, 50);
       }
     });
     if (messagesEle.current) {
@@ -1191,7 +1191,7 @@ export default function Chat() {
           top: containerEle.current.scrollHeight,
           behavior: "smooth",
         });
-      }, 100);
+      }, 50);
     }
   }, [isGenerating]);
 
