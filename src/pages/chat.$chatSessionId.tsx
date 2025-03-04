@@ -1034,7 +1034,6 @@ export default function Chat() {
   const location = useLocation();
 
   const { chatSessionId } = useParams();
-  const prevChatSessionId = useRef<string>(chatSessionId!);
 
   const {
     activeMessageBlocks,
@@ -1068,10 +1067,10 @@ export default function Chat() {
   });
 
   const containerEle = useRef<HTMLDivElement>(null);
-  const messagesEle = useRef<HTMLDivElement>(null);
+  const messagesRenderEle = useRef<HTMLDivElement>(null);
   const messageLineHeight = useRef<number>(0);
-  const resizeObserver = useRef<ResizeObserver>(null!);
-  const scrollerEle = useRef<HTMLDivElement>(null);
+
+  // generation
 
   const isSubmited = useRef(false);
   useEffect(() => {
@@ -1147,53 +1146,55 @@ export default function Chat() {
     setIsGenerating(false);
   };
 
-  const scrollToTimmer = useRef(-1);
+  // scroll
+
+  const resizeObserver = useRef<ResizeObserver>(null!);
+  const scrollerEle = useRef<HTMLDivElement>(null);
+
+  const contentScrollToBottomTimmer = useRef<number>(null!);
+  const contentScrollToBottom = (sleep: number = 0) => {
+    clearTimeout(contentScrollToBottomTimmer.current);
+    contentScrollToBottomTimmer.current = setTimeout(() => {
+      scrollerEle.current?.scrollIntoView({ behavior: "smooth" });
+    }, sleep);
+  };
+
   useEffect(() => {
-    resizeObserver.current = new ResizeObserver((entries) => {
+    containerEle.current?.scrollTo({ top: 0, behavior: "instant" }); // reset container scroll anchor
+  }, [chatSessionId]);
+
+  useEffect(() => {
+    contentScrollToBottom(200); // scroll to bottom when change chat session
+  }, [currentChatSessionId]);
+
+  useEffect(() => {
+    resizeObserver.current?.disconnect();
+
+    if (!isGenerating) return;
+    contentScrollToBottom(0);
+
+    resizeObserver.current = new ResizeObserver((e) => {
       if (
         containerEle.current !== null &&
         containerEle.current.scrollHeight <
           containerEle.current.scrollTop +
             containerEle.current.clientHeight +
             messageLineHeight.current * 4
-      ) {
-        setTimeout(() => {
-          scrollerEle.current?.scrollIntoView({
-            behavior: "smooth",
-          });
-        }, 50);
-      }
+      )
+        contentScrollToBottom(0);
     });
-    if (messagesEle.current) {
-      resizeObserver.current.observe(messagesEle.current);
 
+    if (messagesRenderEle.current) {
       messageLineHeight.current = parseInt(
-        window.getComputedStyle(messagesEle.current).lineHeight,
+        window.getComputedStyle(messagesRenderEle.current).lineHeight,
       );
-      clearTimeout(scrollToTimmer.current);
-      scrollToTimmer.current = setTimeout(() => {
-        scrollerEle.current?.scrollIntoView({
-          behavior: "smooth",
-        });
-      }, 100);
+      resizeObserver.current.observe(messagesRenderEle.current);
     }
 
     return () => {
       resizeObserver.current.disconnect();
     };
-  }, [currentChatSessionId]);
-
-  useEffect(() => {
-    clearTimeout(scrollToTimmer.current);
-    if (isGenerating) {
-      scrollToTimmer.current = setTimeout(() => {
-        containerEle.current?.scrollTo({
-          top: containerEle.current.scrollHeight,
-          behavior: "smooth",
-        });
-      }, 50);
-    }
-  }, [isGenerating]);
+  }, [currentChatSessionId, isGenerating]);
 
   return (
     <div className="flex h-full w-full">
@@ -1201,7 +1202,7 @@ export default function Chat() {
         className="flex h-full w-full flex-col items-stretch"
         data-clarity-unmask="true"
       >
-        <div className="sticky top-0 flex h-16 items-center">
+        <div className="sticky top-0 flex h-16 items-center md:h-20">
           <div className="ml-auto flex size-16 items-center justify-center">
             <button
               className="flex size-10 items-center justify-center rounded-full text-slate-600 transition-all active:bg-slate-300 md:hover:bg-slate-300/50 md:active:bg-slate-300"
@@ -1229,8 +1230,8 @@ export default function Chat() {
             >
               <div
                 className="flex w-full max-w-screen-md flex-col gap-6 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s] md:pb-5"
-                key={chatSessionId}
-                ref={messagesEle}
+                key={currentChatSessionId}
+                ref={messagesRenderEle}
               >
                 <ChatSession.Provider
                   value={{
@@ -1268,10 +1269,8 @@ export default function Chat() {
                     );
                   })}
                 </ChatSession.Provider>
-                <div
-                  className="pointer-events-none sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] md:-mt-8 md:h-8"
-                  ref={scrollerEle}
-                ></div>
+                <div ref={scrollerEle}></div>
+                <div className="pointer-events-none sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] md:-mt-8 md:h-8"></div>
               </div>
             </div>
             <div

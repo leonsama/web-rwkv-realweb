@@ -15,8 +15,7 @@ import { isMiddle } from "./utils/utils";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 
 import { HashRouter } from "react-router";
-// const BASENAME = import.meta.env.DEV ? "/" : "/web-rwkv-realweb/";
-const BASENAME = "/";
+const BASENAME = import.meta.env.VITE_BASE_URL;
 
 function Placeholder() {
   return (
@@ -63,16 +62,16 @@ function PageContent() {
 }
 
 function fallbackRender({ error, resetErrorBoundary }: FallbackProps) {
-  // Call resetErrorBoundary() to reset the error boundary and retry the render.
-
   return (
     <div
       role="alert"
-      className="flex h-full w-full items-center justify-center"
+      className="flex h-full w-full flex-col items-center justify-center gap-2 p-2"
     >
-      <p>OOPS..</p>
-      <p>Something went wrong:</p>
-      <pre style={{ color: "red" }}>{error.message}</pre>
+      <p className="text-5xl font-light">OOPS...</p>
+      <p>Something went wrong</p>
+      <div className="max-w-md overflow-auto rounded-lg bg-red-100 p-2">
+        <code style={{ color: "red" }}>{error.message}</code>
+      </div>
     </div>
   );
 }
