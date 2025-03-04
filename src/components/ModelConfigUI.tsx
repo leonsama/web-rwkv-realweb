@@ -20,7 +20,7 @@ import {
 } from "../store/ModelStorage";
 import { Sampler } from "../web-rwkv-wasm-port/types";
 
-import DEFAULT_VOVAL_URL from "../../assets/rwkv_vocab_v20230424.json?url";
+import DEFAULT_VOVAB_URL from "../../assets/rwkv_vocab_v20230424.json?url";
 import { createModalForm, Modal, USER_CANCEL_ERROR } from "./popup/Modals";
 import {
   cn,
@@ -42,7 +42,7 @@ export interface RWKVModelWeb {
   defaultSessionConfiguration: SessionConfiguration;
 }
 
-// const DEFAULT_VOVAL_URL = "/assets/rwkv_vocab_v20230424.json";
+// const DEFAULT_VOVAB_URL = "/assets/rwkv_vocab_v20230424.json";
 
 const DEFAULT_SYSTEM_PROMPT = `system: You are an AI assistant powered by the RWKV7 model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`;
 
@@ -63,7 +63,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
         },
       },
     ],
-    vocal_url: DEFAULT_VOVAL_URL,
+    vocal_url: DEFAULT_VOVAB_URL,
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
       stopWords: DEFAULT_STOP_WORDS,
@@ -94,7 +94,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
         },
       },
     ],
-    vocal_url: DEFAULT_VOVAL_URL,
+    vocal_url: DEFAULT_VOVAB_URL,
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
       stopWords: DEFAULT_STOP_WORDS,
@@ -131,7 +131,9 @@ export function useModelLoader() {
         {error.stack && (
           <details>
             <summary>Stack</summary>
-            <pre>{error.stack}</pre>
+            <div className="max-w-md overflow-auto rounded-lg bg-red-100 p-2">
+              <pre>{error.stack}</pre>
+            </div>
           </details>
         )}
         <div className="-mb-1 flex justify-end gap-2">
@@ -272,7 +274,7 @@ export function useModelLoader() {
       cacheItemKey,
       size: size,
       defaultSessionConfiguration,
-      vocal_url: DEFAULT_VOVAL_URL,
+      vocal_url: DEFAULT_VOVAB_URL,
       loadFromWebParam: loadFromWebParam,
     });
 
@@ -280,7 +282,7 @@ export function useModelLoader() {
       await loadModel(
         name,
         chunks,
-        DEFAULT_VOVAL_URL,
+        DEFAULT_VOVAB_URL,
         defaultSessionConfiguration,
       );
     } catch (error) {
@@ -618,7 +620,7 @@ export function ModelLoaderCard({
               </Entry>
               <Entry label="Vocal URL">
                 <input
-                  defaultValue={DEFAULT_VOVAL_URL}
+                  defaultValue={DEFAULT_VOVAB_URL}
                   className="rounded-lg border p-2"
                   name="vocalUrl"
                 ></input>
@@ -722,8 +724,11 @@ export function ModelLoaderCard({
     if (e.dataTransfer.files.length !== 1) {
       toast.error("Single file only");
       return;
-    } else if (!e.dataTransfer.files[0].name.endsWith(".st")) {
-      toast.error(".st file only");
+    } else if (
+      !e.dataTransfer.files[0].name.endsWith(".st") &&
+      !e.dataTransfer.files[0].name.endsWith(".prefab")
+    ) {
+      toast.error(".st or .prefab file only");
       return;
     }
     close?.();
