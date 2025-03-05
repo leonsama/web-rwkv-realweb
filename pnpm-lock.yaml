@@ -69,6 +69,9 @@ importers:
       '@eslint/js':
         specifier: ^9.17.0
         version: 9.17.0
+      '@types/node':
+        specifier: ^22.13.9
+        version: 22.13.9
       '@types/react':
         specifier: ^18.3.17
         version: 18.3.18
@@ -77,7 +80,7 @@ importers:
         version: 18.3.5(@types/react@18.3.18)
       '@vitejs/plugin-react':
         specifier: ^4.3.4
-        version: 4.3.4(vite@6.0.5(jiti@1.21.7)(yaml@2.6.1))
+        version: 4.3.4(vite@6.0.5(@types/node@22.13.9)(jiti@1.21.7)(yaml@2.6.1))
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.49)
@@ -122,10 +125,10 @@ importers:
         version: 8.18.2(eslint@9.17.0(jiti@1.21.7))(typescript@5.6.3)
       vite:
         specifier: ^6.0.5
-        version: 6.0.5(jiti@1.21.7)(yaml@2.6.1)
+        version: 6.0.5(@types/node@22.13.9)(jiti@1.21.7)(yaml@2.6.1)
       vite-plugin-pages:
         specifier: ^0.32.4
-        version: 0.32.4(react-router@7.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(vite@6.0.5(jiti@1.21.7)(yaml@2.6.1))
+        version: 0.32.4(react-router@7.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(vite@6.0.5(@types/node@22.13.9)(jiti@1.21.7)(yaml@2.6.1))
       vite-plugin-wasm-pack:
         specifier: ^0.1.12
         version: 0.1.12
@@ -1245,6 +1248,9 @@ packages:
 
   '@types/ms@0.7.34':
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
+
+  '@types/node@22.13.9':
+    resolution: {integrity: sha512-acBjXdRJ3A6Pb3tqnw9HZmyR3Fiol3aGxRCK1x3d+6CDAMjl7I649wpSd+yNURCjbOUGu9tqtLKnTGxmK6CyGw==, tarball: https://registry.npmmirror.com/@types/node/-/node-22.13.9.tgz}
 
   '@types/prop-types@15.7.14':
     resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
@@ -2683,6 +2689,9 @@ packages:
 
   ufo@1.5.4:
     resolution: {integrity: sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==}
+
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==, tarball: https://registry.npmmirror.com/undici-types/-/undici-types-6.20.0.tgz}
 
   unidiff@1.0.4:
     resolution: {integrity: sha512-ynU0vsAXw0ir8roa+xPCUHmnJ5goc5BTM2Kuc3IJd8UwgaeRs7VSD5+eeaQL+xp1JtB92hu/Zy/Lgy7RZcr1pQ==, tarball: https://registry.npmmirror.com/unidiff/-/unidiff-1.0.4.tgz}
@@ -4255,6 +4264,10 @@ snapshots:
 
   '@types/ms@0.7.34': {}
 
+  '@types/node@22.13.9':
+    dependencies:
+      undici-types: 6.20.0
+
   '@types/prop-types@15.7.14': {}
 
   '@types/react-dom@18.3.5(@types/react@18.3.18)':
@@ -4347,14 +4360,14 @@ snapshots:
       '@typescript-eslint/types': 8.18.2
       eslint-visitor-keys: 4.2.0
 
-  '@vitejs/plugin-react@4.3.4(vite@6.0.5(jiti@1.21.7)(yaml@2.6.1))':
+  '@vitejs/plugin-react@4.3.4(vite@6.0.5(@types/node@22.13.9)(jiti@1.21.7)(yaml@2.6.1))':
     dependencies:
       '@babel/core': 7.26.0
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.0)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 6.0.5(jiti@1.21.7)(yaml@2.6.1)
+      vite: 6.0.5(@types/node@22.13.9)(jiti@1.21.7)(yaml@2.6.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -5883,6 +5896,8 @@ snapshots:
 
   ufo@1.5.4: {}
 
+  undici-types@6.20.0: {}
+
   unidiff@1.0.4:
     dependencies:
       diff: 5.2.0
@@ -5944,7 +5959,7 @@ snapshots:
       '@types/unist': 3.0.3
       unist-util-stringify-position: 4.0.0
 
-  vite-plugin-pages@0.32.4(react-router@7.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(vite@6.0.5(jiti@1.21.7)(yaml@2.6.1)):
+  vite-plugin-pages@0.32.4(react-router@7.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(vite@6.0.5(@types/node@22.13.9)(jiti@1.21.7)(yaml@2.6.1)):
     dependencies:
       '@types/debug': 4.1.12
       debug: 4.4.0
@@ -5954,7 +5969,7 @@ snapshots:
       json5: 2.2.3
       local-pkg: 0.5.1
       picocolors: 1.1.1
-      vite: 6.0.5(jiti@1.21.7)(yaml@2.6.1)
+      vite: 6.0.5(@types/node@22.13.9)(jiti@1.21.7)(yaml@2.6.1)
       yaml: 2.6.1
     optionalDependencies:
       react-router: 7.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -5967,12 +5982,13 @@ snapshots:
       fs-extra: 10.1.0
       narrowing: 1.5.0
 
-  vite@6.0.5(jiti@1.21.7)(yaml@2.6.1):
+  vite@6.0.5(@types/node@22.13.9)(jiti@1.21.7)(yaml@2.6.1):
     dependencies:
       esbuild: 0.24.0
       postcss: 8.4.49
       rollup: 4.29.1
     optionalDependencies:
+      '@types/node': 22.13.9
       fsevents: 2.3.3
       jiti: 1.21.7
       yaml: 2.6.1

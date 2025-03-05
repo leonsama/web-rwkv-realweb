@@ -2,6 +2,8 @@ import { clsx, type ClassValue } from "clsx";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+export type Timer = ReturnType<typeof setTimeout>;
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

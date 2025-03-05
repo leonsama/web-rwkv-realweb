@@ -7,6 +7,7 @@ import { RWKVMarkdown } from "../components/MarkdownRender";
 import { RWKVOutputFormatter } from "../utils/RWKVOutputFormatter";
 import { createModalForm } from "../components/popup/Modals";
 import { InputList } from "../components/Input";
+import { Timer } from "../utils/utils";
 
 const DEFAULT_MD_CONTENT = `# Web RWKV Markdown render test
 ## inline
@@ -39,7 +40,7 @@ export default function Test() {
 
   const pause = useRef(false);
 
-  const timmer = useRef(-1);
+  const timmer = useRef<Timer>();
 
   const [typeDelay, setTypeDelay] = useState<string | number>(100);
   const [typeLen, setTypeLen] = useState<string | number>(1);
@@ -58,7 +59,7 @@ export default function Test() {
 
         if (renderIndex > renderString.length) {
           clearInterval(timmer.current);
-          timmer.current = -1;
+          timmer.current = undefined;
           return;
         }
 
@@ -107,7 +108,7 @@ export default function Test() {
             <div>
               <Button
                 onClick={() => {
-                  if (timmer.current === -1) {
+                  if (timmer.current === undefined) {
                     trigger();
                   } else {
                     pause.current = !pause.current;

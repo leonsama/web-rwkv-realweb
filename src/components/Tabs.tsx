@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { RadioGroup, RadioGroupOption } from "./RadioGroup";
 import { inserCss } from "./popup/utils";
+import { Timer } from "../utils/utils";
 
 interface TabsContextType {
   activeValue: string;
@@ -79,7 +80,7 @@ export function Tabs({
 
   const contentWrapperRef = useRef<HTMLDivElement>(null);
 
-  const onChangeTimmer = useRef<number>(-1);
+  const onChangeTimmer = useRef<Timer>();
   useEffect(() => {
     onValueChange?.(activeValue);
     setOnChange(true);
@@ -163,7 +164,7 @@ export function TabsContent({
   const [isMount, setIsMount] = useState(false);
 
   const contentRef = useRef<HTMLDivElement>(null);
-  const timmer = useRef<number>(-1);
+  const timmer = useRef<Timer>();
 
   const {
     activeValue,

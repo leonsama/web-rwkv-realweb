@@ -34,7 +34,7 @@ import {
   PopupNodeRender,
 } from "./utils";
 
-import { cn, CustomError } from "../../utils/utils";
+import { cn, CustomError, Timer } from "../../utils/utils";
 
 import style from "./Modals.module.css";
 
@@ -62,7 +62,7 @@ export function Tooltip({
   const baseEle = useRef<HTMLElement | null>(null);
   const tooltipEle = useRef<HTMLDivElement | null>(null);
 
-  const componentUnloadTimer = useRef<number>();
+  const componentUnloadTimer = useRef<Timer>();
   const [tooltipPos, setTooltipPos] = useState<
     PositionResult & { posReady: boolean }
   >({
@@ -198,7 +198,7 @@ export function BaseModal({
 }) {
   const bgEle = useRef<HTMLDivElement>(null);
   const modalEle = useRef<HTMLDivElement>(null);
-  const componentUnloadTimer = useRef<number>();
+  const componentUnloadTimer = useRef<Timer>();
   const [componentLoadLevel, setComponentLoadLevel] =
     useState<ComponentLoadLevel>(ComponentLoadLevel.PRELOAD);
   const [renderModel, setRenderModel] = useState(false);

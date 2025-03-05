@@ -11,6 +11,7 @@ import React, {
 } from "react";
 import { ComponentLoadLevel, LiveClassName } from "./Popup.d";
 import { createPortal } from "react-dom";
+import { Timer } from "../../utils/utils";
 
 export const POPUP_NAMESPACE = "new-popup-";
 
@@ -246,7 +247,7 @@ export function CheckEventTrigger({
   ) => void;
   children: React.ReactNode;
 }) {
-  const checkHoverTimer = useRef<number>();
+  const checkHoverTimer = useRef<Timer>();
   const isHover = useRef<boolean>(false);
 
   const events: { [event: string]: any } = {};

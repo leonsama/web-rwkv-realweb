@@ -4,6 +4,7 @@ import { ChatTextarea } from "../components/ChatTextarea";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import {
   cn,
+  Timer,
   useMaxWidthBreakpoint,
   useSuspendUntilValid,
 } from "../utils/utils";
@@ -880,7 +881,7 @@ function ChatSessionConfigurationBar({
     setAlwaysOpenSessionConfigurationPannel,
   } = usePageStorage((s) => s);
 
-  const timmer = useRef(-1);
+  const timmer = useRef<Timer>();
 
   const modalOperation = useRef<ModalInterface>(null!);
 
@@ -895,7 +896,7 @@ function ChatSessionConfigurationBar({
         setIsDivExpanded(true);
         timmer.current = setTimeout(() => {
           setShowConfigurationCard(true);
-          timmer.current = -1;
+          timmer.current = undefined;
         }, 300);
       }
     } else {
@@ -904,7 +905,7 @@ function ChatSessionConfigurationBar({
       if (!isMobile) {
         timmer.current = setTimeout(() => {
           setIsDivExpanded(false);
-          timmer.current = -1;
+          timmer.current = undefined;
         }, 300);
       }
     }
@@ -973,7 +974,7 @@ function ChatSessionConfigurationBar({
     }
   };
 
-  const openTimmer = useRef(-1);
+  const openTimmer = useRef<Timer>();
   useEffect(() => {
     clearTimeout(openTimmer.current);
     if (alwaysOpenSessionConfigurationPannel && isMobile === false) {
@@ -1151,7 +1152,7 @@ export default function Chat() {
   const resizeObserver = useRef<ResizeObserver>(null!);
   const scrollerEle = useRef<HTMLDivElement>(null);
 
-  const contentScrollToBottomTimmer = useRef<number>(null!);
+  const contentScrollToBottomTimmer = useRef<Timer>(null!);
   const contentScrollToBottom = (sleep: number = 0) => {
     clearTimeout(contentScrollToBottomTimmer.current);
     contentScrollToBottomTimmer.current = setTimeout(() => {

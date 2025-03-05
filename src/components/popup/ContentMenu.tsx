@@ -26,6 +26,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { Timer } from "../../utils/utils";
 
 export const POPUP_CONTEXT_MENU = `${POPUP_NAMESPACE}context-menu`;
 
@@ -309,7 +310,7 @@ const ContextMenuBase = ({
   React.ReactElement<typeof Menu>;
   data?: any;
 }) => {
-  const timmer = useRef(-1);
+  const timmer = useRef<Timer>();
   const closeMenu = (menuEle: HTMLDivElement) => {
     setComponentLoadLevel(ComponentLoadLevel.UNLOAD);
     requestAnimationFrame(() => {

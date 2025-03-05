@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { cn } from "../utils/utils";
+import { cn, Timer } from "../utils/utils";
 import { PromptTextarea } from "./PromptTextarea";
 import {
   cleanChatPrompt,
@@ -134,13 +134,13 @@ export function ChatTextarea({
     loadModelModal.current.setIsModalOpen(true);
   };
 
-  const blurTimmer = useRef<number>(-1);
+  const blurTimmer = useRef<Timer>();
 
   const hidePannel = (delay: number) => {
     clearTimeout(blurTimmer.current);
     blurTimmer.current = setTimeout(() => {
       setIsPannelExpaned(false);
-      blurTimmer.current = -1;
+      blurTimmer.current = undefined;
     }, delay);
   };
 
@@ -148,7 +148,7 @@ export function ChatTextarea({
     clearTimeout(blurTimmer.current);
     if (isFocus) {
       setIsPannelExpaned(true);
-      blurTimmer.current = -1;
+      blurTimmer.current = undefined;
     } else if (value === "") {
       hidePannel(300);
     }
