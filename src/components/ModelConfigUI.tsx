@@ -92,11 +92,42 @@ export const DEFAULT_API_MODEL: APIModel = {
     },
   },
   APIParam: {
+    baseUrl: "https://sparkleman-rwkv-hf-space.hf.space/api/v1",
+    key: "sk-test",
+  },
+  from: "API",
+};
+
+export const LOCAL_API_MODEL: APIModel = {
+  name: "rwkv-latest:local",
+  description: "For local debug",
+  supportReasoning: true,
+  reasoningName: "rwkv-latest:thinking:local",
+  param: null,
+  dataset: "v2.8",
+  update: "2024/12/10",
+  ctx: "4096",
+  defaultSessionConfiguration: {
+    stopTokens: DEFAULT_STOP_TOKENS,
+    stopWords: DEFAULT_STOP_WORDS,
+    maxTokens: 2048,
+    systemPrompt: null,
+    defaultSamplerConfig: {
+      temperature: 2.0,
+      top_p: 0.5,
+      presence_penalty: 0.5,
+      count_penalty: 0.5,
+      half_life: 200,
+    },
+  },
+  APIParam: {
     baseUrl: "http://127.0.0.1:8000/api/v1",
     key: "sk-test",
   },
   from: "API",
 };
+
+const ONLINE_API_MODELS = [DEFAULT_API_MODEL, LOCAL_API_MODEL];
 
 const DEFAULT_SYSTEM_PROMPT = `system: You are an AI assistant powered by the RWKV7 model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`;
 
@@ -1169,7 +1200,7 @@ export function ModelLoaderCard({
             <TabsContent value="web" className="max-md:h-full">
               <div className="flex h-full flex-col overflow-auto md:h-96">
                 <div className="grid w-full gap-4 lg:grid-cols-2">
-                  {[DEFAULT_API_MODEL, ...ONLINE_RWKV_MODELS].map((v, k) => {
+                  {[...ONLINE_API_MODELS, ...ONLINE_RWKV_MODELS].map((v, k) => {
                     return (
                       <div
                         className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2"

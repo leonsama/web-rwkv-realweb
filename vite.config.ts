@@ -21,11 +21,11 @@ function getGitInfo() {
 }
 
 export default defineConfig(({ mode }) => {
-  process.env = {
-    ...process.env,
-    ...loadEnv(mode, process.cwd(), ""),
-    ...getGitInfo(),
-  };
+  process.env = Object.assign(
+    process.env,
+    loadEnv(mode, process.cwd(), ""),
+    getGitInfo(),
+  );
 
   return {
     base: "./",
