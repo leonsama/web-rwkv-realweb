@@ -292,7 +292,7 @@ export default function Settings() {
           </Card>
           <div className="flex h-36 flex-col items-center justify-center pb-6">
             <h2 className="text-lg text-slate-300">
-              <span>WebRWKV</span> · {import.meta.env.VITE_GIT_SHA}
+              <span>Made with ♥ by Leon</span> · {import.meta.env.VITE_GIT_SHA}
             </h2>
             <h3 className="text-xs text-slate-300">
               Commit at {import.meta.env.VITE_GIT_COMMIT_DATE}
