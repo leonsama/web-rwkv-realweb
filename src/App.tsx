@@ -15,6 +15,10 @@ import { isMiddle } from "./utils/utils";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 
 import { HashRouter } from "react-router";
+import { useChatModelSession } from "./store/ModelStorage";
+import { useWebRWKVChat } from "./web-rwkv-wasm-port/web-rwkv";
+import { DEFAULT_API_MODEL, useModelLoader } from "./components/ModelConfigUI";
+import { Button } from "./components/Button";
 const BASENAME = import.meta.env.VITE_BASE_URL;
 
 function Placeholder() {
@@ -72,11 +76,29 @@ function fallbackRender({ error, resetErrorBoundary }: FallbackProps) {
       <div className="max-w-md overflow-auto rounded-lg bg-red-100 p-2">
         <code style={{ color: "red" }}>{error.message}</code>
       </div>
+      <Button
+        onClick={() => {
+          window.location.hash = "";
+          window.location.reload();
+        }}
+      >
+        Return to home page
+      </Button>
     </div>
   );
 }
 
 export function App() {
+  const chatModelSession = useChatModelSession((s) => s);
+  const { fromAPI } = useModelLoader();
+
+  useEffect(() => {
+    if (!chatModelSession.llmModel.currentModelName) {
+      console.log("Load API Model");
+      fromAPI(DEFAULT_API_MODEL);
+    }
+  }, []);
+
   return (
     <Suspense fallback={<Placeholder></Placeholder>}>
       <div className="flex h-screen w-screen select-none bg-white text-black">

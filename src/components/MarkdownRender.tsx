@@ -7,6 +7,8 @@ import {
   useState,
 } from "react";
 
+import katex, { type KatexOptions } from "katex";
+
 export type HeadingLevels = 1 | 2 | 3 | 4 | 5 | 6;
 
 import Lowlight from "react-lowlight";
@@ -15,6 +17,7 @@ import "react-lowlight/common";
 import "highlight.js/styles/default.css";
 import Markdown, { CustomReactRenderer } from "./marked-react";
 import { cn } from "../utils/utils";
+import { ReasoningIcon } from "./ChatTextarea";
 
 function FadeTextInline({
   children,
@@ -91,6 +94,100 @@ function FadeText({
   }, [children]);
   return <>{render}</>;
 }
+
+function ThinkBlock({ children }: { children: ReactNode }) {
+  const [showReasoning, setShowReasoning] = useState(true);
+  const [reasonContainerHeight, setReasonContainerHeight] = useState(0);
+  const [enableAnimation, setEnableAnimaiton] = useState(false);
+  const reasonContentEle = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const resizeOberserver = new ResizeObserver(() => {
+      setReasonContainerHeight(reasonContentEle.current?.clientHeight || 0);
+    });
+    if (reasonContentEle.current) {
+      resizeOberserver.observe(reasonContentEle.current);
+    }
+    return () => {
+      resizeOberserver.disconnect();
+    };
+  }, []);
+  return (
+    <div className="mb-4 rounded-2xl md:mt-3">
+      <div className="flex">
+        <div
+          className="flex w-48 cursor-pointer select-none items-center gap-2 rounded-3xl p-2 pr-2 text-sm font-semibold transition-all duration-200 md:hover:bg-yellow-500/20"
+          onClick={() => {
+            setEnableAnimaiton(true);
+            setShowReasoning(!showReasoning);
+          }}
+        >
+          <ReasoningIcon enableReasoning={true}></ReasoningIcon>{" "}
+          {showReasoning ? (
+            <span key={0} className="motion-preset-slide-down-md">
+              Hide reasoning
+            </span>
+          ) : (
+            <span key={1} className="motion-preset-slide-up-md">
+              Show reasoning
+            </span>
+          )}
+          {showReasoning ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="motion-preset-slide-up-md ml-auto size-5"
+              key={2}
+            >
+              <path
+                fillRule="evenodd"
+                d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="motion-preset-slide-down-md ml-auto size-5"
+              key={3}
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          )}
+        </div>
+      </div>
+      <div
+        className={cn(
+          "ml-[18px] overflow-hidden border-l pl-4 [mask-image:linear-gradient(180deg,#ffff_calc(100%_-_8px),_#0000_100%)]",
+          showReasoning?"":" opacity-0",
+          enableAnimation && "transition-all duration-300",
+        )}
+        style={{
+          height: showReasoning ? `${reasonContainerHeight}px` : `0px`,
+        }}
+      >
+        <div ref={reasonContentEle} className="-mt-4 text-slate-600">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const katexOptions: KatexOptions = {
+  strict: false,
+  throwOnError: false,
+  macros: {
+    "\\f": "#1f(#2)",
+  },
+};
 
 export const RWKVMarkedRenderer: CustomReactRenderer = {
   heading(children: ReactNode, level: HeadingLevels) {
@@ -209,6 +306,29 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
         </div>
       </div>
     );
+  },
+  inlineKatex(children: ReactNode) {
+    return (
+      <span
+        dangerouslySetInnerHTML={{
+          __html: katex.renderToString(children as string, katexOptions),
+        }}
+        key={this.elementId}
+      ></span>
+    );
+  },
+  blockKatex(children: ReactNode) {
+    return (
+      <p
+        dangerouslySetInnerHTML={{
+          __html: katex.renderToString(children as string, katexOptions),
+        }}
+        key={this.elementId}
+      ></p>
+    );
+  },
+  thinkBlock(children: ReactNode) {
+    return <ThinkBlock key={this.elementId}>{children}</ThinkBlock>;
   },
 };
 

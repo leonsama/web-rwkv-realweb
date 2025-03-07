@@ -4,6 +4,8 @@ import { Marked, MarkedOptions } from "marked";
 import ReactParser from "./ReactParser";
 import ReactRenderer, { ReactRendererOptions } from "./ReactRenderer";
 
+import markedExtension from "./marked_extension";
+
 type LexerOptions = Pick<MarkedOptions, "breaks" | "gfm">;
 
 export interface MarkdownProps extends ReactRendererOptions, LexerOptions {
@@ -11,7 +13,6 @@ export interface MarkdownProps extends ReactRendererOptions, LexerOptions {
   children?: string;
   isInline?: boolean;
   instance?: Marked;
-
 }
 
 const validateComponentProps = (props: MarkdownProps) => {
@@ -39,6 +40,7 @@ const defaultProps = {
 };
 
 const markedInstance = new Marked();
+markedInstance.use(markedExtension({ strict: false }));
 
 const Markdown = (props: MarkdownProps) => {
   validateComponentProps(props);
@@ -47,9 +49,10 @@ const Markdown = (props: MarkdownProps) => {
   const marked = options.instance ?? markedInstance;
 
   // lexer options
-  const lexerOptions = {
+  const lexerOptions: MarkedOptions = {
     breaks: options.breaks,
     gfm: options.gfm,
+    extensions: marked.defaults.extensions,
   };
 
   // convert input markdown into tokens

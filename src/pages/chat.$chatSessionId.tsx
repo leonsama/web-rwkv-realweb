@@ -10,6 +10,7 @@ import {
 } from "../utils/utils";
 import {
   DEFAULT_SESSION_CONFIGURATION,
+  InferPortInterface,
   SessionConfiguration,
   useWebRWKVChat,
 } from "../web-rwkv-wasm-port/web-rwkv";
@@ -60,6 +61,8 @@ const ChatSession = createContext<
     checkIsModelLoaded: (
       validate: (currentState: string | null) => boolean,
     ) => Promise<void>;
+
+    webRWKVLLMInfer: InferPortInterface;
   }
 >(null!);
 
@@ -98,7 +101,7 @@ function MessageInformationViewer({
   currentMessageBlock: CurrentMessageBlock;
 }) {
   return (
-    <Card className="md:2/3 h-2/3 max-h-full w-full overflow-auto md:w-2/3 md:max-w-xl">
+    <Card className="h-full max-h-full w-full overflow-auto max-md:rounded-none md:h-2/3 md:w-2/3 md:max-w-xl">
       <CardTitle
         icon={
           <svg
@@ -225,6 +228,7 @@ function AssistantContent({
     completion,
     getActiveMessages,
     checkIsModelLoaded,
+    webRWKVLLMInfer,
   } = useContext(ChatSession);
 
   const avatarEle = useRef<HTMLDivElement>(null);
@@ -272,6 +276,7 @@ function AssistantContent({
         sessionConfiguration.defaultSamplerConfig.presence_penalty,
       count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
       penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
+      enableReasoning: webRWKVLLMInfer.isEnableReasoning,
     });
 
     let result = "";
@@ -621,7 +626,7 @@ function ChatSessionConfigurationCard({
   return (
     <Card
       className={cn(
-        "h-full w-full overflow-auto transition-all md:h-3/4 md:w-2/3 md:max-w-md min-[1250px]:h-full min-[1250px]:w-full",
+        "h-full w-full overflow-auto transition-all max-md:rounded-none md:h-3/4 md:w-2/3 md:max-w-md min-[1250px]:h-full min-[1250px]:w-full",
         isOpen ? "" : "scale-95 opacity-0",
       )}
     >
@@ -931,7 +936,7 @@ function ChatSessionConfigurationBar({
       setTimeout(async () => {
         try {
           const { isAlwaysShow } = await createModalForm(
-            <Card className="max-w-sm bg-white">
+            <Card className="m-4 max-w-sm bg-white">
               <CardTitle className="bg-white">
                 <span className="text-lg font-bold">
                   Always Display Pannel?
@@ -1129,6 +1134,7 @@ export default function Chat() {
         sessionConfiguration.defaultSamplerConfig.presence_penalty,
       count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
       penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
+      enableReasoning: webRWKVLLMInfer.isEnableReasoning,
     });
     resultBlock.messageContents[activeMessageContentIndex].modelName =
       currentModelName;
@@ -1250,6 +1256,7 @@ export default function Chat() {
                     startGenerationTask,
                     isGenerating,
                     setIsGenerating,
+                    webRWKVLLMInfer,
 
                     currentModelName,
                     loadingModelName,

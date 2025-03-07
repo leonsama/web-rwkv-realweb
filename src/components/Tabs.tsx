@@ -64,11 +64,13 @@ export function Tabs({
   value,
   onValueChange,
   children,
+  className,
 }: {
   defaultValue: string;
   value?: string;
   onValueChange?: (value: string) => void;
   children?: React.ReactNode;
+  className?: string;
 }) {
   const [activeValue, setActiveValue] = useState(defaultValue);
   const [contentHeight, setContentHeight] = useState(0);
@@ -134,7 +136,7 @@ export function Tabs({
           activeValue && previousActiveIndex.current != -1
             ? `${WEB_RWKV_TABS}-transition`
             : ""
-        } ${(onChange && `${WEB_RWKV_TABS}-tabsOnChange`) || ""}`}
+        } ${(onChange && `${WEB_RWKV_TABS}-tabsOnChange`) || ""} ${className || ""}`}
       >
         {Children.map(children, (child) => {
           if (
@@ -222,7 +224,7 @@ export function TabsContent({
       <div
         {...prop}
         ref={contentRef}
-        className={`${WEB_RWKV_TABS}-tabsContent`}
+        className={`${WEB_RWKV_TABS}-tabsContent ${className || ""}`}
         style={{ zIndex: activeValue === value ? "10" : undefined }}
       >
         {children}

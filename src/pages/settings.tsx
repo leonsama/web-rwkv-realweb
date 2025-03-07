@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { useWebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
-import { loadFile } from "../utils/loadModels";
 import { cn, formatFileSize } from "../utils/utils";
 import { RadioGroup, RadioGroupOption } from "../components/RadioGroup";
 import { createModalForm, Modal } from "../components/popup/Modals";
@@ -57,7 +56,7 @@ export default function Settings() {
   const resetAllData = async () => {
     try {
       const { isReset } = await createModalForm(
-        <Card className="max-w-sm bg-white">
+        <Card className="m-4 max-w-sm bg-white">
           <CardTitle className="bg-white text-red-500">
             <span className="text-lg font-bold">Reset</span>
           </CardTitle>
@@ -93,6 +92,7 @@ export default function Settings() {
         await clearAllCache();
         clearAllSession();
         localStorage.clear();
+        window.location.hash = "";
         window.location.reload();
       }
     } catch (error) {}
@@ -118,7 +118,7 @@ export default function Settings() {
         className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-2 pb-4 md:px-4 md:pb-0"
         style={{ scrollbarGutter: "stable both-edges" }}
       >
-        <div className="flex w-full max-w-screen-md flex-col gap-4 px-2 pb-20 motion-translate-y-in-[20%] motion-opacity-in-[0%] motion-duration-[0.4s] md:gap-8">
+        <div className="flex w-full max-w-screen-md flex-col gap-4 px-2 motion-translate-y-in-[20%] motion-opacity-in-[0%] motion-duration-[0.4s] md:gap-8">
           <h1 className="py-2 pb-8 pl-4 text-5xl">Settings</h1>
           <Card
             title="Language Model"
@@ -261,8 +261,21 @@ export default function Settings() {
                 onClick={async () => {
                   setTotalCacheSize(await getTotalCacheSize());
                 }}
+                className="flex items-center justify-center gap-2 bg-white/0"
               >
                 {totalCacheSize < 0 ? "Check" : formatFileSize(totalCacheSize)}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  className="size-4 text-gray-600"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </Button>
             </Entry>
             <Entry label="Clear Cache">
@@ -277,6 +290,14 @@ export default function Settings() {
               </Button>
             </Entry>
           </Card>
+          <div className="flex h-36 flex-col items-center justify-center pb-6">
+            <h2 className="text-lg text-slate-300">
+              <span>WebRWKV</span> · {import.meta.env.VITE_GIT_SHA}
+            </h2>
+            <h3 className="text-xs text-slate-300">
+              Commit at {import.meta.env.VITE_GIT_COMMIT_DATE}
+            </h3>
+          </div>
         </div>
       </div>
     </div>

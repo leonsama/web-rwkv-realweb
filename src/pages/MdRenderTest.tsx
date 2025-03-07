@@ -16,6 +16,13 @@ inline \`code\` inline strong **strong**
 - a1 \`b1\` c1 **d1**
 - a2 \`b2\` c2 **d2**
 - a3 \`b3\` c3 **d3**
+## code
+\`\`\`python
+def xxx(sdwds):
+    asdfghjklasdfghjklasdfghjkl.asdwdsa()
+    asdfghjklasdfghjklasdfghjkl.asdwdsa()
+xxx(xxasd)
+\`\`\`
 ## table
 | h1 | h2 | h3 |
 | -- | -- | -- |
@@ -32,6 +39,14 @@ inline \`code\` inline strong **strong**
 > > q2
 > + l1
 > + l2 \`code\` 
+## katex
+inline $f(x)=x+y$
+$$
+% \\f is defined as #1f(#2) using the macro
+\\f\\relax{x} = \\int_{-\\infty}^\\infty
+    \\f\\hat\\xi\\,e^{2 \\pi i \\xi x}
+    \\,d\\xi
+$$
 `;
 
 export default function Test() {
@@ -123,6 +138,16 @@ export default function Test() {
                 }}
               >
                 Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  setRender("");
+                  setTimeout(() => {
+                    setRender(value);
+                  }, 0);
+                }}
+              >
+                Set
               </Button>
               <span>Type Delay</span>
               <input

@@ -56,7 +56,7 @@ class ReactParser {
 
             if (item.task) {
               listItemChildren.push(
-                this.renderer.checkbox(item.checked ?? false)
+                this.renderer.checkbox(item.checked ?? false),
               );
             }
 
@@ -69,7 +69,7 @@ class ReactParser {
           return this.renderer.list(
             children,
             token.ordered,
-            token.ordered ? token.start : undefined
+            token.ordered ? token.start : undefined,
           );
         }
 
@@ -118,6 +118,18 @@ class ReactParser {
 
         case "hr": {
           return this.renderer.hr();
+        }
+
+        case "blockKatex": {
+          return this.renderer.blockKatex(token.text);
+        }
+
+        case "thinkBlock": {
+          const thinkContent = token as Tokens.Blockquote;
+
+          const content = this.parse(thinkContent.tokens);
+
+          return this.renderer.thinkBlock(content);
         }
 
         default: {
@@ -172,6 +184,10 @@ class ReactParser {
 
         case "escape": {
           return this.renderer.text(token.text);
+        }
+
+        case "inlineKatex": {
+          return this.renderer.inlineKatex(token.text);
         }
 
         default: {

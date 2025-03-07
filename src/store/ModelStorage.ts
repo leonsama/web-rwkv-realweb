@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import {
+  APIInferPort,
+  InferPortInterface,
   SessionConfiguration,
   WebRWKVInferPort,
 } from "../web-rwkv-wasm-port/web-rwkv";
@@ -8,25 +10,36 @@ import { createJSONStorage, persist, StateStorage } from "zustand/middleware";
 import * as idb from "idb-keyval";
 import { CustomError, dangerousUUIDV4 } from "../utils/utils";
 import { Sampler } from "../web-rwkv-wasm-port/types";
-import { RWKVModelWeb } from "../components/ModelConfigUI";
+import {
+  APIModel,
+  APIModelParam,
+  RWKVModelWeb,
+} from "../components/ModelConfigUI";
 
-interface ModelSession {
-  llmModel: WebRWKVInferPort;
+interface ModelSession<T extends InferPortInterface = InferPortInterface> {
+  llmModel: T;
   loadingModelName: null | string;
   setLoadingModelName: (name: null | string) => void;
+  setLlmModel: (inferPort: T) => void;
 }
 
 export const useChatModelSession = create<ModelSession>()((set, get) => {
   return {
     loadingModelName: null,
-    llmModel: new WebRWKVInferPort(),
+    // llmModel: new WebRWKVInferPort(),
+    llmModel: new APIInferPort(),
     setLoadingModelName(name) {
       set({ ...get(), loadingModelName: name });
+    },
+    setLlmModel(inferPort) {
+      set({ ...get(), llmModel: inferPort });
     },
   };
 });
 
-interface RecentModel {
+// ====================== previous model storage interface ======================
+
+interface RecentModel_V0 {
   name: string;
   lastLoadedTimestamp: number;
   from: "web" | "device" | "URL";
@@ -39,8 +52,8 @@ interface RecentModel {
   defaultSessionConfiguration: SessionConfiguration;
 }
 
-interface ModelStorage {
-  recentModels: RecentModel[];
+interface ModelStorage_V0 {
+  recentModels: RecentModel_V0[];
 
   setRecentModel: ({
     name,
@@ -73,6 +86,70 @@ interface ModelStorage {
   }) => Promise<void>;
 }
 
+// ==============================================================================
+
+interface RecentModel {
+  name: string;
+  description: string | null;
+  supportReasoning: boolean;
+  reasoningName: string | null;
+  lastLoadedTimestamp: number;
+  from: "web" | "device" | "URL" | "API";
+  size: number;
+  param: string | null;
+  cached: boolean;
+  cacheItemKey: string | null;
+  loadFromWebParam: RWKVModelWeb | null;
+  loadFromAPIModel: APIModel | null;
+  vocal_url: string;
+  vocalCacheItemKey: string | null;
+  defaultSessionConfiguration: SessionConfiguration;
+}
+
+interface ModelStorage {
+  recentModels: RecentModel[];
+
+  setRecentModel: ({
+    name,
+    from,
+    cached,
+    vocal_url,
+    loadFromWebParam,
+    loadFromAPIModel,
+    size,
+    cacheItemKey,
+    vocalCacheItemKey,
+    defaultSessionConfiguration,
+    reasoningName,
+    supportReasoning,
+    param,
+    description,
+  }: {
+    name: string;
+    from: "web" | "device" | "URL" | "API";
+    vocal_url: string;
+    vocalCacheItemKey?: string;
+    cached: boolean;
+    size: number;
+    defaultSessionConfiguration: SessionConfiguration;
+    loadFromWebParam?: RWKVModelWeb;
+    loadFromAPIModel?: APIModel;
+    cacheItemKey?: string;
+    reasoningName?: string;
+    supportReasoning?: boolean;
+    param?: string;
+    description?: string | null;
+  }) => Promise<void>;
+  getRecentModel: ({ name }: { name: string }) => RecentModel | undefined;
+  deleteRecentModel: ({
+    name,
+    deleteCacheOnly,
+  }: {
+    name: string;
+    deleteCacheOnly?: boolean;
+  }) => Promise<void>;
+}
+
 export const useModelStorage = create<ModelStorage>()(
   persist(
     (set, get) => {
@@ -86,9 +163,14 @@ export const useModelStorage = create<ModelStorage>()(
           vocal_url,
           vocalCacheItemKey,
           loadFromWebParam,
+          loadFromAPIModel,
           size,
           cacheItemKey,
           defaultSessionConfiguration,
+          reasoningName,
+          supportReasoning,
+          param,
+          description,
         }) {
           set((prev) => ({
             ...prev,
@@ -100,11 +182,16 @@ export const useModelStorage = create<ModelStorage>()(
                 cached: cached,
                 cacheItemKey: cacheItemKey || null,
                 loadFromWebParam: loadFromWebParam || null,
+                loadFromAPIModel: loadFromAPIModel || null,
                 size: size,
                 lastLoadedTimestamp: Date.now(),
                 defaultSessionConfiguration,
                 vocal_url,
                 vocalCacheItemKey: vocalCacheItemKey || null,
+                reasoningName: reasoningName || null,
+                supportReasoning: supportReasoning || false,
+                param: param || null,
+                description: description || null,
               },
             ],
           }));
@@ -145,6 +232,25 @@ export const useModelStorage = create<ModelStorage>()(
       name: "webrwkv-model-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ recentModels: state.recentModels }),
+      version: 1,
+      migrate(persistedState, version) {
+        let currentVersion = version;
+        if (currentVersion === 0) {
+          // Add API storage
+          (persistedState as ModelStorage).recentModels = (
+            persistedState as ModelStorage_V0
+          ).recentModels.map((v) => ({
+            ...v,
+            loadFromAPIModel: null,
+            reasoningName: null,
+            supportReasoning: false,
+            param: null,
+            description: null,
+          }));
+          currentVersion = 1;
+        }
+        return persistedState;
+      },
     },
   ),
 );

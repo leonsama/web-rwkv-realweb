@@ -179,6 +179,18 @@ class ReactRenderer {
   br() {
     return this.#h("br");
   }
+
+  inlineKatex(children: ReactNode) {
+    return children;
+  }
+
+  blockKatex(children: ReactNode) {
+    return children;
+  }
+
+  thinkBlock(children: ReactNode) {
+    return children;
+  }
 }
 
 export default ReactRenderer;

@@ -2,12 +2,16 @@ import { useNavigate } from "react-router";
 import { ChatTextarea } from "../components/ChatTextarea";
 import { usePageStorage } from "../store/PageStorage";
 import { Flipped, Flipper } from "react-flip-toolkit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn, isEnterIndex } from "../utils/utils";
 import { Card, CardTitle } from "../components/Cards";
 import { useChatSessionStore } from "../store/ChatSessionStorage";
 import { createModalForm, Modal } from "../components/popup/Modals";
-import { ModelLoaderCard, useModelLoader } from "../components/ModelConfigUI";
+import {
+  APIModel,
+  ModelLoaderCard,
+  useModelLoader,
+} from "../components/ModelConfigUI";
 import { useChatModelSession, useModelStorage } from "../store/ModelStorage";
 import { Button } from "../components/Button";
 import { useWebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
@@ -20,7 +24,7 @@ export default function Home() {
   const chatSessionStorage = useChatSessionStore((state) => state);
 
   const { recentModels } = useModelStorage((s) => s);
-  const { fromCache, fromWeb } = useModelLoader();
+  const { fromCache, fromWeb, fromAPI } = useModelLoader();
 
   const { llmModel, loadingModelName } = useChatModelSession((s) => s);
   const { currentModelName, defaultSessionConfiguration } =
@@ -113,7 +117,7 @@ export default function Home() {
                     >
                       <RadioGroupOption value={"all"}>All</RadioGroupOption>
                       <RadioGroupOption value={"cached"}>
-                        Cached
+                        Available
                       </RadioGroupOption>
                     </RadioGroup>
                   </>
@@ -143,8 +147,11 @@ export default function Home() {
                     .sort((a, b) =>
                       a.lastLoadedTimestamp < b.lastLoadedTimestamp ? 1 : -1,
                     )
-                    .filter((v) => (showCachedOnly ? v.cached === true : true))
-                    .length === 0 ? (
+                    .filter((v) =>
+                      showCachedOnly
+                        ? v.from === "API" || v.cached === true
+                        : true,
+                    ).length === 0 ? (
                     <div className="-mt-2 flex flex-col items-center justify-center px-1 py-2 max-md:h-28 md:flex-1">
                       <svg
                         className="icon"
@@ -176,17 +183,41 @@ export default function Home() {
                     <div className="-mt-2 flex w-full flex-col gap-1 overflow-auto px-1 py-2 [mask-image:linear-gradient(0deg,_#0000_0px_,#ffff_8px,_#ffff_calc(100%_-_8px),_#0000_100%)] max-md:h-28 md:flex-1">
                       {recentModels
                         .filter((v) =>
-                          showCachedOnly ? v.cached === true : true,
+                          showCachedOnly
+                            ? v.from === "API" || v.cached === true
+                            : true,
                         )
                         .map((v) => {
                           return (
                             <div
-                              className="flex items-center gap-2"
+                              className="flex items-center gap-1"
                               key={v.name}
                             >
                               <div className="text-fadeout flex w-full flex-1 items-center overflow-hidden text-nowrap">
                                 <span className="w-0">{v.name}</span>
                               </div>
+                              {v.supportReasoning && (
+                                <div>
+                                  <span
+                                    className={cn(
+                                      "border-g rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
+                                    )}
+                                  >
+                                    Reasoning
+                                  </span>
+                                </div>
+                              )}
+                              {v.from === "API" && (
+                                <div>
+                                  <span
+                                    className={cn(
+                                      "border-g rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
+                                    )}
+                                  >
+                                    Online
+                                  </span>
+                                </div>
+                              )}
                               {v.cached && (
                                 <div>
                                   <span className="rounded-3xl border border-green-700 p-0.5 text-xs text-green-700">
@@ -194,44 +225,67 @@ export default function Home() {
                                   </span>
                                 </div>
                               )}
-                              <Button
-                                className={cn(
-                                  "rounded-xl p-1 px-2 font-medium",
-                                  loadingModelName === v.name &&
-                                    "pointer-events-none bg-transparent",
-                                  currentModelName === v.name &&
-                                    "pointer-events-none bg-transparent font-semibold",
-                                  v.from === "device" &&
-                                    v.cached === false &&
-                                    "invisible",
-                                )}
-                                onClick={async () => {
-                                  if (
-                                    currentModelName === v.name ||
-                                    (v.from === "device" && v.cached === false)
-                                  )
-                                    return;
-                                  if (v.cached) {
-                                    fromCache(v.name);
-                                  } else {
-                                    try {
-                                      const { shoudLoadFromWeb } =
-                                        await shouldLoadFromWeb.open();
-                                      if (shoudLoadFromWeb === "Yes") {
-                                        fromWeb(v.loadFromWebParam!);
-                                      }
-                                    } catch (error) {
+                              {v.from !== "API" ? (
+                                <Button
+                                  className={cn(
+                                    "rounded-xl p-1 px-2 font-medium",
+                                    loadingModelName === v.name &&
+                                      "pointer-events-none bg-transparent",
+                                    currentModelName === v.name &&
+                                      "pointer-events-none bg-transparent px-0.5 text-xs font-semibold hover:bg-white/0",
+                                    v.from === "device" &&
+                                      v.cached === false &&
+                                      "invisible",
+                                  )}
+                                  onClick={async () => {
+                                    if (
+                                      currentModelName === v.name ||
+                                      (v.from === "device" &&
+                                        v.cached === false)
+                                    )
                                       return;
+                                    if (v.cached) {
+                                      fromCache(v.name);
+                                    } else {
+                                      try {
+                                        const { shoudLoadFromWeb } =
+                                          await shouldLoadFromWeb.open();
+                                        if (shoudLoadFromWeb === "Yes") {
+                                          fromWeb(v.loadFromWebParam!);
+                                        }
+                                      } catch (error) {
+                                        return;
+                                      }
                                     }
-                                  }
-                                }}
-                              >
-                                {loadingModelName === v.name
-                                  ? "Loading"
-                                  : currentModelName === v.name
-                                    ? "Loaded"
-                                    : "Load"}
-                              </Button>
+                                    close!();
+                                  }}
+                                >
+                                  {loadingModelName === v.name
+                                    ? "Loading"
+                                    : currentModelName === v.name
+                                      ? "Current Model"
+                                      : "Load"}
+                                </Button>
+                              ) : (
+                                <Button
+                                  className={cn(
+                                    "rounded-xl p-1 px-3 font-medium",
+                                    loadingModelName === v.name &&
+                                      "pointer-events-none bg-transparent px-2",
+                                    currentModelName === v.name &&
+                                      "pointer-events-none bg-transparent px-0.5 text-xs font-semibold hover:bg-white/0",
+                                  )}
+                                  onClick={() => {
+                                    fromAPI(v.loadFromAPIModel!);
+                                  }}
+                                >
+                                  {loadingModelName === v.name
+                                    ? "Loading"
+                                    : currentModelName === v.name
+                                      ? "Current Model"
+                                      : "Use"}
+                                </Button>
+                              )}
                             </div>
                           );
                         })}
@@ -273,7 +327,7 @@ export default function Home() {
               <Card
                 title="RWKV"
                 className={cn(
-                  "cursor-pointer transition-all hover:scale-[1.03]",
+                  "cursor-pointer transition-all md:hover:scale-[1.03]",
                   isEnterIndex()
                     ? "motion-delay-[1000ms]"
                     : showUI && "motion-delay-[300ms]",
@@ -307,7 +361,7 @@ export default function Home() {
               <Card
                 title={"WEB RWKV"}
                 className={cn(
-                  "cursor-pointer transition-all hover:scale-[1.03]",
+                  "cursor-pointer transition-all md:hover:scale-[1.03]",
                   isEnterIndex()
                     ? "motion-delay-[1150ms]"
                     : showUI && "motion-delay-[350ms]",

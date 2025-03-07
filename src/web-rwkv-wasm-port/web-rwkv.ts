@@ -4,6 +4,7 @@ import WebRWKVWorker from "./web-rwkv.worker?worker";
 import { WEB_RWKV_WASM_PORT } from "./web-rwkv.worker";
 import { Sampler } from "./types";
 import { CustomError } from "../utils/utils";
+import { APIModelParam } from "../components/ModelConfigUI";
 
 export interface SessionConfiguration {
   stopTokens: number[];
@@ -36,9 +37,12 @@ export const DEFAULT_SESSION_CONFIGURATION = {
   defaultSamplerConfig: DEFAULT_SAMPLER_CONFIG,
 };
 
-export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
+export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
   const [currentModelName, setCurrentModelName] = useState<string | null>(
     webRWKVInferPort.currentModelName,
+  );
+  const [supportReasoning, setSupportReasoning] = useState<boolean>(
+    webRWKVInferPort.supportReasoning,
   );
 
   const defaultSessionConfiguration = useRef<SessionConfiguration>(null!);
@@ -54,10 +58,12 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
     defaultSessionConfiguration.current =
       webRWKVInferPort.defaultSessionConfiguration;
 
+    setSupportReasoning(webRWKVInferPort.supportReasoning);
+
     return () => {
       webRWKVInferPort.removeCurrentModelChange(onChangeModelHook);
     };
-  }, []);
+  }, [webRWKVInferPort]);
 
   const unloadModel = async () => {
     webRWKVInferPort.unloadModel();
@@ -108,6 +114,7 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
       new_message_role = "Assistant",
       stop_tokens = DEFAULT_STOP_TOKENS,
       stop_words = DEFAULT_STOP_WORDS,
+      enableReasoning = false,
     }: {
       max_tokens?: number;
       prompt?: string;
@@ -121,6 +128,7 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
       new_message_role?: string;
       stop_tokens?: number[];
       stop_words?: string[];
+      enableReasoning?: boolean;
     },
     controller: AbortController = new AbortController(),
   ): Promise<{
@@ -147,6 +155,10 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
         const innerCompletion = webRWKVInferPort.completion(
           {
             max_tokens,
+            messages: messages?.filter((v) => !v.hasOwnProperty("text")) as {
+              role: string;
+              content: string;
+            }[],
             prompt: formattedPrompt,
             temperature,
             top_p,
@@ -156,6 +168,7 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
             stream,
             stop_tokens,
             stop_words,
+            enableReasoning,
           },
           controller.signal,
         );
@@ -177,10 +190,12 @@ export function useWebRWKVChat(webRWKVInferPort: WebRWKVInferPort) {
   return {
     currentModelName,
     defaultSessionConfiguration,
+    supportReasoning,
 
     loadModel,
     unloadModel,
     completion,
+    warnup,
 
     onConsoleLog: webRWKVInferPort.onConsoleLog,
     removeConsoleLog: webRWKVInferPort.removeConsoleLog,
@@ -205,7 +220,48 @@ export function cleanChatPrompt(prompt: string) {
   return prompt.trim().replace(/\n+/g, "\n");
 }
 
-export class WebRWKVInferPort {
+export interface InferPortInterface {
+  portType: string;
+  isLoadingModel: boolean;
+  currentModelName: string | null;
+  defaultSessionConfiguration: SessionConfiguration;
+  vacalUrl: string | null;
+
+  supportReasoning: boolean;
+  isEnableReasoning: boolean;
+
+  init(): Promise<void>;
+
+  onCurrentModelChange(cb: (name: string | null) => void): void;
+  removeCurrentModelChange(cb: (name: string | null) => void): void;
+
+  resetWorker(): Promise<void>;
+  unloadModel(): Promise<void>;
+  loadModel(name: string, chunks: Uint8Array[]): Promise<void>;
+
+  onConsoleLog(cb: (...args: any[]) => void): void;
+  removeConsoleLog(cb: (...args: any[]) => void): void;
+
+  completion(
+    options: {
+      messages?: { role: string; content: string }[];
+      max_tokens?: number;
+      prompt: string;
+      temperature?: number;
+      top_p?: number;
+      presence_penalty?: number;
+      count_penalty?: number;
+      penalty_half_life?: number;
+      stream?: boolean;
+      stop_tokens?: number[];
+      stop_words?: string[];
+      enableReasoning?: boolean;
+    },
+    signal?: AbortSignal,
+  ): AsyncGenerator<string, void, unknown>;
+}
+
+export class WebRWKVInferPort implements InferPortInterface {
   private workerClass: Comlink.Remote<typeof WEB_RWKV_WASM_PORT> | undefined =
     undefined;
   private worker: Comlink.Remote<WEB_RWKV_WASM_PORT> | null = null;
@@ -213,17 +269,14 @@ export class WebRWKVInferPort {
   private currentModelNameCallback: ((name: string | null) => void)[] = [];
   private consoleLogCallbackList: (typeof console.log)[] = [];
 
+  portType: string = "wasm";
+
+  supportReasoning: boolean = false;
+  isEnableReasoning: boolean = false;
+
   isLoadingModel: boolean = false;
   currentModelName: string | null = null;
 
-  // defaultSamplerParam: Sampler = {
-  //   temperature: 1.0,
-  //   top_p: 0.5,
-  //   presence_penalty: 0.5,
-  //   count_penalty: 0.5,
-  //   half_life: 200,
-  // };
-  // defaultSystemPrompt: string | null = null;
   defaultSessionConfiguration: SessionConfiguration = null!;
 
   vacalUrl: string | null = null;
@@ -248,6 +301,7 @@ export class WebRWKVInferPort {
   }
   onCurrentModelChange(cb: (name: string | null) => void) {
     this.currentModelNameCallback.push(cb);
+    this.setCurrentModel(this.currentModelName);
   }
   removeCurrentModelChange(cb: (name: string | null) => void) {
     this.currentModelNameCallback = this.currentModelNameCallback.filter(
@@ -311,6 +365,7 @@ export class WebRWKVInferPort {
   async *completion(
     options: {
       max_tokens?: number;
+      messages?: { role: string; content: string }[];
       prompt: string;
       temperature?: number;
       top_p?: number;
@@ -374,6 +429,213 @@ export class WebRWKVInferPort {
       if (signal?.aborted) {
         break;
       }
+    }
+  }
+}
+
+export class APIInferPort implements InferPortInterface {
+  private currentModelNameCallback: ((name: string | null) => void)[] = [];
+
+  supportReasoning: boolean = false;
+  reasoningModelName: string | null = null;
+  isEnableReasoning: boolean = false;
+
+  portType: string = "api";
+
+  isLoadingModel: boolean = false;
+  currentModelName: string | null = null;
+
+  defaultSessionConfiguration: SessionConfiguration = null!;
+
+  vacalUrl: string | null = null;
+
+  APIModelParam: APIModelParam | null = null;
+
+  constructor() {}
+
+  async init() {}
+
+  // load & unload model
+
+  async resetWorker() {}
+
+  async unloadModel() {
+    this.APIModelParam = null;
+    this.setCurrentModel(null);
+  }
+
+  async loadModel(name: string, chunks: Uint8Array[]) {
+    throw new Error("APIInferPort");
+  }
+
+  async loadModelFromAPI(modelName: string, APIModelParam: APIModelParam) {
+    this.setCurrentModel(modelName);
+    this.APIModelParam = APIModelParam;
+  }
+
+  // currentModelNameCallback
+
+  private setCurrentModel(name: string | null) {
+    this.currentModelName = name;
+    this.currentModelNameCallback.forEach((cb) => cb(name));
+  }
+  onCurrentModelChange(cb: (name: string | null) => void) {
+    this.currentModelNameCallback.push(cb);
+    this.setCurrentModel(this.currentModelName);
+  }
+  removeCurrentModelChange(cb: (name: string | null) => void) {
+    this.currentModelNameCallback = this.currentModelNameCallback.filter(
+      (x) => x !== cb,
+    );
+  }
+
+  //console log
+
+  async setupConsoleLog() {}
+  onConsoleLog(cb: (...args: any[]) => void) {}
+  removeConsoleLog(cb: (...args: any[]) => void) {}
+
+  async *completion(
+    options: {
+      max_tokens?: number;
+      prompt: string;
+      temperature?: number;
+      top_p?: number;
+      presence_penalty?: number;
+      count_penalty?: number;
+      penalty_half_life?: number;
+      stream?: boolean;
+      stop_tokens?: number[];
+      stop_words?: string[];
+      enableReasoning?: boolean;
+      messages?: { role: string; content: string }[];
+    },
+    signal?: AbortSignal,
+  ): AsyncGenerator<string, void, unknown> {
+    if (!this.APIModelParam) {
+      throw new Error("APIParam not initialized");
+    }
+    if (!this.currentModelName) {
+      throw new Error("ModelName not set");
+    }
+
+    const url = `${this.APIModelParam.baseUrl}/chat/completions`;
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.APIModelParam.key}`,
+    };
+
+    const requestBody = {
+      model:
+        this.portType === "api" && options.enableReasoning
+          ? (this as APIInferPort).reasoningModelName!
+          : this.currentModelName!,
+      // prompt: options.prompt,
+      messages: options.messages,
+      max_tokens: options.max_tokens,
+      temperature: options.temperature,
+      top_p: options.top_p,
+      presence_penalty: options.presence_penalty,
+      ...(options.count_penalty !== undefined && {
+        count_penalty: options.count_penalty,
+      }),
+      ...(options.penalty_half_life !== undefined && {
+        penalty_decay: Math.exp(
+          -0.69314718 /
+            Math.max(
+              options.penalty_half_life ??
+                this.defaultSessionConfiguration.defaultSamplerConfig.half_life,
+              1,
+            ),
+        ),
+      }),
+      stream: true,
+      ...(options.stop_words && { stop: options.stop_words }),
+    };
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(requestBody),
+        signal,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `API request failed: ${response.status} ${response.statusText} - ${errorText}`,
+        );
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("Failed to read response body");
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      let isThinking = false;
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          let eventEndIndex;
+
+          while ((eventEndIndex = buffer.indexOf("\n\n")) !== -1) {
+            const eventData = buffer.slice(0, eventEndIndex);
+            buffer = buffer.slice(eventEndIndex + 2);
+
+            for (const line of eventData.split("\n")) {
+              if (line.startsWith("data: ")) {
+                const jsonStr = line.slice(6).trim();
+                if (jsonStr === "[DONE]") continue;
+
+                try {
+                  const data = JSON.parse(jsonStr);
+                  const reasoningContent =
+                    data.choices[0]?.delta.reasoning_content || "";
+                  const content = data.choices[0]?.delta.content || "";
+                  if (reasoningContent != "" && !isThinking) {
+                    isThinking = true;
+                    yield `<think>`;
+                  } else if (content !== "" && isThinking) {
+                    isThinking = false;
+                    yield `</think>`;
+                  }
+                  yield `${reasoningContent}${content}`;
+                } catch (e) {
+                  console.error("Failed to parse SSE data:", e);
+                }
+              }
+            }
+          }
+        }
+
+        // Process remaining buffer content
+        if (buffer.trim()) {
+          for (const line of buffer.split("\n")) {
+            if (line.startsWith("data: ")) {
+              const jsonStr = line.slice(6).trim();
+              try {
+                const data = JSON.parse(jsonStr);
+                const text = data.choices[0]?.text || "";
+                if (text) yield text;
+              } catch (e) {
+                console.error("Failed to parse remaining data:", e);
+              }
+            }
+          }
+        }
+      } finally {
+        reader.releaseLock();
+      }
+    } catch (error) {
+      if ((error as any).name === "AbortError") return;
+      console.log("Error ", error);
     }
   }
 }

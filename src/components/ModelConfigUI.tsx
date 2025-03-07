@@ -1,16 +1,18 @@
 import React, { useRef, useState } from "react";
 import {
+  APIInferPort,
   DEFAULT_SESSION_CONFIGURATION,
   DEFAULT_STOP_TOKENS,
   DEFAULT_STOP_WORDS,
+  InferPortInterface,
   SessionConfiguration,
   useWebRWKVChat,
+  WebRWKVInferPort,
 } from "../web-rwkv-wasm-port/web-rwkv";
 import { Button } from "./Button";
 import { Card, CardTitle, Entry } from "./Cards";
 import { ComponentLoadLevel } from "./popup/Popup.d";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs";
-import { loadFile } from "../utils/loadModels";
 import { getMaxZIndex } from "./popup/utils";
 import { Id, toast } from "react-toastify";
 import {
@@ -20,7 +22,7 @@ import {
 } from "../store/ModelStorage";
 import { Sampler } from "../web-rwkv-wasm-port/types";
 
-import DEFAULT_VOVAB_URL from "../../assets/rwkv_vocab_v20230424.json?url";
+import DEFAULT_VOCAB_URL from "../../assets/rwkv_vocab_v20230424.json?url";
 import { createModalForm, Modal, USER_CANCEL_ERROR } from "./popup/Modals";
 import {
   cn,
@@ -33,23 +35,77 @@ import { createContextMenu, Menu, MenuItem } from "./popup/ContentMenu";
 
 export interface RWKVModelWeb {
   name: string;
-  size: string;
+  description: string | null;
+  supportReasoning: boolean;
+  param: string;
+  size: number;
   ctx: string;
   dataset: string;
   update: string;
   fetchParams: Parameters<typeof fetch>;
   vocal_url: string;
   defaultSessionConfiguration: SessionConfiguration;
+  from: "Web";
 }
 
-// const DEFAULT_VOVAB_URL = "/assets/rwkv_vocab_v20230424.json";
+export interface APIModelParam {
+  baseUrl: string;
+  key: string;
+}
+
+export interface APIModel {
+  name: string;
+  description: string | null;
+  supportReasoning: boolean;
+  reasoningName: string | null;
+  param: string | null;
+  dataset: string;
+  update: string;
+  defaultSessionConfiguration: SessionConfiguration;
+  APIParam: APIModelParam;
+  ctx: string;
+  from: "API";
+}
+
+// const DEFAULT_VOCAB_URL = "/assets/rwkv_vocab_v20230424.json";
+
+export const DEFAULT_API_MODEL: APIModel = {
+  name: "rwkv-latest",
+  description: "Latest RWKV Official Online Model",
+  supportReasoning: true,
+  reasoningName: "rwkv-latest:thinking",
+  param: null,
+  dataset: "v2.8",
+  update: "2024/12/10",
+  ctx: "4096",
+  defaultSessionConfiguration: {
+    stopTokens: DEFAULT_STOP_TOKENS,
+    stopWords: DEFAULT_STOP_WORDS,
+    maxTokens: 2048,
+    systemPrompt: null,
+    defaultSamplerConfig: {
+      temperature: 2.0,
+      top_p: 0.5,
+      presence_penalty: 0.5,
+      count_penalty: 0.5,
+      half_life: 200,
+    },
+  },
+  APIParam: {
+    baseUrl: "http://127.0.0.1:8000/api/v1",
+    key: "sk-test",
+  },
+  from: "API",
+};
 
 const DEFAULT_SYSTEM_PROMPT = `system: You are an AI assistant powered by the RWKV7 model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`;
 
 const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
   {
     name: "RWKV x070 World",
-    size: "0.1B",
+    description: "Web RWKV model by Cryscan",
+    param: "0.1B",
+    size: 382105168,
     dataset: "v2.8",
     ctx: "4096",
     update: "2024/12/10",
@@ -63,7 +119,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
         },
       },
     ],
-    vocal_url: DEFAULT_VOVAB_URL,
+    vocal_url: DEFAULT_VOCAB_URL,
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
       stopWords: DEFAULT_STOP_WORDS,
@@ -77,10 +133,14 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
         half_life: 200,
       },
     },
+    supportReasoning: false,
+    from: "Web",
   },
   {
     name: "RWKV x070 World",
-    size: "0.4B",
+    description: "Web RWKV model by Cryscan",
+    size: 945815552,
+    param: "0.4B",
     dataset: "v2.8",
     ctx: "4096",
     update: "2025/01/07",
@@ -94,7 +154,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
         },
       },
     ],
-    vocal_url: DEFAULT_VOVAB_URL,
+    vocal_url: DEFAULT_VOCAB_URL,
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
       stopWords: DEFAULT_STOP_WORDS,
@@ -108,17 +168,33 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
         half_life: 200,
       },
     },
+    supportReasoning: false,
+    from: "Web",
   },
 ];
 
 export function useModelLoader() {
   const { createCacheItem, readCacheItem } = useIndexedDBCache((s) => s);
   const { setRecentModel, getRecentModel } = useModelStorage((s) => s);
-  const { loadModel, defaultSessionConfiguration } = useWebRWKVChat(
-    useChatModelSession((s) => s.llmModel),
-  );
+  const { llmModel, setLlmModel } = useChatModelSession((s) => s);
+
   const { setLoadingModelName } = useChatModelSession((s) => s);
   const modelLoadTaster = useRef<Id>(-1);
+
+  const wasmWarnup = async (wasmport: InferPortInterface) => {
+    const stream = await wasmport.completion({
+      stream: true,
+      prompt: "User: who?\n\nAssistant:",
+      max_tokens: 10,
+    });
+    let result = "";
+    console.log(stream);
+
+    for await (const chunk of stream) {
+      result += chunk;
+    }
+    console.log("warnup:", result);
+  };
 
   const showError = async (error: Error) => {
     await createModalForm(
@@ -245,14 +321,17 @@ export function useModelLoader() {
     }
   };
 
-  const commonLoadHandler = async ({
+  const WASMCommonLoadHandler = async ({
     name,
     chunks,
     from,
     size,
     cacheItemKey,
+    param,
     loadFromWebParam,
     defaultSessionConfiguration,
+    supportReasoning,
+    description,
   }: {
     name: string;
     chunks: Uint8Array[];
@@ -261,6 +340,9 @@ export function useModelLoader() {
     cacheItemKey: string | undefined;
     loadFromWebParam: RWKVModelWeb | undefined;
     defaultSessionConfiguration: SessionConfiguration;
+    supportReasoning: boolean;
+    param: string | null;
+    description: string | null;
   }) => {
     toast.update(modelLoadTaster.current, {
       progress: 0.99,
@@ -274,17 +356,23 @@ export function useModelLoader() {
       cacheItemKey,
       size: size,
       defaultSessionConfiguration,
-      vocal_url: DEFAULT_VOVAB_URL,
+      vocal_url: DEFAULT_VOCAB_URL,
       loadFromWebParam: loadFromWebParam,
+      param: param || undefined,
+      description,
     });
 
+    const newLlmModel =
+      llmModel.portType === "wasm" ? llmModel : new WebRWKVInferPort();
+    await newLlmModel.init();
+    newLlmModel.vacalUrl = DEFAULT_VOCAB_URL;
+    newLlmModel.defaultSessionConfiguration = defaultSessionConfiguration;
+    newLlmModel.supportReasoning = supportReasoning;
+
     try {
-      await loadModel(
-        name,
-        chunks,
-        DEFAULT_VOVAB_URL,
-        defaultSessionConfiguration,
-      );
+      await newLlmModel.loadModel(name, chunks);
+      wasmWarnup(newLlmModel);
+      setLlmModel(newLlmModel);
     } catch (error) {
       toast.update(modelLoadTaster.current, {
         type: "error",
@@ -315,6 +403,7 @@ export function useModelLoader() {
 
   const fromDevice = async (file: File) => {
     setLoadingModelName(file.name);
+    console.log("Load model from device:", file.name);
 
     let isCacheModel = await shouldSaveModel();
 
@@ -362,7 +451,7 @@ export function useModelLoader() {
     }
 
     await cacheItem?.close();
-    await commonLoadHandler({
+    await WASMCommonLoadHandler({
       name: file.name,
       chunks: chunks,
       from: "device",
@@ -370,6 +459,9 @@ export function useModelLoader() {
       cacheItemKey: !isError ? cacheItem?.key : undefined,
       defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
       loadFromWebParam: undefined,
+      supportReasoning: false,
+      param: null,
+      description: null,
     });
     setLoadingModelName(null);
   };
@@ -379,10 +471,11 @@ export function useModelLoader() {
     name?: string,
     customUrl?: boolean,
   ) => {
+    console.log("Load model from web:", model);
     modelLoadTaster.current = toast.loading("Downloading Model");
 
     const modelName =
-      name || `${model.name} ${model.size} ${model.dataset} CTX${model.ctx}`;
+      name || `${model.name} ${model.param} ${model.dataset} CTX${model.ctx}`;
     console.log(name, modelName);
     setLoadingModelName(modelName);
 
@@ -448,14 +541,17 @@ export function useModelLoader() {
         });
       }
       await cacheItem?.close();
-      await commonLoadHandler({
+      await WASMCommonLoadHandler({
         name: modelName,
         chunks: chunks,
         from: customUrl ? "URL" : "web",
         size: receivedLength,
+        param: model.param,
         cacheItemKey: !isError ? cacheItem?.key : undefined,
         defaultSessionConfiguration: model.defaultSessionConfiguration,
         loadFromWebParam: model,
+        supportReasoning: model.supportReasoning,
+        description: model.description,
       });
     } catch (error) {
       toast.update(modelLoadTaster.current, {
@@ -476,47 +572,83 @@ export function useModelLoader() {
   const fromCache = async (modelName: string) => {
     modelLoadTaster.current = toast.loading("Loading from Cache");
     setLoadingModelName(modelName);
+    console.log("Load model from cache:", modelName);
 
-    const { defaultSessionConfiguration, loadFromWebParam } = getRecentModel({
+    const recentModel = getRecentModel({
       name: modelName,
     })!;
 
-    try {
-      const chunks: Uint8Array[] = [];
-      const generator = readCacheItem({ key: modelName });
+    if (recentModel.from === "API") {
+      fromAPI(recentModel.loadFromAPIModel!);
+    } else {
+      try {
+        const chunks: Uint8Array[] = [];
+        const generator = readCacheItem({ key: modelName });
 
-      let chunkCount = 0;
-      let receivedLength = 0;
+        let chunkCount = 0;
+        let receivedLength = 0;
 
-      for await (const chunk of generator) {
-        receivedLength += chunk.length;
-        chunks.push(chunk);
-        toast.update(modelLoadTaster.current, {
-          progress: (1 - Math.exp((-1 * chunkCount) / 8)) * 0.9,
+        for await (const chunk of generator) {
+          receivedLength += chunk.length;
+          chunks.push(chunk);
+          toast.update(modelLoadTaster.current, {
+            progress: (1 - Math.exp((-1 * chunkCount) / 8)) * 0.9,
+          });
+        }
+
+        await WASMCommonLoadHandler({
+          name: modelName,
+          chunks: chunks,
+          from: recentModel.from,
+          size: receivedLength,
+          cacheItemKey: modelName,
+          defaultSessionConfiguration: recentModel.defaultSessionConfiguration,
+          loadFromWebParam: recentModel.loadFromWebParam || undefined,
+          supportReasoning: recentModel.supportReasoning,
+          param: recentModel.param,
+          description: recentModel.description,
         });
+      } catch (error) {
+        toast.update(modelLoadTaster.current, {
+          type: "error",
+          render: "Cache load failed",
+        });
+        throw error;
+      } finally {
+        setLoadingModelName(null);
       }
-
-      await commonLoadHandler({
-        name: modelName,
-        chunks: chunks,
-        from: "device",
-        size: receivedLength,
-        cacheItemKey: modelName,
-        defaultSessionConfiguration: defaultSessionConfiguration,
-        loadFromWebParam: loadFromWebParam || undefined,
-      });
-    } catch (error) {
-      toast.update(modelLoadTaster.current, {
-        type: "error",
-        render: "Cache load failed",
-      });
-      throw error;
-    } finally {
-      setLoadingModelName(null);
     }
   };
 
-  return { fromDevice, fromWeb, fromCache };
+  const fromAPI = async (model: APIModel) => {
+    console.log("Load model from api:", model);
+    setRecentModel({
+      name: model.name,
+      supportReasoning: model.supportReasoning,
+      reasoningName: model.reasoningName || undefined,
+      from: "API",
+      cached: false,
+      size: -1,
+      defaultSessionConfiguration: model.defaultSessionConfiguration,
+      vocal_url: "",
+      loadFromAPIModel: model,
+      param: model.param || undefined,
+      description: model.description,
+    });
+
+    const newLlmModel = new APIInferPort();
+    await (newLlmModel as APIInferPort).loadModelFromAPI(
+      model.name,
+      model.APIParam,
+    );
+    newLlmModel.defaultSessionConfiguration = model.defaultSessionConfiguration;
+    newLlmModel.supportReasoning = model.supportReasoning;
+    (newLlmModel as APIInferPort).reasoningModelName = model.reasoningName;
+
+    setLlmModel(newLlmModel);
+  };
+
+  return { fromDevice, fromWeb, fromCache, fromAPI };
 }
 
 export function ModelLoaderCard({
@@ -531,7 +663,7 @@ export function ModelLoaderCard({
   enterTabValue?: string;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "className">) {
   const { recentModels, deleteRecentModel } = useModelStorage((s) => s);
-  const { fromDevice, fromWeb, fromCache } = useModelLoader();
+  const { fromDevice, fromWeb, fromCache, fromAPI } = useModelLoader();
   const { loadingModelName, llmModel } = useChatModelSession((s) => s);
   const { currentModelName } = useWebRWKVChat(llmModel);
 
@@ -620,7 +752,7 @@ export function ModelLoaderCard({
               </Entry>
               <Entry label="Vocal URL">
                 <input
-                  defaultValue={DEFAULT_VOVAB_URL}
+                  defaultValue={DEFAULT_VOCAB_URL}
                   className="rounded-lg border p-2"
                   name="vocalUrl"
                 ></input>
@@ -676,13 +808,17 @@ export function ModelLoaderCard({
         );
       const customFileParame: RWKVModelWeb = {
         name: modelName === "" ? modelUrl : modelName,
-        size: "-",
+        description: null,
+        param: "-",
+        size: -1,
         dataset: "-",
         ctx: "-",
         update: "-",
         fetchParams: [modelUrl, { ...JSON.parse(fetchOptions) }],
         vocal_url: vocalUrl,
         defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
+        supportReasoning: false,
+        from: "Web",
       };
       fromWeb(customFileParame, modelName, true);
     } catch (error) {
@@ -783,14 +919,15 @@ export function ModelLoaderCard({
           )}
         </>
       }
-      className="w-full bg-slate-100 md:w-2/3 md:max-w-2xl"
+      className="w-full bg-slate-100 max-md:h-full max-md:rounded-none md:w-3/4 md:max-w-3xl"
     >
-      <Entry>
-        <div className="flex flex-1 flex-col gap-5">
+      <Entry className="flex-1">
+        <div className="h flex flex-1 flex-col gap-5">
           <Tabs
             defaultValue={activeTab}
             value={activeTab}
             onValueChange={(v) => setActiveTab(v)}
+            className="max-md:flex-1"
           >
             <TabsList className={"h-10 flex-shrink-0 gap-1 bg-slate-200 p-1"}>
               <TabsTrigger value="recent">Recent</TabsTrigger>
@@ -798,9 +935,9 @@ export function ModelLoaderCard({
               <TabsTrigger value="device">Device</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="recent">
+            <TabsContent value="recent" className="max-md:h-full">
               {recentModels.length === 0 ? (
-                <div className="flex h-80 flex-col items-center justify-center">
+                <div className="flex h-full flex-col items-center justify-center md:h-96">
                   <svg
                     className="icon"
                     viewBox="0 0 1024 1024"
@@ -853,146 +990,328 @@ export function ModelLoaderCard({
                   </span>
                 </div>
               ) : (
-                <div className="flex h-80 flex-col overflow-auto">
-                  <table className="w-full table-auto text-nowrap text-left text-sm">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>From</th>
-                        <th>Cache</th>
-                        <th>Size</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {recentModels
-                        .sort((a, b) =>
-                          a.lastLoadedTimestamp < b.lastLoadedTimestamp
-                            ? 1
-                            : -1,
-                        )
-                        .map((v, k) => {
-                          return (
-                            <tr key={v.name}>
-                              <td>
-                                <div className={"text-fadeout text-nowrap"}>
-                                  {v.name}
-                                </div>
-                              </td>
-                              <td>
-                                {v.from.slice(0, 1).toUpperCase() +
-                                  v.from.slice(1)}
-                              </td>
-                              <td>
-                                {v.cached && (
-                                  <span className="rounded-3xl border border-green-700 p-0.5 text-xs text-green-700">
-                                    Cached
+                <div className="flex h-full flex-col overflow-auto md:h-96">
+                  <div className="grid w-full gap-4 lg:grid-cols-2">
+                    {recentModels
+                      .sort((a, b) =>
+                        a.lastLoadedTimestamp < b.lastLoadedTimestamp ? 1 : -1,
+                      )
+                      .map((v) => {
+                        return (
+                          <RecordManagement.ContextMenuTrigger
+                            key={v.name}
+                            data={v.name}
+                            contextMenu={true}
+                          >
+                            <div className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2">
+                              <div
+                                className={
+                                  "text-fadeout flex w-full overflow-auto text-nowrap pt-2 text-xl font-semibold"
+                                }
+                              >
+                                <span className="w-0 flex-1">{v.name}</span>
+                              </div>
+                              <div>
+                                {v.description ? (
+                                  <span>{v.description}</span>
+                                ) : (
+                                  <span className="text-gray-500">
+                                    No description.
                                   </span>
                                 )}
-                              </td>
-                              <td className={cn(!v.cached && "text-gray-500")}>
-                                {v.size ? formatFileSize(v.size) : ""}
-                              </td>
-                              <td className="flex justify-end gap-1">
-                                <Button
-                                  className={cn(
-                                    "rounded-xl p-1 px-2 font-medium",
-                                    loadingModelName === v.name &&
-                                      "pointer-events-none bg-transparent",
-                                    currentModelName === v.name &&
-                                      "pointer-events-none bg-transparent font-semibold",
-                                    v.from === "device" &&
-                                      v.cached === false &&
-                                      "invisible",
-                                  )}
-                                  onClick={async () => {
-                                    if (
-                                      currentModelName === v.name ||
-                                      (v.from === "device" &&
-                                        v.cached === false)
-                                    )
-                                      return;
-                                    if (v.cached) {
-                                      fromCache(v.name);
-                                    } else {
-                                      try {
-                                        const { shoudLoadFromWeb } =
-                                          await shouldLoadFromWeb.open();
-                                        if (shoudLoadFromWeb === "Yes") {
-                                          fromWeb(v.loadFromWebParam!);
-                                        }
-                                      } catch (error) {
-                                        return;
-                                      }
-                                    }
-                                    close!();
-                                  }}
-                                >
-                                  {loadingModelName === v.name
-                                    ? "Loading"
-                                    : currentModelName === v.name
-                                      ? "Loaded"
-                                      : "Load"}
-                                </Button>
-
-                                <RecordManagement.ContextMenuTrigger
-                                  click={true}
-                                  data={v.name}
-                                  position="bottom right"
-                                >
-                                  <span>
-                                    <Button className="bg-transparent p-1.5">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                        className="size-5"
+                              </div>
+                              <div className="flex gap-1">
+                                <div className="flex flex-1 items-center gap-1 overflow-x-auto">
+                                  {v.supportReasoning && (
+                                    <div>
+                                      <span
+                                        className={cn(
+                                          "border-g flex items-center rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
+                                        )}
                                       >
-                                        <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
-                                      </svg>
+                                        Reasoning
+                                      </span>
+                                    </div>
+                                  )}
+                                  {v.from === "API" && (
+                                    <div>
+                                      <span
+                                        className={cn(
+                                          "border-g flex items-center rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
+                                        )}
+                                      >
+                                        Online
+                                      </span>
+                                    </div>
+                                  )}
+                                  {v.param && (
+                                    <div>
+                                      <span
+                                        className={cn(
+                                          "border-g flex items-center rounded-3xl border border-blue-600 p-0.5 text-xs text-blue-600",
+                                        )}
+                                      >
+                                        {v.param}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {v.from !== "API" && (
+                                    <div>
+                                      <span
+                                        className={cn(
+                                          v.cached
+                                            ? "border-green-700 text-green-700"
+                                            : "border-gray-500 text-gray-500",
+                                          "flex items-center rounded-3xl border p-0.5 text-xs",
+                                        )}
+                                      >
+                                        {v.cached ? "Cached" : "No Cache"}{" "}
+                                        {v.size && v.size > 0
+                                          ? formatFileSize(v.size)
+                                          : ""}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex justify-end gap-1">
+                                  {v.from !== "API" ? (
+                                    <Button
+                                      className={cn(
+                                        "rounded-xl p-1 px-2 font-medium",
+                                        loadingModelName === v.name &&
+                                          "pointer-events-none bg-transparent",
+                                        currentModelName === v.name &&
+                                          "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0",
+                                        v.from === "device" &&
+                                          v.cached === false &&
+                                          "invisible",
+                                      )}
+                                      onClick={async () => {
+                                        if (
+                                          currentModelName === v.name ||
+                                          (v.from === "device" &&
+                                            v.cached === false)
+                                        )
+                                          return;
+                                        if (v.cached) {
+                                          fromCache(v.name);
+                                        } else {
+                                          try {
+                                            const { shoudLoadFromWeb } =
+                                              await shouldLoadFromWeb.open();
+                                            if (shoudLoadFromWeb === "Yes") {
+                                              fromWeb(v.loadFromWebParam!);
+                                            }
+                                          } catch (error) {
+                                            return;
+                                          }
+                                        }
+                                        close!();
+                                      }}
+                                    >
+                                      {loadingModelName === v.name
+                                        ? "Loading"
+                                        : currentModelName === v.name
+                                          ? "Current Model"
+                                          : "Load"}
                                     </Button>
-                                  </span>
-                                </RecordManagement.ContextMenuTrigger>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
+                                  ) : (
+                                    <Button
+                                      className={cn(
+                                        "rounded-xl p-1 px-3 font-medium",
+                                        loadingModelName === v.name &&
+                                          "pointer-events-none bg-transparent px-2",
+                                        currentModelName === v.name &&
+                                          "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0",
+                                      )}
+                                      onClick={() => {
+                                        fromAPI(v.loadFromAPIModel!);
+                                        close!();
+                                      }}
+                                    >
+                                      {loadingModelName === v.name
+                                        ? "Loading"
+                                        : currentModelName === v.name
+                                          ? "Current Model"
+                                          : "Use"}
+                                    </Button>
+                                  )}
+
+                                  <RecordManagement.ContextMenuTrigger
+                                    click={true}
+                                    data={v.name}
+                                    position="bottom right"
+                                  >
+                                    <span>
+                                      <Button className="bg-transparent p-1.5">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          viewBox="0 0 20 20"
+                                          fill="currentColor"
+                                          className="size-5"
+                                        >
+                                          <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+                                        </svg>
+                                      </Button>
+                                    </span>
+                                  </RecordManagement.ContextMenuTrigger>
+                                </div>
+                              </div>
+                            </div>
+                          </RecordManagement.ContextMenuTrigger>
+                        );
+                      })}
+                  </div>
                 </div>
               )}
             </TabsContent>
 
-            <TabsContent value="web">
-              <div className="flex h-80 flex-col overflow-auto">
-                <table className="w-full table-auto text-left text-sm">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Size</th>
-                      <th>Dataset</th>
-                      <th>CTX</th>
-                      <th>Released</th>
-                      <th className="text-center">Operation</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[...ONLINE_RWKV_MODELS].map((v, k) => {
-                      return (
-                        <tr key={k}>
-                          <td>{v.name}</td>
-                          <td>{v.size}</td>
-                          <td>{v.dataset}</td>
-                          <td>{v.ctx}</td>
-                          <td>{v.update}</td>
-                          <td className="text-center">
-                            <Button onClick={() => fromWeb(v)}>Load</Button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+            <TabsContent value="web" className="max-md:h-full">
+              <div className="flex h-full flex-col overflow-auto md:h-96">
+                <div className="grid w-full gap-4 lg:grid-cols-2">
+                  {[DEFAULT_API_MODEL, ...ONLINE_RWKV_MODELS].map((v, k) => {
+                    return (
+                      <div
+                        className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2"
+                        key={k}
+                      >
+                        <div
+                          className={
+                            "text-fadeout flex w-full overflow-auto text-nowrap pt-2 text-xl font-semibold"
+                          }
+                        >
+                          <span className="w-0 flex-1">{v.name}</span>
+                        </div>
+                        <div>
+                          {v.description ? (
+                            <span>{v.description}</span>
+                          ) : (
+                            <span className="text-gray-500">
+                              No description.
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex gap-1">
+                          <div className="flex flex-1 items-center gap-1 overflow-x-auto">
+                            {v.supportReasoning && (
+                              <div>
+                                <span
+                                  className={cn(
+                                    "border-g flex items-center rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
+                                  )}
+                                >
+                                  Reasoning
+                                </span>
+                              </div>
+                            )}
+                            {v.from === "API" && (
+                              <div>
+                                <span
+                                  className={cn(
+                                    "border-g flex items-center rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
+                                  )}
+                                >
+                                  Online
+                                </span>
+                              </div>
+                            )}
+                            {v.param && (
+                              <div>
+                                <span
+                                  className={cn(
+                                    "border-g flex items-center rounded-3xl border border-blue-600 p-0.5 text-xs text-blue-600",
+                                  )}
+                                >
+                                  {v.param}
+                                </span>
+                              </div>
+                            )}
+                            {v.from === "Web" && v.size > 0 && (
+                              <div>
+                                <span
+                                  className={cn(
+                                    "flex items-center rounded-3xl border border-green-700 p-0.5 text-xs text-green-700",
+                                  )}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="inline size-4"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                    />
+                                  </svg>
+
+                                  {v.size && v.size > 0
+                                    ? formatFileSize(v.size)
+                                    : ""}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex justify-end gap-1">
+                            {v.from !== "API" ? (
+                              <Button
+                                className={cn(
+                                  "rounded-xl p-1 px-2 font-medium",
+                                  loadingModelName === v.name &&
+                                    "pointer-events-none bg-transparent",
+                                  currentModelName === v.name &&
+                                    "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0",
+                                )}
+                                onClick={async () => {
+                                  if (currentModelName === v.name) return;
+                                  try {
+                                    const { shoudLoadFromWeb } =
+                                      await shouldLoadFromWeb.open();
+                                    if (shoudLoadFromWeb === "Yes") {
+                                      fromWeb(v);
+                                    }
+                                  } catch (error) {
+                                    return;
+                                  }
+                                  close!();
+                                }}
+                              >
+                                {loadingModelName === v.name
+                                  ? "Loading"
+                                  : currentModelName === v.name
+                                    ? "Current Model"
+                                    : "Load"}
+                              </Button>
+                            ) : (
+                              <Button
+                                className={cn(
+                                  "rounded-xl p-1 px-3 font-medium",
+                                  loadingModelName === v.name &&
+                                    "pointer-events-none bg-transparent px-2",
+                                  currentModelName === v.name &&
+                                    "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0",
+                                )}
+                                onClick={() => {
+                                  fromAPI(v);
+                                  close!();
+                                }}
+                              >
+                                {loadingModelName === v.name
+                                  ? "Loading"
+                                  : currentModelName === v.name
+                                    ? "Current Model"
+                                    : "Use"}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
                 <div className="text-center">
                   <a
                     href="#"
@@ -1008,10 +1327,10 @@ export function ModelLoaderCard({
               </div>
             </TabsContent>
 
-            <TabsContent value="device">
+            <TabsContent value="device" className="max-md:h-full">
               <div
                 className={cn(
-                  "flex h-80 cursor-pointer flex-col items-center justify-center rounded-lg bg-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-white/50",
+                  "flex h-full cursor-pointer flex-col items-center justify-center rounded-lg bg-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-white/50 md:h-96",
                   isDragOver &&
                     "scale-[1.03] border border-green-500 bg-green-200",
                 )}
@@ -1051,7 +1370,7 @@ export function ModelLoaderCard({
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Select / Drop to load a .st model file</span>
+                <span>Select / Drop a .st / .prefab file</span>
               </div>
               <input
                 className="hidden"
