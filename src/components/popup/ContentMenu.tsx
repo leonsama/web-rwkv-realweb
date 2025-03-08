@@ -3,9 +3,7 @@ import { ComponentLoadLevel, LiveClassName } from "./Popup.d";
 import {
   calculatePosition,
   CheckEventTrigger,
-  DomEventListener,
   getMaxDuration,
-  getMaxDurationAmongChildren,
   getMaxZIndex,
   getRootPopup,
   inserCss,
@@ -14,7 +12,6 @@ import {
   Padding,
   POPUP_NAMESPACE,
   PositionList,
-  refMiddleware,
 } from "./utils";
 import {
   Children,
@@ -112,6 +109,7 @@ let isCloseEventListenerLoaded = false;
   if (!isCloseEventListenerLoaded) {
     document.addEventListener("click", CloseAllMenu);
     document.addEventListener("contextmenu", CloseAllMenu);
+    isCloseEventListenerLoaded = true
   }
 })();
 

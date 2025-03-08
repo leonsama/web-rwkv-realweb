@@ -3,16 +3,13 @@ import {
   APIInferPort,
   InferPortInterface,
   SessionConfiguration,
-  WebRWKVInferPort,
 } from "../web-rwkv-wasm-port/web-rwkv";
 import { createJSONStorage, persist, StateStorage } from "zustand/middleware";
 
 import * as idb from "idb-keyval";
 import { CustomError, dangerousUUIDV4 } from "../utils/utils";
-import { Sampler } from "../web-rwkv-wasm-port/types";
 import {
   APIModel,
-  APIModelParam,
   RWKVModelWeb,
 } from "../components/ModelConfigUI";
 

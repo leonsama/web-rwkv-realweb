@@ -9,7 +9,9 @@
     "dev": "pnpm run wasm:build && vite",
     "dev:host": "pnpm run wasm:build && vite --host 0.0.0.0",
     "build": "pnpm run wasm:build && vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "lint": "pnpm dlx eslint . --ext .ts,.tsx",
+    "lint:fix": "pnpm dlx eslint --fix . --ext .ts,.tsx"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,7 @@
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "^15.14.0",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",

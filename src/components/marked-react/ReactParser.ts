@@ -133,7 +133,7 @@ class ReactParser {
         }
 
         default: {
-          console.warn(`Token with "${token.type}" type was not found`); // eslint-disable-line no-console
+          console.warn(`Token with "${token.type}" type was not found`);  
           return null;
         }
       }
@@ -191,7 +191,7 @@ class ReactParser {
         }
 
         default: {
-          console.warn(`Token with "${token.type}" type was not found`); // eslint-disable-line no-console
+          console.warn(`Token with "${token.type}" type was not found`);  
           return null;
         }
       }

@@ -17,7 +17,7 @@ import {
 } from "web-rwkv-wasm";
 
 import { TensorInfo, Options } from "./types";
-import { dangerousUUIDV4, fetchWithRetry, lock } from "./utils";
+import { fetchWithRetry, lock } from "./utils";
 
 const config = {
   session_type: SessionType.Chat,
@@ -67,7 +67,7 @@ async function initReader(blob: Blob) {
   );
   const metadata = JSON.parse(str);
 
-  let tensors = new Array();
+  const tensors = [];
   for (const name in metadata) {
     if (name !== "__metadata__") {
       const info: TensorInfo = metadata[name];
@@ -127,7 +127,7 @@ async function* pipeline(
   max_len: number,
 ) {
   const info = session.info();
-  let output = new Float32Array(info.num_vocab);
+  const output = new Float32Array(info.num_vocab);
   let probs = new Float32Array(info.num_vocab);
 
   const state = new Float32Array(session.state_len());
@@ -138,7 +138,7 @@ async function* pipeline(
   let history = Array.from(tokens.slice(0, cutoff));
   tokens = tokens.slice(cutoff);
 
-  for (var i = 0; i < max_len; ++i) {
+  for (let i = 0; i < max_len; ++i) {
     if (tokens.length > 0) {
       await session.run(tokens, output);
     }
@@ -174,13 +174,13 @@ async function* pipeline(
   }
 }
 
-var _session: undefined | Promise<Session> = undefined;
+let _session: undefined | Promise<Session> = undefined;
 var _tokenizers: Map<string, Tokenizer> = new Map();
 
 async function load(data: Uint8Array[]) {
   console.log("🔄 Loading model");
   console.log(`📌 Session type: ${config.session_type}`);
-  let blob = new Blob(data);
+  const blob = new Blob(data);
   _session = initSession(blob);
   try {
     await _session;
@@ -288,7 +288,7 @@ export class WEB_RWKV_WASM_PORT {
     }
     console.log("Options", options);
     console.log(prompt);
-    let tokens = tokenizer.encode(encoder.encode(prompt));
+    const tokens = tokenizer.encode(encoder.encode(prompt));
 
     const release = await lock.acquire("generate");
 

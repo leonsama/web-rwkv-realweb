@@ -12,7 +12,6 @@ interface LowlightProps {
   markers: number[] | LowlightMarker[];
 }
 
-import { createLowlight as type } from "lowlight";
 
 declare function Lowlight(props: LowlightProps): JSX.Element;
 declare namespace Lowlight {

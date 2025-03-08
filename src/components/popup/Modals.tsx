@@ -1,11 +1,6 @@
 /// <reference path="Popup.d.tsx" />
 
 import {
-  Children,
-  cloneElement,
-  forwardRef,
-  isValidElement,
-  ReactElement,
   useEffect,
   useRef,
   useState,
@@ -15,15 +10,10 @@ import { createPortal } from "react-dom";
 
 import {
   getRootPopup,
-  inserCss,
   getMaxZIndex,
-  POPUP_NAMESPACE,
-  POPUP_ROOT_ID,
-  Position,
   PositionList,
   PositionResult,
   Padding,
-  getMaxDurationAmongChildren,
   getMaxDuration,
   calculatePosition,
   DomEventListener,

@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useWebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
 import { cn, formatFileSize } from "../utils/utils";
 import { RadioGroup, RadioGroupOption } from "../components/RadioGroup";
 import { createModalForm, Modal } from "../components/popup/Modals";
-import { ComponentLoadLevel } from "../components/popup/Popup.d";
 import {
   createContextMenu,
   Menu,

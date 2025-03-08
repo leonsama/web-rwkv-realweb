@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
 import { PromptTextarea } from "../components/PromptTextarea";
 import { Button } from "../components/Button";
-import Markdown from "../components/marked-react";
-import { redirect } from "react-router";
 import { RWKVMarkdown } from "../components/MarkdownRender";
 import { RWKVOutputFormatter } from "../utils/RWKVOutputFormatter";
 import { createModalForm } from "../components/popup/Modals";

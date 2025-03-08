@@ -8,7 +8,6 @@ import {
 import { useChatModelSession } from "../store/ModelStorage";
 import { Modal, ModalInterface } from "./popup/Modals";
 import { ModelLoaderCard } from "./ModelConfigUI";
-import { Slide, toast } from "react-toastify";
 
 interface Suggestion {
   prompt: string;

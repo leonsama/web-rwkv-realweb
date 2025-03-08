@@ -1,9 +1,7 @@
-import { useLocation } from "react-router";
 import { usePageStorage } from "../store/PageStorage";
 import { cn, isEnterIndex } from "../utils/utils";
 
 import { Flipper, Flipped } from "react-flip-toolkit";
-import { useEffect } from "react";
 
 export function WebRWKVFixedBanner() {
   const sessionStorage = usePageStorage((s) => s);

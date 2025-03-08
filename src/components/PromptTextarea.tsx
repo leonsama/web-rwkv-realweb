@@ -1,4 +1,4 @@
-import { TextareaHTMLAttributes, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import styles from "./PromptTextarea.module.css";
 

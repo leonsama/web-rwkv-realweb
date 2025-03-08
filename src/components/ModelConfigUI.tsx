@@ -11,24 +11,20 @@ import {
 } from "../web-rwkv-wasm-port/web-rwkv";
 import { Button } from "./Button";
 import { Card, CardTitle, Entry } from "./Cards";
-import { ComponentLoadLevel } from "./popup/Popup.d";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./Tabs";
-import { getMaxZIndex } from "./popup/utils";
 import { Id, toast } from "react-toastify";
 import {
   useIndexedDBCache,
   useChatModelSession,
   useModelStorage,
 } from "../store/ModelStorage";
-import { Sampler } from "../web-rwkv-wasm-port/types";
 
 import DEFAULT_VOCAB_URL from "../../assets/rwkv_vocab_v20230424.json?url";
-import { createModalForm, Modal, USER_CANCEL_ERROR } from "./popup/Modals";
+import { createModalForm, USER_CANCEL_ERROR } from "./popup/Modals";
 import {
   cn,
   CustomError,
   formatFileSize,
-  promiseWithTimeout,
   TIMEOUT_ERROR,
 } from "../utils/utils";
 import { createContextMenu, Menu, MenuItem } from "./popup/ContentMenu";
@@ -436,7 +432,7 @@ export function useModelLoader() {
     setLoadingModelName(file.name);
     console.log("Load model from device:", file.name);
 
-    let isCacheModel = await shouldSaveModel();
+    const isCacheModel = await shouldSaveModel();
 
     try {
       await shouldOverwriteCacheWhenExisted(file.name);
@@ -447,8 +443,8 @@ export function useModelLoader() {
     const stream = file.stream();
     const reader = stream.getReader();
     let receivedLength = 0;
-    let chunks: Uint8Array[] = [];
-    let cacheItem = isCacheModel ? createCacheItem({ key: file.name }) : null;
+    const chunks: Uint8Array[] = [];
+    const cacheItem = isCacheModel ? createCacheItem({ key: file.name }) : null;
 
     let isError = false;
 
@@ -510,7 +506,7 @@ export function useModelLoader() {
     console.log(name, modelName);
     setLoadingModelName(modelName);
 
-    let isCacheModel = await shouldSaveModel();
+    const isCacheModel = await shouldSaveModel();
 
     try {
       await shouldOverwriteCacheWhenExisted(modelName);
@@ -518,7 +514,7 @@ export function useModelLoader() {
       return;
     }
 
-    let cacheItem = isCacheModel ? createCacheItem({ key: modelName }) : null;
+    const cacheItem = isCacheModel ? createCacheItem({ key: modelName }) : null;
 
     try {
       const response = await fetch(...model.fetchParams);
@@ -616,7 +612,7 @@ export function useModelLoader() {
         const chunks: Uint8Array[] = [];
         const generator = readCacheItem({ key: modelName });
 
-        let chunkCount = 0;
+        const chunkCount = 0;
         let receivedLength = 0;
 
         for await (const chunk of generator) {

@@ -1,6 +1,5 @@
 import { type KatexOptions } from "katex";
 import { MarkedExtension, TokenizerAndRendererExtension } from "marked";
-import React, { createElement } from "react";
 
 export default function (options: KatexOptions = {}): MarkedExtension {
   return {
