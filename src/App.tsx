@@ -73,7 +73,7 @@ function fallbackRender({ error, resetErrorBoundary }: FallbackProps) {
     >
       <p className="text-5xl font-light">OOPS...</p>
       <p>Something went wrong</p>
-      <div className="max-w-md overflow-auto rounded-lg bg-red-100 p-2">
+      <div className="max-w-md select-text overflow-auto rounded-lg bg-red-100 p-2">
         <code style={{ color: "red" }}>{error.message}</code>
       </div>
       <Button

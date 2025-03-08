@@ -1,5 +1,4 @@
-import katex, { type KatexOptions } from "katex";
-import "katex/dist/katex.css";
+import { type KatexOptions } from "katex";
 import { MarkedExtension, TokenizerAndRendererExtension } from "marked";
 import React, { createElement } from "react";
 

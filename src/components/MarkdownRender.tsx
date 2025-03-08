@@ -9,15 +9,16 @@ import {
   useState,
 } from "react";
 
-import katex, { type KatexOptions } from "katex";
-
 export type HeadingLevels = 1 | 2 | 3 | 4 | 5 | 6;
 
 import Markdown, { CustomReactRenderer } from "./marked-react";
 import { cn } from "../utils/utils";
 import { ReasoningIcon } from "./ChatTextarea";
 
+import { type KatexOptions } from "katex";
+
 const CodeHighlight = lazy(() => import("./CodeHighlight"));
+const KatexRender = lazy(() => import("./KatexRender"));
 
 function FadeTextInline({
   children,
@@ -199,6 +200,25 @@ function CodeBlock({ snippet, lang }: { snippet: string; lang: string }) {
   );
 }
 
+function InlineKatex({ children }: { children: ReactNode }) {
+  return (
+    <span>
+      <Suspense fallback={<code>{children}</code>}>
+        <KatexRender katexOptions={katexOptions}>{children}</KatexRender>
+      </Suspense>
+    </span>
+  );
+}
+function BlockKatex({ children }: { children: ReactNode }) {
+  return (
+    <p>
+      <Suspense fallback={<code>{children}</code>}>
+        <KatexRender katexOptions={katexOptions}>{children}</KatexRender>
+      </Suspense>
+    </p>
+  );
+}
+
 const katexOptions: KatexOptions = {
   strict: false,
   throwOnError: false,
@@ -314,24 +334,10 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
     );
   },
   inlineKatex(children: ReactNode) {
-    return (
-      <span
-        dangerouslySetInnerHTML={{
-          __html: katex.renderToString(children as string, katexOptions),
-        }}
-        key={this.elementId}
-      ></span>
-    );
+    return <InlineKatex key={this.elementId}>{children}</InlineKatex>;
   },
   blockKatex(children: ReactNode) {
-    return (
-      <p
-        dangerouslySetInnerHTML={{
-          __html: katex.renderToString(children as string, katexOptions),
-        }}
-        key={this.elementId}
-      ></p>
-    );
+    return <BlockKatex key={this.elementId}>{children}</BlockKatex>;
   },
   thinkBlock(children: ReactNode) {
     return <ThinkBlock key={this.elementId}>{children}</ThinkBlock>;
