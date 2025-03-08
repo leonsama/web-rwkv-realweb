@@ -45,6 +45,8 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
     webRWKVInferPort.supportReasoning,
   );
 
+  const currentInferPort = useRef<InferPortInterface>(null!);
+
   const defaultSessionConfiguration = useRef<SessionConfiguration>(null!);
 
   const onChangeModelHook = (name: string | null) => {
@@ -53,12 +55,14 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
       webRWKVInferPort.defaultSessionConfiguration;
   };
   useEffect(() => {
-    webRWKVInferPort.onCurrentModelChange(onChangeModelHook);
-
     defaultSessionConfiguration.current =
       webRWKVInferPort.defaultSessionConfiguration;
 
     setSupportReasoning(webRWKVInferPort.supportReasoning);
+
+    currentInferPort.current = webRWKVInferPort;
+
+    webRWKVInferPort.onCurrentModelChange(onChangeModelHook);
 
     return () => {
       webRWKVInferPort.removeCurrentModelChange(onChangeModelHook);
@@ -92,7 +96,6 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
       max_tokens: 25,
     });
     let result = "";
-    console.log(stream);
 
     for await (const chunk of stream) {
       result += chunk;
@@ -152,7 +155,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
 
     const generator = {
       [Symbol.asyncIterator]: async function* () {
-        const innerCompletion = webRWKVInferPort.completion(
+        const innerCompletion = currentInferPort.current.completion(
           {
             max_tokens,
             messages: messages?.filter((v) => !v.hasOwnProperty("text")) as {

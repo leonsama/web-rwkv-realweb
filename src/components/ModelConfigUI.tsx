@@ -653,6 +653,16 @@ export function useModelLoader() {
 
   const fromAPI = async (model: APIModel) => {
     console.log("Load model from api:", model);
+
+    const newLlmModel = new APIInferPort();
+    await (newLlmModel as APIInferPort).loadModelFromAPI(
+      model.name,
+      model.APIParam,
+    );
+    newLlmModel.defaultSessionConfiguration = model.defaultSessionConfiguration;
+    newLlmModel.supportReasoning = model.supportReasoning;
+    (newLlmModel as APIInferPort).reasoningModelName = model.reasoningName;
+
     setRecentModel({
       name: model.name,
       supportReasoning: model.supportReasoning,
@@ -666,16 +676,6 @@ export function useModelLoader() {
       param: model.param || undefined,
       description: model.description,
     });
-
-    const newLlmModel = new APIInferPort();
-    await (newLlmModel as APIInferPort).loadModelFromAPI(
-      model.name,
-      model.APIParam,
-    );
-    newLlmModel.defaultSessionConfiguration = model.defaultSessionConfiguration;
-    newLlmModel.supportReasoning = model.supportReasoning;
-    (newLlmModel as APIInferPort).reasoningModelName = model.reasoningName;
-
     setLlmModel(newLlmModel);
   };
 
