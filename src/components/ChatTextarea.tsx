@@ -147,7 +147,8 @@ export function ChatTextarea({
 
   useEffect(() => {
     setTimeout(() => {
-      setLineCount(textDisplayAreaRef.current!.scrollHeight / lineHeight);
+      if (textDisplayAreaRef.current)
+        setLineCount(textDisplayAreaRef.current.scrollHeight / lineHeight);
     }, 0);
   }, [value]);
 

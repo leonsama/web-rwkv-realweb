@@ -1,7 +1,9 @@
 import {
   cloneElement,
   createElement,
+  lazy,
   ReactNode,
+  Suspense,
   useEffect,
   useRef,
   useState,
@@ -11,13 +13,11 @@ import katex, { type KatexOptions } from "katex";
 
 export type HeadingLevels = 1 | 2 | 3 | 4 | 5 | 6;
 
-import Lowlight from "react-lowlight";
-import "react-lowlight/common";
-
-import "highlight.js/styles/default.css";
 import Markdown, { CustomReactRenderer } from "./marked-react";
 import { cn } from "../utils/utils";
 import { ReasoningIcon } from "./ChatTextarea";
+
+const CodeHighlight = lazy(() => import("./CodeHighlight"));
 
 function FadeTextInline({
   children,
@@ -166,7 +166,7 @@ function ThinkBlock({ children }: { children: ReactNode }) {
       <div
         className={cn(
           "ml-[18px] overflow-hidden border-l pl-4 [mask-image:linear-gradient(180deg,#ffff_calc(100%_-_8px),_#0000_100%)]",
-          showReasoning?"":" opacity-0",
+          showReasoning ? "" : "opacity-0",
           enableAnimation && "transition-all duration-300",
         )}
         style={{
@@ -176,6 +176,24 @@ function ThinkBlock({ children }: { children: ReactNode }) {
         <div ref={reasonContentEle} className="-mt-4 text-slate-600">
           {children}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function CodeBlock({ snippet, lang }: { snippet: string; lang: string }) {
+  return (
+    <div className="group/code z-20 flex w-full flex-1 flex-col rounded-2xl bg-neutral-100 will-change-scroll">
+      <div className="flex w-full overflow-auto">
+        <Suspense
+          fallback={
+            <pre className="w-0 flex-1">
+              <code className="block overflow-x-auto p-4">{snippet}</code>
+            </pre>
+          }
+        >
+          <CodeHighlight snippet={snippet} lang={lang}></CodeHighlight>
+        </Suspense>
       </div>
     </div>
   );
@@ -292,19 +310,7 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
   },
   code(snippet: string, lang: string) {
     return (
-      <div
-        className="group/code z-20 flex w-full flex-1 flex-col rounded-2xl bg-neutral-100 will-change-scroll"
-        key={this.elementId}
-      >
-        <div className="flex w-full overflow-auto">
-          <Lowlight
-            language={Lowlight.hasLanguage(lang) ? lang : "plaintext"}
-            value={snippet}
-            markers={[]}
-            className="w-0 flex-1"
-          />
-        </div>
-      </div>
+      <CodeBlock snippet={snippet} lang={lang} key={this.elementId}></CodeBlock>
     );
   },
   inlineKatex(children: ReactNode) {
