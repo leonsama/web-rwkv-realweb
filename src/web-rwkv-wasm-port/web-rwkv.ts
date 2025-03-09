@@ -554,6 +554,7 @@ export class APIInferPort implements InferPortInterface {
       }),
       stream: true,
       ...(options.stop_words && { stop: options.stop_words }),
+      ...(options.stop_tokens && { stop_tokens: options.stop_tokens }),
     };
     try {
       const response = await fetch(url, {
