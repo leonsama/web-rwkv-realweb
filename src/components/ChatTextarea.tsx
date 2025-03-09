@@ -128,7 +128,7 @@ export function ChatTextarea({
   const [isPannelExpaned, setIsPannelExpaned] = useState(false);
 
   const { llmModel, loadingModelName } = useChatModelSession((s) => s);
-  const { currentModelName, unloadModel, supportReasoning } =
+  const { selectedModelName, unloadModel, supportReasoning } =
     useWebRWKVChat(llmModel);
 
   const [isEnableReasoning, setEnableReasoning] = useState(
@@ -418,7 +418,7 @@ export function ChatTextarea({
               isPannelExpaned ? "opacity-100" : "opacity-0",
             )}
           >
-            Current Model: {currentModelName}
+            Current Model: {selectedModelName}
             <button className="pl-2" onClick={openModal}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -441,7 +441,7 @@ export function ChatTextarea({
       <div
         className={cn(
           "group absolute bottom-0 left-0 right-0 top-0 flex cursor-pointer items-center backdrop-blur-sm transition-all duration-300",
-          currentModelName === null
+          selectedModelName === null
             ? ""
             : "pointer-events-none scale-95 opacity-0",
         )}
@@ -468,7 +468,7 @@ export function ChatTextarea({
           </svg>
         </div>
         <div className="flex h-14 w-0 flex-1 cursor-pointer items-center self-end p-2">
-          {currentModelName === null &&
+          {selectedModelName === null &&
             (loadingModelName === null ? (
               <span className="transition-all group-active:scale-95">
                 Model not loaded. Load to interact.

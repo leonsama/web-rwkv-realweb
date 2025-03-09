@@ -88,7 +88,7 @@ export function App() {
   useEffect(() => {
     if (
       import.meta.env.VITE_AUTO_SET_HF_API === "True" &&
-      !chatModelSession.llmModel.currentModelName
+      !chatModelSession.llmModel.selectedModelName
     ) {
       console.log("Load API Model");
       fromAPI(DEFAULT_API_MODEL);

@@ -48,7 +48,7 @@ const ChatSession = createContext<
     isGenerating: boolean;
     setIsGenerating: (value: boolean) => void;
 
-    currentModelName: string | null;
+    selectedModelName: string | null;
     loadingModelName: string | null;
 
     generator: React.MutableRefObject<CompletionGenerator>;
@@ -218,7 +218,7 @@ function AssistantContent({
     activeMessageBlocks,
     sessionConfiguration,
     updateCurrentMessageBlock,
-    currentModelName,
+    selectedModelName,
     loadingModelName,
     generator,
     completion,
@@ -244,7 +244,7 @@ function AssistantContent({
       samplerConfig: sessionConfiguration.defaultSamplerConfig,
       isGenerating: true,
       rank: 0,
-      modelName: currentModelName,
+      modelName: selectedModelName,
       timestamp: Date.now(),
     });
 
@@ -382,7 +382,7 @@ function AssistantContent({
           {currentMessageBlock.messageContents[
             currentMessageBlock.activeMessageContentIndex
           ].isGenerating &&
-            currentModelName === null && (
+            selectedModelName === null && (
               <div className="my-5 text-sm text-gray-400">
                 {loadingModelName === null
                   ? "Load a model to interact"
@@ -1055,7 +1055,7 @@ export default function Chat() {
   const { llmModel: webRWKVLLMInfer, loadingModelName } = useChatModelSession(
     (s) => s,
   );
-  const { currentModelName, completion, defaultSessionConfiguration } =
+  const { selectedModelName, completion, defaultSessionConfiguration } =
     useWebRWKVChat(webRWKVLLMInfer);
 
   const [showSessionConfigurationBar, setShowSessionConfigurationBar] =
@@ -1065,7 +1065,7 @@ export default function Chat() {
   const generator = useRef<CompletionGenerator>(null!);
 
   const loadModelModal = useRef<ModalInterface>(null!);
-  const checkIsModelLoaded = useSuspendUntilValid(currentModelName, () => {
+  const checkIsModelLoaded = useSuspendUntilValid(selectedModelName, () => {
     loadModelModal.current.setIsModalOpen(true);
   });
 
@@ -1134,7 +1134,7 @@ export default function Chat() {
       enableReasoning: webRWKVLLMInfer.isEnableReasoning,
     });
     resultBlock.messageContents[activeMessageContentIndex].modelName =
-      currentModelName;
+      selectedModelName;
 
     let result = "";
     for await (const chunk of generator.current) {
@@ -1255,7 +1255,7 @@ export default function Chat() {
                     setIsGenerating,
                     webRWKVLLMInfer,
 
-                    currentModelName,
+                    selectedModelName,
                     loadingModelName,
 
                     completion,

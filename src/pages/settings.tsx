@@ -21,7 +21,7 @@ import { Button } from "../components/Button";
 
 export default function Settings() {
   const webRWKVLLMInfer = useChatModelSession((s) => s.llmModel);
-  const { currentModelName, unloadModel } = useWebRWKVChat(webRWKVLLMInfer);
+  const { selectedModelName, unloadModel } = useWebRWKVChat(webRWKVLLMInfer);
 
   const { getTotalCacheSize, clearCache } = useIndexedDBCache((s) => s);
   const [totalCacheSize, setTotalCacheSize] = useState<number>(-1);
@@ -138,8 +138,8 @@ export default function Settings() {
             }
           >
             <Entry label="Loaded model">
-              {currentModelName || "No model loaded"}
-              {currentModelName && (
+              {selectedModelName || "No model loaded"}
+              {selectedModelName && (
                 <Button
                   onClick={() => {
                     unloadModel();

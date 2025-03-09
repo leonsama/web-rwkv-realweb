@@ -27,7 +27,7 @@ function RecentModelsCard({
   const [showCachedOnly, setShowCachedOnly] = useState(true);
 
   const { llmModel, loadingModelName } = useChatModelSession((s) => s);
-  const { currentModelName, defaultSessionConfiguration } =
+  const { selectedModelName, defaultSessionConfiguration } =
     useWebRWKVChat(llmModel);
 
   const { fromCache, fromWeb, fromAPI } = useModelLoader();
@@ -191,7 +191,7 @@ function RecentModelsCard({
                             "rounded-xl p-1 px-2 font-medium",
                             loadingModelName === v.name &&
                               "pointer-events-none bg-transparent",
-                            currentModelName === v.name &&
+                            selectedModelName === v.name &&
                               "pointer-events-none bg-transparent px-0.5 text-xs font-semibold hover:bg-white/0 dark:bg-white/0",
                             v.from === "device" &&
                               v.cached === false &&
@@ -199,7 +199,7 @@ function RecentModelsCard({
                           )}
                           onClick={async () => {
                             if (
-                              currentModelName === v.name ||
+                              selectedModelName === v.name ||
                               (v.from === "device" && v.cached === false)
                             )
                               return;
@@ -221,7 +221,7 @@ function RecentModelsCard({
                         >
                           {loadingModelName === v.name
                             ? "Loading"
-                            : currentModelName === v.name
+                            : selectedModelName === v.name
                               ? "Selected"
                               : "Load"}
                         </Button>
@@ -231,7 +231,7 @@ function RecentModelsCard({
                             "rounded-xl p-1 px-3 font-medium",
                             loadingModelName === v.name &&
                               "pointer-events-none bg-transparent px-2",
-                            currentModelName === v.name &&
+                            selectedModelName === v.name &&
                               "pointer-events-none bg-transparent px-0.5 text-xs font-semibold hover:bg-white/0 dark:bg-white/0",
                           )}
                           onClick={() => {
@@ -240,7 +240,7 @@ function RecentModelsCard({
                         >
                           {loadingModelName === v.name
                             ? "Loading"
-                            : currentModelName === v.name
+                            : selectedModelName === v.name
                               ? "Selected"
                               : "Use"}
                         </Button>
@@ -297,7 +297,7 @@ export default function Home() {
   const { recentModels } = useModelStorage((s) => s);
 
   const { llmModel, loadingModelName } = useChatModelSession((s) => s);
-  const { currentModelName, defaultSessionConfiguration } =
+  const { selectedModelName, defaultSessionConfiguration } =
     useWebRWKVChat(llmModel);
 
   const [showUI, setShowUI] = useState(true);

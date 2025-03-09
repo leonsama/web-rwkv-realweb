@@ -687,7 +687,7 @@ export function ModelLoaderCard({
   const { recentModels, deleteRecentModel } = useModelStorage((s) => s);
   const { fromDevice, fromWeb, fromCache, fromAPI } = useModelLoader();
   const { loadingModelName, llmModel } = useChatModelSession((s) => s);
-  const { currentModelName } = useWebRWKVChat(llmModel);
+  const { selectedModelName } = useWebRWKVChat(llmModel);
 
   const [activeTab, setActiveTab] = useState(enterTabValue || "recent");
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
@@ -1102,7 +1102,7 @@ export function ModelLoaderCard({
                                         "rounded-xl p-1 px-2 font-medium dark:bg-zinc-600",
                                         loadingModelName === v.name &&
                                           "pointer-events-none bg-transparent",
-                                        currentModelName === v.name &&
+                                        selectedModelName === v.name &&
                                           "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                         v.from === "device" &&
                                           v.cached === false &&
@@ -1110,7 +1110,7 @@ export function ModelLoaderCard({
                                       )}
                                       onClick={async () => {
                                         if (
-                                          currentModelName === v.name ||
+                                          selectedModelName === v.name ||
                                           (v.from === "device" &&
                                             v.cached === false)
                                         )
@@ -1133,7 +1133,7 @@ export function ModelLoaderCard({
                                     >
                                       {loadingModelName === v.name
                                         ? "Loading"
-                                        : currentModelName === v.name
+                                        : selectedModelName === v.name
                                           ? "Selected"
                                           : "Load"}
                                     </Button>
@@ -1143,7 +1143,7 @@ export function ModelLoaderCard({
                                         "rounded-xl p-1 px-3 font-medium dark:bg-zinc-600",
                                         loadingModelName === v.name &&
                                           "pointer-events-none bg-transparent px-2",
-                                        currentModelName === v.name &&
+                                        selectedModelName === v.name &&
                                           "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                       )}
                                       onClick={() => {
@@ -1153,7 +1153,7 @@ export function ModelLoaderCard({
                                     >
                                       {loadingModelName === v.name
                                         ? "Loading"
-                                        : currentModelName === v.name
+                                        : selectedModelName === v.name
                                           ? "Selected"
                                           : "Use"}
                                     </Button>
@@ -1284,11 +1284,11 @@ export function ModelLoaderCard({
                                   "rounded-xl p-1 px-2 font-medium dark:bg-zinc-600",
                                   loadingModelName === v.name &&
                                     "pointer-events-none bg-transparent",
-                                  currentModelName === v.name &&
+                                  selectedModelName === v.name &&
                                     "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                 )}
                                 onClick={async () => {
-                                  if (currentModelName === v.name) return;
+                                  if (selectedModelName === v.name) return;
                                   try {
                                     const { shoudLoadFromWeb } =
                                       await shouldLoadFromWeb.open();
@@ -1303,7 +1303,7 @@ export function ModelLoaderCard({
                               >
                                 {loadingModelName === v.name
                                   ? "Loading"
-                                  : currentModelName === v.name
+                                  : selectedModelName === v.name
                                     ? "Selected"
                                     : "Load"}
                               </Button>
@@ -1313,7 +1313,7 @@ export function ModelLoaderCard({
                                   "rounded-xl p-1 px-3 font-medium dark:bg-zinc-600",
                                   loadingModelName === v.name &&
                                     "pointer-events-none bg-transparent px-2",
-                                  currentModelName === v.name &&
+                                  selectedModelName === v.name &&
                                     "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                 )}
                                 onClick={() => {
@@ -1323,7 +1323,7 @@ export function ModelLoaderCard({
                               >
                                 {loadingModelName === v.name
                                   ? "Loading"
-                                  : currentModelName === v.name
+                                  : selectedModelName === v.name
                                     ? "Selected"
                                     : "Use"}
                               </Button>
