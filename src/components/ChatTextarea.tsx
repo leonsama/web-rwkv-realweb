@@ -42,7 +42,9 @@ export function ReasoningIcon({
         fill="currentColor"
         className={cn(
           "transition-all duration-500",
-          enableReasoning ? "text-yellow-600" : "text-gray-500",
+          enableReasoning
+            ? "text-yellow-500"
+            : "text-gray-500 dark:text-zinc-300",
         )}
       ></path>
       <path
@@ -74,7 +76,7 @@ function PromptSuggestion({
   return (
     <button
       className={cn(
-        "h-7 flex-shrink-0 select-none rounded-3xl px-2 py-1.5 text-xs shadow-md outline outline-1 outline-slate-400 transition-all duration-300 hover:bg-gray-100",
+        "h-7 flex-shrink-0 select-none rounded-3xl px-2 py-1.5 text-xs shadow-md outline outline-1 outline-slate-400 transition-[opacity,background-color] duration-300 hover:bg-gray-100 dark:hover:bg-zinc-600/50",
         className,
       )}
       onClick={(e) => {
@@ -200,6 +202,14 @@ export function ChatTextarea({
     llmModel.isEnableReasoning = isEnableReasoning;
   }, [isEnableReasoning]);
 
+  useEffect(() => {
+    if (llmModel.supportReasoning) {
+      llmModel.isEnableReasoning = isEnableReasoning;
+    } else {
+      setEnableReasoning(false);
+    }
+  }, [llmModel]);
+
   return (
     <div
       className={cn(
@@ -230,7 +240,7 @@ export function ChatTextarea({
               className={cn(isPannelExpaned ? "opacity-100" : "opacity-0")}
               style={{
                 transitionDelay: isPannelExpaned
-                  ? `${400 + k * 50}ms`
+                  ? `${400 + k * 50}ms,0ms`
                   : undefined,
               }}
               isKeepFocus={isKeepFocus}
@@ -256,8 +266,8 @@ export function ChatTextarea({
         <div
           className={cn(
             "flex justify-end gap-1 transition-all duration-500",
-            !supportReasoning && "pointer-events-none w-0 opacity-0",
             isPannelExpaned ? "pointer-events-none w-0 opacity-0" : "w-12",
+            !supportReasoning && "pointer-events-none w-0 opacity-0",
           )}
         >
           {/* <button
@@ -293,10 +303,10 @@ export function ChatTextarea({
           </button> */}
           <button
             className={cn(
-              "my-2 mr-1 h-10 w-10 self-end rounded-full p-2.5 text-slate-500",
+              "my-2 mr-1 h-10 w-10 self-end rounded-full p-2.5 text-slate-500 transition-[color,background-color] duration-500 dark:text-zinc-200",
               isEnableReasoning
-                ? "md:hover:bg-yellow-500/10"
-                : "md:hover:bg-slate-100",
+                ? "md:hover:bg-yellow-500/10 dark:md:hover:bg-yellow-500/20"
+                : "md:hover:bg-slate-100 dark:md:hover:bg-slate-200/20",
             )}
             onClick={() => setEnableReasoning(!isEnableReasoning)}
           >
@@ -326,12 +336,14 @@ export function ChatTextarea({
             isFocus={isFocus}
             setIsFocus={setIsFocus}
             isKeepFocus={isKeepFocus}
+            className="dark:caret-zinc-300"
           ></PromptTextarea>
         </div>
         <button
           className={cn(
-            "absolute bottom-0 right-0 m-2 h-10 w-10 self-end rounded-full p-2.5 text-slate-400 transition-[background-color,margin] duration-[200ms,500ms] hover:bg-slate-100",
-            cleanChatPrompt(value) !== "" && "text-slate-600",
+            "absolute bottom-0 right-0 m-2 h-10 w-10 self-end rounded-full p-2.5 text-slate-400 transition-[background-color,margin] duration-[200ms,500ms] hover:bg-slate-100 dark:text-zinc-400",
+            cleanChatPrompt(value) !== "" &&
+              "text-slate-600 dark:text-zinc-300",
             isPannelExpaned ? "max-md:my-0" : "",
           )}
           onClick={() => {
@@ -362,12 +374,12 @@ export function ChatTextarea({
         >
           <button
             className={cn(
-              "flex h-6 items-center gap-2 rounded-full border px-2 text-slate-500 transition-all duration-500 md:hover:bg-slate-100",
+              "flex h-6 items-center gap-2 rounded-full border px-2 text-slate-500 transition-all duration-500 dark:text-slate-300 md:hover:bg-slate-100 dark:md:hover:bg-zinc-600/70",
               supportReasoning && isPannelExpaned
                 ? ""
                 : "pointer-events-none opacity-0",
               isEnableReasoning
-                ? "border-yellow-600 bg-yellow-500/10 text-yellow-600 md:hover:bg-yellow-500/20"
+                ? "border-yellow-600 bg-yellow-500/10 text-yellow-600 dark:text-yellow-600 md:hover:bg-yellow-500/20 dark:md:hover:bg-yellow-500/30"
                 : "border-slate-400 text-slate-500",
             )}
             onTouchStart={() => {
@@ -395,7 +407,7 @@ export function ChatTextarea({
         <div
           className={cn(
             "items-transition-all ml-auto flex h-10 flex-shrink-0 items-center text-sm text-gray-500/50 duration-500 md:h-14",
-            supportReasoning && isPannelExpaned ? "" : "-mb-10 md:-mb-14",
+            isPannelExpaned ? "" : "-mb-10 md:-mb-14",
           )}
         >
           <span
@@ -437,7 +449,7 @@ export function ChatTextarea({
       >
         <div
           className={cn(
-            "m-2 flex h-10 w-10 items-center justify-center self-end rounded-full text-slate-800",
+            "m-2 flex h-10 w-10 items-center justify-center self-end rounded-full text-slate-800 dark:text-zinc-300",
           )}
         >
           <svg

@@ -1,10 +1,5 @@
 import { Suspense, useEffect } from "react";
-import {
-  useLocation,
-  useRoutes,
-  useMatch,
-  useNavigate,
-} from "react-router";
+import { useLocation, useRoutes, useMatch, useNavigate } from "react-router";
 import routes from "~react-pages";
 import { Bar } from "./components/Bar";
 import { WebRWKVBanner } from "./components/WebRWKVBanner";
@@ -102,7 +97,7 @@ export function App() {
 
   return (
     <Suspense fallback={<Placeholder></Placeholder>}>
-      <div className="flex h-screen w-screen select-none bg-white text-black">
+      <div className="flex h-screen w-screen select-none bg-white text-black transition-[background-color] duration-500 dark:bg-zinc-900 dark:text-zinc-300">
         <Bar></Bar>
 
         <div className="relative flex-1 overflow-auto">

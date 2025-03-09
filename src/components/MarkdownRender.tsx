@@ -173,7 +173,10 @@ function ThinkBlock({ children }: { children: ReactNode }) {
           height: showReasoning ? `${reasonContainerHeight}px` : `0px`,
         }}
       >
-        <div ref={reasonContentEle} className="-mt-4 text-slate-600">
+        <div
+          ref={reasonContentEle}
+          className="-mt-4 text-slate-600 dark:text-zinc-400"
+        >
           {children}
         </div>
       </div>
@@ -183,7 +186,7 @@ function ThinkBlock({ children }: { children: ReactNode }) {
 
 function CodeBlock({ snippet, lang }: { snippet: string; lang: string }) {
   return (
-    <div className="group/code z-20 flex w-full flex-1 flex-col rounded-2xl bg-neutral-100 will-change-scroll">
+    <div className="group/code z-20 flex w-full flex-1 flex-col rounded-2xl bg-neutral-100 will-change-scroll dark:bg-neutral-700">
       <div className="flex w-full overflow-auto">
         <Suspense
           fallback={
@@ -319,7 +322,7 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
       <code
         key={this.elementId}
         className={cn(
-          "mx-0.5 text-wrap break-words rounded-md bg-stone-200 box-decoration-clone px-0.5 text-stone-800/90",
+          "mx-0.5 text-wrap break-words rounded-md bg-stone-200 box-decoration-clone px-0.5 text-stone-800/90 dark:bg-neutral-700 dark:text-stone-300",
           className,
         )}
       >

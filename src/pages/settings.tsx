@@ -17,6 +17,7 @@ import {
 } from "../store/ModelStorage";
 import { useChatSessionStore } from "../store/ChatSessionStorage";
 import { usePageStorage } from "../store/PageStorage";
+import { Button } from "../components/Button";
 
 export default function Settings() {
   const webRWKVLLMInfer = useChatModelSession((s) => s.llmModel);
@@ -31,6 +32,8 @@ export default function Settings() {
   const {
     alwaysOpenSessionConfigurationPannel,
     setAlwaysOpenSessionConfigurationPannel,
+    setTheme,
+    theme,
   } = usePageStorage((s) => s);
 
   const LanguageMenu = createContextMenu(
@@ -194,9 +197,9 @@ export default function Settings() {
             <Entry label="Theme">
               <RadioGroup
                 className="-m-2 h-10 gap-1 bg-slate-200 p-1"
-                value={"auto"}
+                value={theme}
                 onChange={(value) => {
-                  console.log(value);
+                  setTheme(value);
                 }}
               >
                 <RadioGroupOption value={"light"}>Light</RadioGroupOption>
@@ -260,14 +263,14 @@ export default function Settings() {
                 onClick={async () => {
                   setTotalCacheSize(await getTotalCacheSize());
                 }}
-                className="flex items-center justify-center gap-2 bg-white/0"
+                className="flex items-center justify-center gap-2 bg-white/0 dark:bg-white/0"
               >
                 {totalCacheSize < 0 ? "Check" : formatFileSize(totalCacheSize)}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
                   fill="currentColor"
-                  className="size-4 text-gray-600"
+                  className="size-4 text-gray-600 dark:text-zinc-400"
                 >
                   <path
                     fillRule="evenodd"
@@ -291,29 +294,17 @@ export default function Settings() {
           </Card>
           <div className="flex h-36 flex-col items-center justify-center pb-6">
             <h2 className="text-lg text-slate-300">
-              <span>Made with ♥ by Leon</span> · {import.meta.env.VITE_GIT_SHA}
+              <span>Made with ♥ by Leon</span>
             </h2>
             <h3 className="text-xs text-slate-300">
-              Commit at {import.meta.env.VITE_GIT_COMMIT_DATE}
+              Last Commit at {import.meta.env.VITE_GIT_COMMIT_DATE}
+            </h3>
+            <h3 className="text-xs text-slate-300">
+              {import.meta.env.VITE_GIT_BRANCH} · {import.meta.env.VITE_GIT_SHA}
             </h3>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-function Button({
-  className,
-  ...prop
-}: { className?: string } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      className={cn(
-        "rounded-lg bg-slate-200 px-4 py-2 transition-all hover:bg-slate-300 active:scale-90",
-        className,
-      )}
-      {...prop}
-    ></button>
   );
 }

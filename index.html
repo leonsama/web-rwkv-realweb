@@ -47,8 +47,16 @@
         window["clarity"] = console.log;
       }
     </script>
+    <script>
+      document.documentElement.classList.toggle(
+        "dark",
+        localStorage.theme === "dark" ||
+          (!("theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches),
+      );
+    </script>
   </head>
-  <body class="bg-white text-black">
+  <body class="bg-white text-black dark:bg-zinc-900 dark:text-zinc-300">
     <div id="root"></div>
     <script type="module" src="./src/index.tsx"></script>
   </body>

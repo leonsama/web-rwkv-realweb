@@ -81,8 +81,8 @@ function ToolButton({
       className={cn(
         "rounded-lg p-1 transition-all",
         disabled
-          ? "pointer-events-none text-slate-200"
-          : "active:bg-slate-400/40 md:hover:bg-slate-400/20",
+          ? "pointer-events-none text-slate-200 dark:text-zinc-400"
+          : "active:bg-slate-400/40 dark:active:bg-zinc-700/70 md:hover:bg-slate-400/20 dark:md:hover:bg-zinc-700/50",
         className,
       )}
     >
@@ -195,7 +195,7 @@ function UserContent({
   return (
     <div className="z-10 flex flex-row-reverse motion-opacity-in-[0%] motion-duration-[0.4s]">
       <div className="ml-10 flex max-w-screen-sm flex-col">
-        <div className="w-full select-text overflow-hidden rounded-3xl rounded-tr-md bg-slate-100 p-4">
+        <div className="w-full select-text overflow-hidden rounded-3xl rounded-tr-md bg-slate-100 p-4 dark:bg-zinc-800">
           <span className="whitespace-pre-wrap">
             {
               currentMessageBlock.messageContents[
@@ -307,7 +307,7 @@ function AssistantContent({
           {/* switch active currentMessageContent */}
           <div
             className={cn(
-              "ml-auto flex items-center text-slate-400",
+              "ml-auto flex items-center text-slate-400 dark:text-zinc-300",
               currentMessageBlock.messageContents.length === 1 &&
                 currentMessageBlock.messageContents[
                   currentMessageBlock.activeMessageContentIndex
@@ -376,9 +376,9 @@ function AssistantContent({
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-2">
-        <div className="sticky top-0 z-10 -mt-8 h-6 bg-white [mask-image:linear-gradient(0deg,#0000,#ffff)]"></div>
+        <div className="sticky top-0 z-10 -mt-8 h-6 bg-white [mask-image:linear-gradient(0deg,#0000,#ffff)] dark:bg-zinc-900"></div>
         <div
-          className="min-h-10 select-text motion-opacity-in-[0%] motion-duration-[0.4s]"
+          className="min-h-10 select-text motion-opacity-in-[0%] dark:motion-opacity-in-[0%] motion-duration-[0.4s]"
           key={`${currentMessageBlock.key}-${currentMessageBlock.activeMessageContentIndex}`}
         >
           {currentMessageBlock.messageContents[
@@ -500,7 +500,7 @@ function AssistantContent({
                 : "delay-[50ms]",
               currentMessageBlock.messageContents[
                 currentMessageBlock.activeMessageContentIndex
-              ].rank === 1 && "text-slate-700",
+              ].rank === 1 && "text-slate-700 dark:text-zinc-300",
             )}
             onClick={() => {
               if (
@@ -656,10 +656,10 @@ function ChatSessionConfigurationCard({
           </svg>
         </Button>
       </CardTitle>
-      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 dark:bg-zinc-700">
         <span>Sampler Options</span>
         <Button
-          className="ml-auto h-10 rounded-xl text-sm text-gray-500"
+          className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
             sessionConfiguration.defaultSamplerConfig =
               DEFAULT_SESSION_CONFIGURATION.defaultSamplerConfig;
@@ -748,10 +748,10 @@ function ChatSessionConfigurationCard({
           className="mb-10 text-xs text-gray-500"
         ></InputRange>
       </div>
-      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 dark:bg-zinc-700">
         <span>Completion Options</span>
         <Button
-          className="ml-auto h-10 rounded-xl text-sm text-gray-500"
+          className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
             sessionConfiguration.maxTokens =
               DEFAULT_SESSION_CONFIGURATION.maxTokens;
@@ -772,14 +772,14 @@ function ChatSessionConfigurationCard({
             updateSessionConfiguration(sessionConfiguration);
           }}
           verification={(v) => !isNaN(+v) && parseInt(v) > 0}
-          className="w-full rounded-xl bg-white/60 p-2"
+          className="w-full rounded-xl bg-white/60 p-2 dark:bg-zinc-700 dark:caret-zinc-300"
         ></InputText>
       </Entry>
 
-      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2">
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 dark:bg-zinc-700">
         <span>System Prompt</span>
         <Button
-          className="ml-auto h-10 rounded-xl text-sm text-gray-500"
+          className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
             sessionConfiguration.systemPrompt =
               DEFAULT_SESSION_CONFIGURATION.systemPrompt;
@@ -804,15 +804,15 @@ function ChatSessionConfigurationCard({
               updateSessionConfiguration(sessionConfiguration);
             }}
             // style={{ height: "100%" }}
-            className="h-full rounded-2xl bg-white/60 px-2"
+            className="h-full rounded-2xl bg-white/60 px-2 dark:bg-zinc-700 dark:caret-zinc-300"
           ></PromptTextarea>
         </div>
       </Entry>
 
-      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 text-sm">
+      <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 text-sm dark:bg-zinc-700">
         <span>Stop Words & Stop Tokens</span>
         <Button
-          className="ml-auto h-10 rounded-xl text-sm text-gray-500"
+          className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
             sessionConfiguration.stopTokens =
               DEFAULT_SESSION_CONFIGURATION.stopTokens;
@@ -840,7 +840,9 @@ function ChatSessionConfigurationCard({
             });
             updateSessionConfiguration(sessionConfiguration);
           }}
-          className="w-full rounded-xl bg-white/60 p-2"
+          className="w-full rounded-xl bg-white/60 p-2 dark:bg-zinc-700 dark:caret-zinc-300"
+          classNameItem="dark:bg-zinc-700 dark:hover:bg-zinc-600/50"
+          classNameItemEdit="dark:bg-zinc-600"
         ></InputList>
       </Entry>
 
@@ -854,7 +856,9 @@ function ChatSessionConfigurationCard({
             sessionConfiguration.stopTokens = v.map((v) => parseInt(v));
             updateSessionConfiguration(sessionConfiguration);
           }}
-          className="w-full rounded-xl bg-white/60 p-2"
+          className="w-full rounded-xl bg-white/60 p-2 dark:bg-zinc-700 dark:caret-zinc-300"
+          classNameItem="dark:bg-zinc-700 dark:hover:bg-zinc-600/50"
+          classNameItemEdit="dark:bg-zinc-600"
         ></InputList>
       </Entry>
     </Card>
@@ -1210,7 +1214,7 @@ export default function Chat() {
         <div className="sticky top-0 flex h-16 items-center md:h-20">
           <div className="ml-auto flex size-16 items-center justify-center">
             <button
-              className="flex size-10 items-center justify-center rounded-full text-slate-600 transition-all active:bg-slate-300 md:hover:bg-slate-300/50 md:active:bg-slate-300"
+              className="flex size-10 items-center justify-center rounded-full text-slate-600 transition-all active:bg-slate-300 dark:text-zinc-300 dark:active:bg-zinc-500/50 md:hover:bg-slate-300/50 md:active:bg-slate-300 dark:md:hover:bg-zinc-700/50 dark:md:active:bg-zinc-500/50"
               onClick={() => {
                 setShowSessionConfigurationBar(!showSessionConfigurationBar);
               }}
@@ -1276,7 +1280,7 @@ export default function Chat() {
                   })}
                 </ChatSession.Provider>
                 <div ref={scrollerEle}></div>
-                <div className="pointer-events-none sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] md:-mt-8 md:h-8"></div>
+                <div className="pointer-events-none sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] dark:bg-zinc-900 md:-mt-8 md:h-8"></div>
               </div>
             </div>
             <div
@@ -1285,7 +1289,7 @@ export default function Chat() {
             >
               <button
                 className={cn(
-                  "absolute left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border bg-white py-1.5 pl-2 pr-4 transition-all",
+                  "absolute left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border bg-white py-1.5 pl-2 pr-4 transition-all dark:border-0 dark:bg-zinc-700",
                   isGenerating ? "-top-16 shadow-lg" : "-top-0 scale-95",
                 )}
                 onClick={() => {
@@ -1314,7 +1318,7 @@ export default function Chat() {
                 }}
               </Modal>
               <ChatTextarea
-                className="bottom-2 w-full max-w-screen-md bg-white md:bottom-4"
+                className="bottom-2 w-full max-w-screen-md bg-white dark:bg-zinc-700 md:bottom-4"
                 onSubmit={(value) => {
                   startGenerationTask(value);
                 }}

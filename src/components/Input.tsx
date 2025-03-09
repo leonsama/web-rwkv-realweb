@@ -101,6 +101,8 @@ interface InputListProps<T extends string> {
   max?: number;
   verification?: (value: T) => boolean;
   className?: string;
+  classNameItem?: string;
+  classNameItemEdit?: string;
 }
 
 export function InputList<T extends string>({
@@ -109,6 +111,8 @@ export function InputList<T extends string>({
   max = Infinity,
   verification,
   className,
+  classNameItem,
+  classNameItemEdit,
 }: InputListProps<T>) {
   const [inputValue, setInputValue] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -186,7 +190,7 @@ export function InputList<T extends string>({
       {value.map((item, index) => (
         <div
           key={`${value.length}-${index}`}
-          className={style["input-list-item"]}
+          className={`${style["input-list-item"]} ${classNameItem || ""}`}
           draggable={editingIndex !== index}
           onDragStart={handleDragStart(index)}
           onDragOver={(e) => e.preventDefault()}
@@ -215,7 +219,7 @@ export function InputList<T extends string>({
                 }}
                 onBlur={handleEditConfirm}
                 autoFocus
-                className={style["input-list-edit"]}
+                className={`${style["input-list-edit"]} ${classNameItemEdit || ""}`}
               />
             </>
           ) : (
@@ -237,7 +241,7 @@ export function InputList<T extends string>({
           onChange={setInputValue}
           verification={(val) => !verification || verification(val as T)}
           onKeyDown={handleInputKeyDown}
-          className={style["input-list-input"]}
+          className={`${style["input-list-input"]}`}
           ref={inputRef}
         />
         {max < Infinity && (

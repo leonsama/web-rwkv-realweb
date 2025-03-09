@@ -21,12 +21,7 @@ import {
 
 import DEFAULT_VOCAB_URL from "../../assets/rwkv_vocab_v20230424.json?url";
 import { createModalForm, USER_CANCEL_ERROR } from "./popup/Modals";
-import {
-  cn,
-  CustomError,
-  formatFileSize,
-  TIMEOUT_ERROR,
-} from "../utils/utils";
+import { cn, CustomError, formatFileSize, TIMEOUT_ERROR } from "../utils/utils";
 import { createContextMenu, Menu, MenuItem } from "./popup/ContentMenu";
 
 export interface RWKVModelWeb {
@@ -1030,7 +1025,7 @@ export function ModelLoaderCard({
                             data={v.name}
                             contextMenu={true}
                           >
-                            <div className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2">
+                            <div className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2 dark:bg-zinc-700">
                               <div
                                 className={
                                   "text-fadeout flex w-full overflow-auto text-nowrap pt-2 text-xl font-semibold"
@@ -1199,7 +1194,7 @@ export function ModelLoaderCard({
                   {[...ONLINE_API_MODELS, ...ONLINE_RWKV_MODELS].map((v, k) => {
                     return (
                       <div
-                        className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2"
+                        className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2 dark:bg-zinc-700"
                         key={k}
                       >
                         <div
@@ -1357,7 +1352,7 @@ export function ModelLoaderCard({
             <TabsContent value="device" className="max-md:h-full">
               <div
                 className={cn(
-                  "flex h-full cursor-pointer flex-col items-center justify-center rounded-lg bg-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-white/50 md:h-96",
+                  "flex h-full cursor-pointer flex-col items-center justify-center rounded-lg bg-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-white/50 dark:shadow-zinc-600/50 dark:bg-zinc-700 md:h-96",
                   isDragOver &&
                     "scale-[1.03] border border-green-500 bg-green-200",
                 )}

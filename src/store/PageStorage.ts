@@ -21,7 +21,9 @@ export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
   return store;
 };
 
-interface SessionStorage {
+// =================== previous interface ===================
+
+interface SessionStorage_V0 {
   isBarOpen: boolean;
   isFunctionBarOpen: boolean;
   showLargeBanner: boolean;
@@ -35,33 +37,90 @@ interface SessionStorage {
   setAlwaysOpenSessionConfigurationPannel: (show: boolean) => void;
 }
 
+// ==========================================================
+
+interface SessionStorage {
+  isBarOpen: boolean;
+  isFunctionBarOpen: boolean;
+  showLargeBanner: boolean;
+  pageLocation: { to: To | false; options?: any };
+  setIsBarOpen: (isOpen: boolean) => void;
+  setIsFunctionBarOpen: (isOpen: boolean) => void;
+  setShowLargeBanner: (showLargeBanner: boolean) => void;
+  setPageLocation: (to: To, options?: any) => void;
+
+  alwaysOpenSessionConfigurationPannel: boolean | null;
+  setAlwaysOpenSessionConfigurationPannel: (show: boolean) => void;
+
+  theme: "light" | "dark" | "auto";
+  setTheme: (colorMode: "light" | "dark" | "auto") => void;
+}
+
+const setTheme = (colorMode: "light" | "dark" | "auto") => {
+  switch (colorMode) {
+    case "light":
+      localStorage.setItem("theme", "light");
+      break;
+    case "dark":
+      localStorage.setItem("theme", "dark");
+      break;
+
+    default:
+      localStorage.removeItem("theme");
+      break;
+  }
+  document.documentElement.classList.toggle(
+    "dark",
+    localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches),
+  );
+};
+
 export const usePageStorage = create<SessionStorage>()(
   persist(
-    (set) => ({
-      isBarOpen: true,
-      isFunctionBarOpen: false,
-      showLargeBanner: isEnterIndex(),
-      pageLocation: { to: false },
-      setShowLargeBanner: (showLargeBanner: boolean) =>
-        set({ showLargeBanner: showLargeBanner }),
-      setIsBarOpen: (isOpen: boolean) => set({ isBarOpen: isOpen }),
-      setIsFunctionBarOpen: (isOpen: boolean) =>
-        set({ isFunctionBarOpen: isOpen }),
-      setPageLocation: (to: To, options?: any) =>
-        set({ pageLocation: { to, options } }),
+    (set) => {
+      return {
+        isBarOpen: true,
+        isFunctionBarOpen: false,
+        showLargeBanner: isEnterIndex(),
+        pageLocation: { to: false },
+        setShowLargeBanner: (showLargeBanner: boolean) =>
+          set({ showLargeBanner: showLargeBanner }),
+        setIsBarOpen: (isOpen: boolean) => set({ isBarOpen: isOpen }),
+        setIsFunctionBarOpen: (isOpen: boolean) =>
+          set({ isFunctionBarOpen: isOpen }),
+        setPageLocation: (to: To, options?: any) =>
+          set({ pageLocation: { to, options } }),
 
-      alwaysOpenSessionConfigurationPannel: null,
-      setAlwaysOpenSessionConfigurationPannel(show) {
-        set({ alwaysOpenSessionConfigurationPannel: !!show });
-      },
-    }),
+        alwaysOpenSessionConfigurationPannel: null,
+        setAlwaysOpenSessionConfigurationPannel(show) {
+          set({ alwaysOpenSessionConfigurationPannel: !!show });
+        },
+        theme: "auto",
+        setTheme(theme) {
+          set({ theme: theme });
+          setTheme(theme);
+        },
+      };
+    },
     {
       name: "webrwkv-page-config",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         alwaysOpenSessionConfigurationPannel:
           state.alwaysOpenSessionConfigurationPannel,
+        theme: state.theme,
       }),
+      migrate(persistedState, version) {
+        let currentVersion = version;
+        if (currentVersion == 0) {
+          (persistedState as SessionStorage).theme = "auto";
+          currentVersion = 1;
+        }
+        return persistedState;
+      },
+      version: 1,
     },
   ),
 );

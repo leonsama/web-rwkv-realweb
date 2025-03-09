@@ -46,7 +46,7 @@
   background-color: transparent;
   color: transparent;
   word-break: break-all;
-  caret-color: black;
+  /* caret-color: currentColor; */
 
   padding: inherit;
   border-radius: inherit;

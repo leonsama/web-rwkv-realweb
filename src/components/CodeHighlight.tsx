@@ -1,5 +1,7 @@
-import "highlight.js/styles/default.css";
+import { useEffect } from "react";
 import Lowlight from "./react-lowlight/Lowlight";
+
+import "./CodeHighlight.css";
 
 export function CodeHighlight({
   snippet,
@@ -8,6 +10,7 @@ export function CodeHighlight({
   snippet: string;
   lang: string;
 }) {
+
   return (
     <Lowlight
       language={Lowlight.lowlight.registered(lang) ? lang : "plaintext"}

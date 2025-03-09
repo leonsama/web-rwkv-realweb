@@ -1,10 +1,4 @@
-import {
-  Children,
-  isValidElement,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Children, isValidElement, useEffect, useRef, useState } from "react";
 import { cn, throttle } from "../utils/utils";
 import { ClassValue } from "clsx";
 
@@ -123,14 +117,14 @@ export function RadioGroup({
   return (
     <div
       className={cn(
-        "relative flex h-12 select-none justify-center gap-2 whitespace-nowrap rounded-xl bg-slate-100 p-2 transition-all duration-300",
+        "relative flex h-12 select-none justify-center gap-2 whitespace-nowrap rounded-xl bg-slate-100 p-2 transition-all duration-300 dark:bg-zinc-900/50",
         className,
       )}
       ref={groupEle}
     >
       <div
         className={cn(
-          "RadioGroupSlider absolute rounded-lg bg-white shadow-sm",
+          "RadioGroupSlider absolute rounded-lg bg-white shadow-sm dark:bg-zinc-700",
           selectBgPos.display ? "opacity-100" : "opacity-0",
           selectBgPos.motionAnimate
             ? `${style["move-transition"]} ${selectBgPos.xDirection}`

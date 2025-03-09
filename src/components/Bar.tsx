@@ -9,16 +9,14 @@ import {
 import { usePageStorage } from "../store/PageStorage";
 import { cn, isEnterIndex } from "../utils/utils";
 import { WebRWKVFixedBanner } from "./WebRWKVBanner";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import {
   CloseAllMenu,
   createContextMenu,
   Menu,
   MenuItem,
 } from "./popup/ContentMenu";
-import {
-  useChatSessionStore,
-} from "../store/ChatSessionStorage";
+import { useChatSessionStore } from "../store/ChatSessionStorage";
 
 import { useShallow } from "zustand/react/shallow";
 import { Slide, toast } from "react-toastify";
@@ -60,16 +58,36 @@ function BarButtom({
   return (
     <button
       className={cn(
-        "group inline-flex h-12 w-12 flex-shrink-0 gap-4 overflow-hidden break-keep rounded-full p-3.5 text-slate-500 transition-all duration-200 hover:bg-slate-200 hover:text-slate-600 active:bg-slate-300",
+        "group inline-flex h-12 w-12 flex-shrink-0 gap-4 overflow-hidden break-keep rounded-full p-3.5 text-slate-500 transition-[color,background-color,width] duration-300 hover:bg-slate-200 hover:text-slate-600 active:bg-slate-300 dark:text-zinc-300 dark:hover:bg-zinc-600/50",
         className,
         sessionStorage.isBarOpen ? "w-full" : "",
       )}
       {...prop}
     >
-      <span className={cn("flex-shrink-0 transition-all duration-300")}>
-        {icon}
-      </span>
+      <span className={cn("flex-shrink-0")}>{icon}</span>
       <span className={cn("flex-shrink-0 break-keep")}>{children}</span>
+    </button>
+  );
+}
+function BarFunctionButtom({
+  children,
+  activate,
+  className,
+  ...prop
+}: {
+  children: ReactNode;
+  activate: boolean;
+} & React.HtmlHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      {...prop}
+      className={cn(
+        "flex h-12 w-12 items-center justify-center rounded-full text-slate-500 transition-[color,background-color,transform] duration-200 active:scale-90 dark:text-zinc-300 md:hover:bg-slate-200 dark:md:hover:bg-zinc-600/70",
+        activate && "bg-slate-300/50 dark:bg-zinc-600",
+        className,
+      )}
+    >
+      {children}
     </button>
   );
 }
@@ -82,7 +100,7 @@ export function Bar() {
       {/* nav bar switch btn */}
       <button
         className={cn(
-          "fixed left-2 top-2 z-20 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full transition-all duration-200 active:scale-90 md:left-4 md:top-4 md:hover:bg-slate-200",
+          "fixed left-2 top-2 z-20 flex h-12 w-12 items-center justify-center overflow-hidden rounded-full transition-all duration-200 active:scale-90 md:left-4 md:top-4 md:hover:bg-slate-200 dark:md:hover:bg-zinc-500/50",
           isEnterIndex() &&
             "CircleMask animate-[CircleMaskFadeIn_1000ms_ease_1300ms]",
         )}
@@ -134,9 +152,9 @@ function BarRoute() {
   return (
     <div
       className={cn(
-        "pointer-events-none fixed z-10 flex h-full w-full flex-shrink-0 select-none bg-slate-300 bg-opacity-0 transition-all duration-300 md:relative md:w-auto",
+        "pointer-events-none fixed z-10 flex h-full w-full flex-shrink-0 select-none bg-slate-300/0 transition-all duration-300 dark:bg-zinc-800/0 md:relative md:w-auto",
         sessionStorage.isBarOpen
-          ? "pointer-events-auto bg-opacity-80 sm:bg-opacity-50"
+          ? "pointer-events-auto bg-slate-300/80 dark:bg-zinc-800/80 sm:bg-slate-300/50 dark:sm:bg-zinc-800/50"
           : "md:pointer-events-auto",
         isEnterIndex() &&
           "CircleMask animate-[CircleMaskFadeIn_3000ms_cubic-bezier(0.23,0.96,0.27,0.99)_1150ms]",
@@ -165,7 +183,7 @@ function BarRoute() {
             element={
               <div
                 className={cn(
-                  "h-full w-56 bg-slate-50 transition-all duration-300 md:w-72",
+                  "h-full w-56 bg-slate-50 transition-all duration-300 dark:bg-zinc-800 md:w-72",
                   sessionStorage.isBarOpen ? "" : "md:w-20",
                 )}
               ></div>
@@ -186,11 +204,11 @@ function BarFunctionMenu() {
   return (
     <div
       className={cn(
-        "flex h-full w-16 flex-col gap-2 overflow-hidden bg-slate-100 p-2 pt-16 transition-all duration-300 md:w-20 md:p-4 md:pt-20",
+        "flex h-full w-16 flex-col gap-2 overflow-hidden bg-slate-100 p-2 pt-16 transition-all duration-300 dark:bg-zinc-700 md:w-20 md:p-4 md:pt-20",
         sessionStorage.isBarOpen ? "" : "md:-ml-20",
       )}
     >
-      <button className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-300/50 text-slate-500 transition-all duration-200 active:scale-90 md:hover:bg-slate-200">
+      <BarFunctionButtom activate={true}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -205,9 +223,9 @@ function BarFunctionMenu() {
             d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
           />
         </svg>
-      </button>
-      <button
-        className="flex h-12 w-12 items-center justify-center rounded-full text-slate-500 transition-all duration-200 active:scale-90 md:hover:bg-slate-200"
+      </BarFunctionButtom>
+      <BarFunctionButtom
+        activate={false}
         onClick={() => {
           toast("⌨️ Writer is comming soon！", {
             position: "top-right",
@@ -222,6 +240,7 @@ function BarFunctionMenu() {
           });
         }}
       >
+        {" "}
         <svg
           viewBox="0 0 1024 1024"
           version="1.1"
@@ -236,9 +255,9 @@ function BarFunctionMenu() {
             p-id="7387"
           ></path>
         </svg>
-      </button>
-      <button
-        className="flex h-12 w-12 items-center justify-center rounded-full text-slate-500 transition-all duration-200 active:scale-90 md:hover:bg-slate-200"
+      </BarFunctionButtom>
+      <BarFunctionButtom
+        activate={false}
         onClick={() => {
           toast("❤️ Translation is comming soon！", {
             position: "top-right",
@@ -265,7 +284,7 @@ function BarFunctionMenu() {
             clipRule="evenodd"
           />
         </svg>
-      </button>
+      </BarFunctionButtom>
     </div>
   );
 }
@@ -302,7 +321,7 @@ function BarChatRouter() {
   return (
     <div
       className={cn(
-        "flex h-full w-56 flex-col bg-slate-50 py-2 pt-16 transition-all duration-300 md:w-72 md:py-4",
+        "flex h-full w-56 flex-col bg-slate-50 py-2 pt-16 transition-all duration-300 dark:bg-zinc-800 md:w-72 md:py-4",
         sessionStorage.isBarOpen ? "" : "md:w-20",
       )}
     >
@@ -327,7 +346,7 @@ function BarChatRouter() {
               >
                 <button
                   className={cn(
-                    "group inline-flex h-12 w-12 flex-shrink-0 gap-4 overflow-hidden break-keep rounded-full bg-slate-200 p-3.5 text-slate-600 transition-all duration-200 hover:bg-slate-300",
+                    "group inline-flex h-12 w-12 flex-shrink-0 gap-4 overflow-hidden break-keep rounded-full bg-slate-200 p-3.5 text-slate-600 transition-all duration-200 hover:bg-slate-300 dark:bg-zinc-500/50 dark:text-zinc-300",
                     sessionStorage.isBarOpen ? "w-36" : "delay-75",
                   )}
                   onClick={() => {
@@ -377,7 +396,7 @@ function BarChatRouter() {
                           })
                         }
                         className={
-                          "group/item ml-3 flex cursor-pointer items-center gap-1 rounded-lg p-1 pl-2 pr-2 text-left hover:bg-slate-100"
+                          "group/item ml-3 flex cursor-pointer items-center gap-1 rounded-lg p-1 pl-2 pr-2 text-left hover:bg-slate-100 dark:hover:bg-zinc-600/50"
                         }
                       >
                         {/* <Tooltip
@@ -407,7 +426,7 @@ function BarChatRouter() {
                           >
                             <div
                               className={
-                                "trnasition-[background-color] flex gap-1 group-hover/item:motion-preset-fade group-hover/item:flex group-hover/item:motion-duration-200 md:hidden md:rounded-lg md:hover:bg-white/80"
+                                "trnasition-[background-color] flex gap-1 group-hover/item:motion-preset-fade group-hover/item:flex group-hover/item:motion-duration-200 md:hidden md:rounded-lg md:hover:bg-white/80 dark:md:hover:bg-zinc-500/50"
                               }
                               onClick={(e) => {
                                 e.stopPropagation();

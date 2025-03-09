@@ -17,7 +17,7 @@ export function Card({
     <div
       {...prop}
       className={cn(
-        "flex select-none flex-col rounded-3xl bg-slate-100",
+        "dark:text col-auto flex select-none flex-col rounded-3xl bg-slate-100 dark:bg-zinc-800",
         className,
       )}
     >
@@ -37,7 +37,7 @@ export function Card({
         ) : (
           <div className="top-0 flex select-none items-center gap-4 rounded-3xl p-4">
             {icon && (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 dark:bg-zinc-900/50 dark:text-zinc-300">
                 {icon}
               </div>
             )}
@@ -80,12 +80,12 @@ export function CardTitle({
     <div
       {...prop}
       className={cn(
-        "sticky top-0 flex select-none items-center gap-4 rounded-3xl bg-slate-100 p-4",
+        "sticky top-0 flex select-none items-center gap-4 rounded-3xl bg-slate-100 p-4 dark:bg-zinc-800",
         className,
       )}
     >
       {icon && (
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-300 dark:bg-zinc-900/50 dark:text-zinc-300">
           {icon}
         </div>
       )}
@@ -113,7 +113,9 @@ export function Entry({
       )}
     >
       {label && (
-        <div className="flex-1 select-none text-slate-500">{label}</div>
+        <div className="flex-1 select-none text-slate-500 dark:text-zinc-400">
+          {label}
+        </div>
       )}
       {children}
     </div>
