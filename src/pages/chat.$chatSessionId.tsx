@@ -9,6 +9,7 @@ import {
   useSuspendUntilValid,
 } from "../utils/utils";
 import {
+  CompletionGenerator,
   DEFAULT_SESSION_CONFIGURATION,
   InferPortInterface,
   SessionConfiguration,
@@ -50,10 +51,7 @@ const ChatSession = createContext<
     currentModelName: string | null;
     loadingModelName: string | null;
 
-    generator: React.MutableRefObject<{
-      controller: { abort(): void };
-      [Symbol.asyncIterator]: () => AsyncGenerator<string, void, unknown>;
-    }>;
+    generator: React.MutableRefObject<CompletionGenerator>;
     completion: ReturnType<typeof useWebRWKVChat>["completion"];
 
     checkIsModelLoaded: (
@@ -145,7 +143,7 @@ function MessageInformationViewer({
           }
           disabled={true}
           onChange={(e) => {}}
-          className="h-full min-h-80 w-full rounded-lg bg-white dark:bg-zinc-700 p-2"
+          className="h-full min-h-80 w-full rounded-lg bg-white p-2 dark:bg-zinc-700"
         ></textarea>
       </Entry>
       <Entry label="Sampler" className="md:items-start">
@@ -279,7 +277,7 @@ function AssistantContent({
 
     let result = "";
     for await (const chunk of generator.current) {
-      result += chunk;
+      result += chunk.word;
       currentMessageBlock.messageContents[activeMessageContentIndex].content =
         result;
       updateCurrentMessageBlock(currentMessageBlock);
@@ -376,9 +374,9 @@ function AssistantContent({
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-2">
-        <div className="sticky top-0 z-10 -mt-8 h-6 bg-white [mask-image:linear-gradient(0deg,#0000,#ffff)] dark:bg-zinc-900 pointer-events-none"></div>
+        <div className="pointer-events-none sticky top-0 z-10 -mt-8 h-6 bg-white [mask-image:linear-gradient(0deg,#0000,#ffff)] dark:bg-zinc-900"></div>
         <div
-          className="min-h-10 select-text motion-opacity-in-[0%] dark:motion-opacity-in-[0%] motion-duration-[0.4s]"
+          className="min-h-10 select-text motion-opacity-in-[0%] motion-duration-[0.4s] dark:motion-opacity-in-[0%]"
           key={`${currentMessageBlock.key}-${currentMessageBlock.activeMessageContentIndex}`}
         >
           {currentMessageBlock.messageContents[
@@ -1064,10 +1062,7 @@ export default function Chat() {
     useState(false);
 
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const generator = useRef<{
-    controller: { abort(): void };
-    [Symbol.asyncIterator]: () => AsyncGenerator<string, void, unknown>;
-  }>(null!);
+  const generator = useRef<CompletionGenerator>(null!);
 
   const loadModelModal = useRef<ModalInterface>(null!);
   const checkIsModelLoaded = useSuspendUntilValid(currentModelName, () => {
@@ -1143,7 +1138,7 @@ export default function Chat() {
 
     let result = "";
     for await (const chunk of generator.current) {
-      result += chunk;
+      result += chunk.word;
       resultBlock.messageContents[activeMessageContentIndex].content = result;
       updateCurrentMessageBlock(resultBlock);
     }

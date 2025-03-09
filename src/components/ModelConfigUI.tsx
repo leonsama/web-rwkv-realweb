@@ -213,7 +213,7 @@ export function useModelLoader() {
     console.log(stream);
 
     for await (const chunk of stream) {
-      result += chunk;
+      result += chunk.word;
     }
     console.log("warnup:", result);
   };
@@ -993,7 +993,7 @@ export function ModelLoaderCard({
                         e.preventDefault();
                         setActiveTab("web");
                       }}
-                      className="font-semibold text-gray-700 underline"
+                      className="font-semibold text-gray-700 underline dark:text-zinc-300"
                     >
                       Web
                     </a>{" "}
@@ -1004,7 +1004,7 @@ export function ModelLoaderCard({
                         e.preventDefault();
                         setActiveTab("device");
                       }}
-                      className="font-semibold text-gray-700 underline"
+                      className="font-semibold text-gray-700 underline dark:text-zinc-300"
                     >
                       Your Device
                     </a>
@@ -1099,7 +1099,7 @@ export function ModelLoaderCard({
                                   {v.from !== "API" ? (
                                     <Button
                                       className={cn(
-                                        "rounded-xl p-1 px-2 font-medium",
+                                        "rounded-xl p-1 px-2 font-medium dark:bg-zinc-600",
                                         loadingModelName === v.name &&
                                           "pointer-events-none bg-transparent",
                                         currentModelName === v.name &&
@@ -1140,7 +1140,7 @@ export function ModelLoaderCard({
                                   ) : (
                                     <Button
                                       className={cn(
-                                        "rounded-xl p-1 px-3 font-medium",
+                                        "rounded-xl p-1 px-3 font-medium dark:bg-zinc-600",
                                         loadingModelName === v.name &&
                                           "pointer-events-none bg-transparent px-2",
                                         currentModelName === v.name &&
@@ -1165,7 +1165,7 @@ export function ModelLoaderCard({
                                     position="bottom right"
                                   >
                                     <span>
-                                      <Button className="bg-transparent p-1.5">
+                                      <Button className="bg-transparent p-1.5 dark:bg-zinc-600">
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
                                           viewBox="0 0 20 20"
@@ -1281,7 +1281,7 @@ export function ModelLoaderCard({
                             {v.from !== "API" ? (
                               <Button
                                 className={cn(
-                                  "rounded-xl p-1 px-2 font-medium",
+                                  "rounded-xl p-1 px-2 font-medium dark:bg-zinc-600",
                                   loadingModelName === v.name &&
                                     "pointer-events-none bg-transparent",
                                   currentModelName === v.name &&
@@ -1310,7 +1310,7 @@ export function ModelLoaderCard({
                             ) : (
                               <Button
                                 className={cn(
-                                  "rounded-xl p-1 px-3 font-medium",
+                                  "rounded-xl p-1 px-3 font-medium dark:bg-zinc-600",
                                   loadingModelName === v.name &&
                                     "pointer-events-none bg-transparent px-2",
                                   currentModelName === v.name &&

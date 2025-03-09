@@ -18,6 +18,21 @@ export type CompletionMessage =
   | { role: "User" | "Assistant" | string; content: string }
   | { text: string };
 
+export type CompletionGenerator = {
+  [Symbol.asyncIterator]: () => AsyncGenerator<
+    {
+      type: "token";
+      word: string;
+      model: string;
+    },
+    void,
+    unknown
+  >;
+  controller: {
+    abort(): void;
+  };
+};
+
 export const DEFAULT_STOP_TOKENS = [261, 0];
 export const DEFAULT_STOP_WORDS = ["\n\nUser"];
 
@@ -98,7 +113,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
     let result = "";
 
     for await (const chunk of stream) {
-      result += chunk;
+      result += chunk.word;
     }
     console.log("warnup:", result);
   };
@@ -134,12 +149,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
       enableReasoning?: boolean;
     },
     controller: AbortController = new AbortController(),
-  ): Promise<{
-    [Symbol.asyncIterator]: () => AsyncGenerator<string, void, unknown>;
-    controller: {
-      abort(): void;
-    };
-  }> {
+  ): Promise<CompletionGenerator> {
     if (!messages && !prompt) {
       throw new Error("messages or prompt is required");
     }
@@ -261,7 +271,15 @@ export interface InferPortInterface {
       enableReasoning?: boolean;
     },
     signal?: AbortSignal,
-  ): AsyncGenerator<string, void, unknown>;
+  ): AsyncGenerator<
+    {
+      type: "token";
+      word: string;
+      model: string;
+    },
+    void,
+    unknown
+  >;
 }
 
 export class WebRWKVInferPort implements InferPortInterface {
@@ -380,13 +398,25 @@ export class WebRWKVInferPort implements InferPortInterface {
       stop_words?: string[];
     },
     signal?: AbortSignal,
-  ): AsyncGenerator<string, void, unknown> {
+  ): AsyncGenerator<
+    {
+      type: "token";
+      word: string;
+      model: string;
+    },
+    void,
+    unknown
+  > {
     if (!this.worker) {
       throw new Error("worker not initialized");
     }
 
     if (!this.vacalUrl) {
       throw new Error("vocab not loaded");
+    }
+
+    if (!this.currentModelName) {
+      throw new Error("model not loaded");
     }
 
     const runner = await this.worker.run(
@@ -424,10 +454,18 @@ export class WebRWKVInferPort implements InferPortInterface {
 
     for await (const result of runner) {
       if (result.type === "token") {
-        yield result.word;
+        yield {
+          type: "token",
+          word: result.word,
+          model: this.currentModelName,
+        };
       }
       if (result.type === "completion") {
-        yield result.word;
+        yield {
+          type: "token",
+          word: result.word,
+          model: this.currentModelName,
+        };
       }
       if (signal?.aborted) {
         break;
@@ -514,7 +552,15 @@ export class APIInferPort implements InferPortInterface {
       messages?: { role: string; content: string }[];
     },
     signal?: AbortSignal,
-  ): AsyncGenerator<string, void, unknown> {
+  ): AsyncGenerator<
+    {
+      type: "token";
+      word: string;
+      model: string;
+    },
+    void,
+    unknown
+  > {
     if (!this.APIModelParam) {
       throw new Error("APIParam not initialized");
     }
@@ -605,12 +651,24 @@ export class APIInferPort implements InferPortInterface {
                   const content = data.choices[0]?.delta.content || "";
                   if (reasoningContent != "" && !isThinking) {
                     isThinking = true;
-                    yield `<think>`;
+                    yield {
+                      type: "token",
+                      word: `<think>`,
+                      model: content.model,
+                    };
                   } else if (content !== "" && isThinking) {
                     isThinking = false;
-                    yield `</think>`;
+                    yield {
+                      type: "token",
+                      word: `</think>`,
+                      model: content.model,
+                    };
                   }
-                  yield `${reasoningContent}${content}`;
+                  yield {
+                    type: "token",
+                    word: `${reasoningContent}${content}`,
+                    model: content.model,
+                  };
                 } catch (e) {
                   console.error("Failed to parse SSE data:", e);
                 }
