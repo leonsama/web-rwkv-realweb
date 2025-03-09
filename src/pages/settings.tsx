@@ -34,6 +34,8 @@ export default function Settings() {
     setAlwaysOpenSessionConfigurationPannel,
     setTheme,
     theme,
+    showReasoningContentByDefault,
+    setShowReasoningContentByDefault,
   } = usePageStorage((s) => s);
 
   const LanguageMenu = createContextMenu(
@@ -222,6 +224,27 @@ export default function Settings() {
                 }
                 onChange={(value) => {
                   setAlwaysOpenSessionConfigurationPannel(value === "Yes");
+                }}
+              >
+                <RadioGroupOption value={"Yes"}>Yes</RadioGroupOption>
+                <RadioGroupOption value={"No"}>No</RadioGroupOption>
+              </RadioGroup>
+            </Entry>
+            <Entry
+              label="Show reasoning content by default"
+              className="max-md:text-sm"
+            >
+              <RadioGroup
+                className="-m-2 h-10 gap-1 bg-slate-200 p-1"
+                value={
+                  showReasoningContentByDefault === null
+                    ? "unset"
+                    : showReasoningContentByDefault
+                      ? "Yes"
+                      : "No"
+                }
+                onChange={(value) => {
+                  setShowReasoningContentByDefault(value === "Yes");
                 }}
               >
                 <RadioGroupOption value={"Yes"}>Yes</RadioGroupOption>

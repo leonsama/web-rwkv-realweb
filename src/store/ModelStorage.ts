@@ -85,7 +85,7 @@ interface ModelStorage_V0 {
 
 // ==============================================================================
 
-interface RecentModel {
+export interface RecentModel {
   name: string;
   description: string | null;
   supportReasoning: boolean;

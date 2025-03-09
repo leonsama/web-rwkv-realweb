@@ -145,7 +145,7 @@ function MessageInformationViewer({
           }
           disabled={true}
           onChange={(e) => {}}
-          className="h-full min-h-80 w-full rounded-lg bg-white p-2"
+          className="h-full min-h-80 w-full rounded-lg bg-white dark:bg-zinc-700 p-2"
         ></textarea>
       </Entry>
       <Entry label="Sampler" className="md:items-start">
@@ -376,7 +376,7 @@ function AssistantContent({
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-2">
-        <div className="sticky top-0 z-10 -mt-8 h-6 bg-white [mask-image:linear-gradient(0deg,#0000,#ffff)] dark:bg-zinc-900"></div>
+        <div className="sticky top-0 z-10 -mt-8 h-6 bg-white [mask-image:linear-gradient(0deg,#0000,#ffff)] dark:bg-zinc-900 pointer-events-none"></div>
         <div
           className="min-h-10 select-text motion-opacity-in-[0%] dark:motion-opacity-in-[0%] motion-duration-[0.4s]"
           key={`${currentMessageBlock.key}-${currentMessageBlock.activeMessageContentIndex}`}

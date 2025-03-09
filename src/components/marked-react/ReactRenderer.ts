@@ -188,7 +188,7 @@ class ReactRenderer {
     return children;
   }
 
-  thinkBlock(children: ReactNode) {
+  thinkBlock(children: ReactNode, isThinking: boolean) {
     return children;
   }
 }

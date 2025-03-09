@@ -54,6 +54,9 @@ interface SessionStorage {
 
   theme: "light" | "dark" | "auto";
   setTheme: (colorMode: "light" | "dark" | "auto") => void;
+
+  showReasoningContentByDefault: boolean | null;
+  setShowReasoningContentByDefault: (show: boolean) => void;
 }
 
 const setTheme = (colorMode: "light" | "dark" | "auto") => {
@@ -102,6 +105,11 @@ export const usePageStorage = create<SessionStorage>()(
           set({ theme: theme });
           setTheme(theme);
         },
+
+        showReasoningContentByDefault: null,
+        setShowReasoningContentByDefault(show) {
+          set({ showReasoningContentByDefault: show });
+        },
       };
     },
     {
@@ -111,11 +119,14 @@ export const usePageStorage = create<SessionStorage>()(
         alwaysOpenSessionConfigurationPannel:
           state.alwaysOpenSessionConfigurationPannel,
         theme: state.theme,
+        showReasoningContentByDefault: state.showReasoningContentByDefault,
       }),
       migrate(persistedState, version) {
         let currentVersion = version;
         if (currentVersion == 0) {
           (persistedState as SessionStorage).theme = "auto";
+          (persistedState as SessionStorage).showReasoningContentByDefault =
+            null;
           currentVersion = 1;
         }
         return persistedState;

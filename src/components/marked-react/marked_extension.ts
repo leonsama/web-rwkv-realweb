@@ -80,6 +80,7 @@ function thinkBlock(): TokenizerAndRendererExtension {
           raw: thinkBlockMatch[0],
           text: thinkBlockMatch[1].trim(),
           tokens: [],
+          isThinking: thinkBlockMatch[2] === "",
         };
         this.lexer.blockTokens(tokens.text, tokens.tokens);
         return tokens;

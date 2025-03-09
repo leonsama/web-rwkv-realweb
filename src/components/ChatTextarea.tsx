@@ -27,14 +27,16 @@ const suggestions: Suggestion[] = [
 
 export function ReasoningIcon({
   enableReasoning,
+  ...prop
 }: {
   enableReasoning: boolean;
-}) {
+} & React.HTMLAttributes<HTMLOrSVGElement>) {
   return (
     <svg
+      {...prop}
       viewBox="0 0 1024 1024"
       xmlns="http://www.w3.org/2000/svg"
-      className="size-5"
+      className={cn("size-5", prop.className)}
       strokeWidth={1.5}
     >
       <path
@@ -266,7 +268,7 @@ export function ChatTextarea({
         <div
           className={cn(
             "flex justify-end gap-1 transition-all duration-500",
-            isPannelExpaned ? "pointer-events-none w-0 opacity-0" : "w-12",
+            isPannelExpaned ? "pointer-events-none w-0 opacity-0" : "w-[52px]",
             !supportReasoning && "pointer-events-none w-0 opacity-0",
           )}
         >

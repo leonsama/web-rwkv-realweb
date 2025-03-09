@@ -15,6 +15,7 @@ import { cn } from "../utils/utils";
 import { ReasoningIcon } from "./ChatTextarea";
 
 import { type KatexOptions } from "katex";
+import { usePageStorage } from "../store/PageStorage";
 
 const CodeHighlight = lazy(() => import("./CodeHighlight"));
 const KatexRender = lazy(() => import("./KatexRender"));
@@ -95,10 +96,21 @@ function FadeText({
   return <>{render}</>;
 }
 
-function ThinkBlock({ children }: { children: ReactNode }) {
-  const [showReasoning, setShowReasoning] = useState(true);
+function ThinkBlock({
+  children,
+  isThinking,
+}: {
+  children: ReactNode;
+  isThinking: boolean;
+}) {
+  const { showReasoningContentByDefault, setShowReasoningContentByDefault } =
+    usePageStorage((s) => s);
+
+  const [showReasoning, setShowReasoning] = useState(
+    showReasoningContentByDefault !== false,
+  );
   const [reasonContainerHeight, setReasonContainerHeight] = useState(0);
-  const [enableAnimation, setEnableAnimaiton] = useState(false);
+  const [enableAnimation, setEnableAnimaiton] = useState(isThinking);
   const reasonContentEle = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -116,14 +128,21 @@ function ThinkBlock({ children }: { children: ReactNode }) {
     <div className="mb-4 rounded-2xl md:mt-3">
       <div className="flex">
         <div
-          className="flex w-48 cursor-pointer select-none items-center gap-2 rounded-3xl p-2 pr-2 text-sm font-semibold transition-all duration-200 md:hover:bg-yellow-500/20"
+          className={cn(
+            "flex w-48 cursor-pointer select-none items-center gap-2 rounded-3xl p-2 pr-2 text-sm font-semibold transition-all duration-200 md:hover:bg-yellow-500/20",
+            isThinking && "animate-pulse",
+          )}
           onClick={() => {
             setEnableAnimaiton(true);
             setShowReasoning(!showReasoning);
           }}
         >
           <ReasoningIcon enableReasoning={true}></ReasoningIcon>{" "}
-          {showReasoning ? (
+          {isThinking ? (
+            <span key={10} className="motion-preset-slide-down-md">
+              Thinking...
+            </span>
+          ) : showReasoning ? (
             <span key={0} className="motion-preset-slide-down-md">
               Hide reasoning
             </span>
@@ -165,19 +184,30 @@ function ThinkBlock({ children }: { children: ReactNode }) {
       </div>
       <div
         className={cn(
-          "ml-[18px] overflow-hidden border-l pl-4 [mask-image:linear-gradient(180deg,#ffff_calc(100%_-_8px),_#0000_100%)]",
-          showReasoning ? "" : "opacity-0",
-          enableAnimation && "transition-all duration-300",
+          "overflow-hidden",
+          showReasoning ? "opacity-100" : "opacity-0",
+          enableAnimation && "transition-[opacity,height] duration-300",
+          enableAnimation && isThinking && "transition-[opacity]",
         )}
         style={{
           height: showReasoning ? `${reasonContainerHeight}px` : `0px`,
         }}
       >
         <div
-          ref={reasonContentEle}
-          className="-mt-4 text-slate-600 dark:text-zinc-400"
+          className={cn(
+            "ml-[18px] overflow-hidden border-l pl-4 [mask-image:linear-gradient(180deg,#ffff_calc(100%_-_8px),_#0000_100%)]",
+            enableAnimation && isThinking && "transition-[height] duration-300",
+          )}
+          style={{
+            height: `${reasonContainerHeight}px`,
+          }}
         >
-          {children}
+          <div
+            ref={reasonContentEle}
+            className="-mt-4 text-slate-600 dark:text-zinc-400"
+          >
+            {children}
+          </div>
         </div>
       </div>
     </div>
@@ -341,18 +371,29 @@ export const RWKVMarkedRenderer: CustomReactRenderer = {
   blockKatex(children: ReactNode) {
     return <BlockKatex key={this.elementId}>{children}</BlockKatex>;
   },
-  thinkBlock(children: ReactNode) {
-    return <ThinkBlock key={this.elementId}>{children}</ThinkBlock>;
+  thinkBlock(children: ReactNode, isThinking) {
+    return (
+      <ThinkBlock key={this.elementId} isThinking={false}>
+        {children}
+      </ThinkBlock>
+    );
   },
 };
 
-export const RWKVMarkedStreamRenderer = {
+export const RWKVMarkedStreamRenderer: CustomReactRenderer = {
   ...RWKVMarkedRenderer,
   text(text: string) {
     return (
       <FadeText key={this.elementId} animate={true}>
         {text}
       </FadeText>
+    );
+  },
+  thinkBlock(children: ReactNode, isThinking) {
+    return (
+      <ThinkBlock key={this.elementId} isThinking={isThinking}>
+        {children}
+      </ThinkBlock>
     );
   },
 };

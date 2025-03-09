@@ -125,15 +125,17 @@ class ReactParser {
         }
 
         case "thinkBlock": {
-          const thinkContent = token as Tokens.Blockquote;
+          const thinkContent = token as Tokens.Blockquote & {
+            isThinking: boolean;
+          };
 
           const content = this.parse(thinkContent.tokens);
 
-          return this.renderer.thinkBlock(content);
+          return this.renderer.thinkBlock(content, thinkContent.isThinking);
         }
 
         default: {
-          console.warn(`Token with "${token.type}" type was not found`);  
+          console.warn(`Token with "${token.type}" type was not found`);
           return null;
         }
       }
@@ -191,7 +193,7 @@ class ReactParser {
         }
 
         default: {
-          console.warn(`Token with "${token.type}" type was not found`);  
+          console.warn(`Token with "${token.type}" type was not found`);
           return null;
         }
       }

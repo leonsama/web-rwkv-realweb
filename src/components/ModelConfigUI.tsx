@@ -1103,7 +1103,7 @@ export function ModelLoaderCard({
                                         loadingModelName === v.name &&
                                           "pointer-events-none bg-transparent",
                                         currentModelName === v.name &&
-                                          "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0",
+                                          "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                         v.from === "device" &&
                                           v.cached === false &&
                                           "invisible",
@@ -1134,7 +1134,7 @@ export function ModelLoaderCard({
                                       {loadingModelName === v.name
                                         ? "Loading"
                                         : currentModelName === v.name
-                                          ? "Current Model"
+                                          ? "Selected"
                                           : "Load"}
                                     </Button>
                                   ) : (
@@ -1144,7 +1144,7 @@ export function ModelLoaderCard({
                                         loadingModelName === v.name &&
                                           "pointer-events-none bg-transparent px-2",
                                         currentModelName === v.name &&
-                                          "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0",
+                                          "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                       )}
                                       onClick={() => {
                                         fromAPI(v.loadFromAPIModel!);
@@ -1154,7 +1154,7 @@ export function ModelLoaderCard({
                                       {loadingModelName === v.name
                                         ? "Loading"
                                         : currentModelName === v.name
-                                          ? "Current Model"
+                                          ? "Selected"
                                           : "Use"}
                                     </Button>
                                   )}
@@ -1285,7 +1285,7 @@ export function ModelLoaderCard({
                                   loadingModelName === v.name &&
                                     "pointer-events-none bg-transparent",
                                   currentModelName === v.name &&
-                                    "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0",
+                                    "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                 )}
                                 onClick={async () => {
                                   if (currentModelName === v.name) return;
@@ -1304,7 +1304,7 @@ export function ModelLoaderCard({
                                 {loadingModelName === v.name
                                   ? "Loading"
                                   : currentModelName === v.name
-                                    ? "Current Model"
+                                    ? "Selected"
                                     : "Load"}
                               </Button>
                             ) : (
@@ -1314,7 +1314,7 @@ export function ModelLoaderCard({
                                   loadingModelName === v.name &&
                                     "pointer-events-none bg-transparent px-2",
                                   currentModelName === v.name &&
-                                    "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0",
+                                    "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                 )}
                                 onClick={() => {
                                   fromAPI(v);
@@ -1324,7 +1324,7 @@ export function ModelLoaderCard({
                                 {loadingModelName === v.name
                                   ? "Loading"
                                   : currentModelName === v.name
-                                    ? "Current Model"
+                                    ? "Selected"
                                     : "Use"}
                               </Button>
                             )}
@@ -1352,7 +1352,7 @@ export function ModelLoaderCard({
             <TabsContent value="device" className="max-md:h-full">
               <div
                 className={cn(
-                  "flex h-full cursor-pointer flex-col items-center justify-center rounded-lg bg-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-white/50 dark:shadow-zinc-600/50 dark:bg-zinc-700 md:h-96",
+                  "flex h-full cursor-pointer flex-col items-center justify-center rounded-lg bg-white transition-all hover:scale-[1.03] hover:shadow-lg hover:shadow-white/50 dark:bg-zinc-700 dark:shadow-zinc-600/50 md:h-96",
                   isDragOver &&
                     "scale-[1.03] border border-green-500 bg-green-200",
                 )}
