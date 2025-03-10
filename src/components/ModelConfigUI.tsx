@@ -122,7 +122,10 @@ export const LOCAL_API_MODEL: APIModel = {
   defaultMode: "generate",
 };
 
-const ONLINE_API_MODELS = [DEFAULT_API_MODEL, LOCAL_API_MODEL];
+const ONLINE_API_MODELS = [
+  DEFAULT_API_MODEL,
+  ...(import.meta.env.DEV ? [LOCAL_API_MODEL] : []),
+];
 
 const DEFAULT_SYSTEM_PROMPT = `system: You are an AI assistant powered by the RWKV7 model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`;
 
@@ -972,7 +975,9 @@ export function ModelLoaderCard({
             <TabsList className={"h-10 flex-shrink-0 gap-1 bg-slate-200 p-1"}>
               <TabsTrigger value="recent">Recent</TabsTrigger>
               <TabsTrigger value="web">Web</TabsTrigger>
-              <TabsTrigger value="device">Device</TabsTrigger>
+              {import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true" && (
+                <TabsTrigger value="device">Device</TabsTrigger>
+              )}
             </TabsList>
 
             <TabsContent value="recent" className="max-md:h-full">
@@ -1015,17 +1020,22 @@ export function ModelLoaderCard({
                     >
                       Web
                     </a>{" "}
-                    or{" "}
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setActiveTab("device");
-                      }}
-                      className="font-semibold text-gray-700 underline dark:text-zinc-300"
-                    >
-                      Your Device
-                    </a>
+                    {import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true" && (
+                      <>
+                        {" "}
+                        or{" "}
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setActiveTab("device");
+                          }}
+                          className="font-semibold text-gray-700 underline dark:text-zinc-300"
+                        >
+                          Your Device
+                        </a>
+                      </>
+                    )}
                     .
                   </span>
                 </div>
@@ -1209,7 +1219,12 @@ export function ModelLoaderCard({
             <TabsContent value="web" className="max-md:h-full">
               <div className="flex h-full flex-col overflow-auto md:h-96">
                 <div className="grid w-full gap-4 lg:grid-cols-2">
-                  {[...ONLINE_API_MODELS, ...ONLINE_RWKV_MODELS].map((v, k) => {
+                  {[
+                    ...ONLINE_API_MODELS,
+                    ...(import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true"
+                      ? ONLINE_RWKV_MODELS
+                      : []),
+                  ].map((v, k) => {
                     return (
                       <div
                         className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2 dark:bg-zinc-700"
@@ -1353,16 +1368,18 @@ export function ModelLoaderCard({
                   })}
                 </div>
                 <div className="text-center">
-                  <a
-                    href="#"
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      loadModelFromCustomUrl();
-                    }}
-                    className="text-sm font-semibold text-gray-500 underline"
-                  >
-                    Loading a model using a custom URL
-                  </a>
+                  {import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true" && (
+                    <a
+                      href="#"
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        loadModelFromCustomUrl();
+                      }}
+                      className="text-sm font-semibold text-gray-500 underline"
+                    >
+                      Loading a model using a custom URL
+                    </a>
+                  )}
                 </div>
               </div>
             </TabsContent>
