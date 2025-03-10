@@ -113,12 +113,14 @@ export function ChatTextarea({
   maxLines = 8,
   onSubmit = () => {},
   submitShortcutOnMobile = false,
+  currentModelName,
   ...props
 }: {
   className?: string;
   maxLines?: number;
   onSubmit?: (value: string, enableReasoning: boolean) => void;
   submitShortcutOnMobile?: boolean;
+  currentModelName?: string;
 }) {
   const [value, setValue] = useState("");
   const textDisplayAreaRef = useRef<HTMLDivElement>(null);
@@ -206,7 +208,10 @@ export function ChatTextarea({
 
   useEffect(() => {
     if (llmModel.supportReasoning) {
-      llmModel.isEnableReasoning = isEnableReasoning;
+      llmModel.isEnableReasoning = llmModel.isEnableReasoning
+        ? true
+        : isEnableReasoning;
+      setEnableReasoning(llmModel.isEnableReasoning);
     } else {
       setEnableReasoning(false);
     }
@@ -408,7 +413,7 @@ export function ChatTextarea({
         </div>
         <div
           className={cn(
-            "items-transition-all ml-auto flex h-10 flex-shrink-0 items-center text-sm text-gray-500/50 duration-500 md:h-14",
+            "items-transition-all ml-auto flex h-10 flex-shrink-0 items-center text-sm text-gray-500/50 duration-500 dark:text-zinc-400 md:h-14",
             isPannelExpaned ? "" : "-mb-10 md:-mb-14",
           )}
         >
@@ -418,7 +423,16 @@ export function ChatTextarea({
               isPannelExpaned ? "opacity-100" : "opacity-0",
             )}
           >
-            Current Model: {selectedModelName}
+            {currentModelName ? (
+              <span className="motion-preset-slide-left-sm" key={0}>
+                Current Model:{" "}
+                <span className="font-semibold">{currentModelName}</span>
+              </span>
+            ) : (
+              <span className="motion-preset-slide-right-sm" key={1}>
+                Selected Model: {selectedModelName}
+              </span>
+            )}
             <button className="pl-2" onClick={openModal}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

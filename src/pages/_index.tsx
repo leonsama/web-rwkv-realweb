@@ -188,7 +188,7 @@ function RecentModelsCard({
                       {v.from !== "API" ? (
                         <Button
                           className={cn(
-                            "rounded-xl p-1 px-2 font-medium",
+                            "rounded-xl p-1 px-2 font-medium transition-[color,transform]",
                             loadingModelName === v.name &&
                               "pointer-events-none bg-transparent",
                             selectedModelName === v.name &&
@@ -228,7 +228,7 @@ function RecentModelsCard({
                       ) : (
                         <Button
                           className={cn(
-                            "rounded-xl p-1 px-3 font-medium",
+                            "rounded-xl p-1 px-3 font-medium transition-[color,transform]",
                             loadingModelName === v.name &&
                               "pointer-events-none bg-transparent px-2",
                             selectedModelName === v.name &&

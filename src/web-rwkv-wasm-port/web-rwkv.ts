@@ -654,20 +654,20 @@ export class APIInferPort implements InferPortInterface {
                     yield {
                       type: "token",
                       word: `<think>`,
-                      model: content.model,
+                      model: data.model,
                     };
                   } else if (content !== "" && isThinking) {
                     isThinking = false;
                     yield {
                       type: "token",
                       word: `</think>`,
-                      model: content.model,
+                      model: data.model,
                     };
                   }
                   yield {
                     type: "token",
                     word: `${reasoningContent}${content}`,
-                    model: content.model,
+                    model: data.model,
                   };
                 } catch (e) {
                   console.error("Failed to parse SSE data:", e);

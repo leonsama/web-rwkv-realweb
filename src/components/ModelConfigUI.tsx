@@ -37,6 +37,7 @@ export interface RWKVModelWeb {
   vocal_url: string;
   defaultSessionConfiguration: SessionConfiguration;
   from: "Web";
+  defaultMode: "generate" | "reasoning";
 }
 
 export interface APIModelParam {
@@ -56,6 +57,7 @@ export interface APIModel {
   APIParam: APIModelParam;
   ctx: string;
   from: "API";
+  defaultMode: "generate" | "reasoning";
 }
 
 // const DEFAULT_VOCAB_URL = "/assets/rwkv_vocab_v20230424.json";
@@ -87,6 +89,7 @@ export const DEFAULT_API_MODEL: APIModel = {
     key: "sk-test",
   },
   from: "API",
+  defaultMode: "reasoning",
 };
 
 export const LOCAL_API_MODEL: APIModel = {
@@ -116,6 +119,7 @@ export const LOCAL_API_MODEL: APIModel = {
     key: "sk-test",
   },
   from: "API",
+  defaultMode: "generate",
 };
 
 const ONLINE_API_MODELS = [DEFAULT_API_MODEL, LOCAL_API_MODEL];
@@ -157,6 +161,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
     },
     supportReasoning: false,
     from: "Web",
+    defaultMode: "generate",
   },
   {
     name: "RWKV x070 World",
@@ -192,6 +197,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
     },
     supportReasoning: false,
     from: "Web",
+    defaultMode: "generate",
   },
 ];
 
@@ -354,6 +360,7 @@ export function useModelLoader() {
     defaultSessionConfiguration,
     supportReasoning,
     description,
+    defaultMode,
   }: {
     name: string;
     chunks: Uint8Array[];
@@ -365,6 +372,7 @@ export function useModelLoader() {
     supportReasoning: boolean;
     param: string | null;
     description: string | null;
+    defaultMode: "generate" | "reasoning";
   }) => {
     toast.update(modelLoadTaster.current, {
       progress: 0.99,
@@ -382,6 +390,7 @@ export function useModelLoader() {
       loadFromWebParam: loadFromWebParam,
       param: param || undefined,
       description,
+      defaultMode,
     });
 
     const newLlmModel =
@@ -390,6 +399,8 @@ export function useModelLoader() {
     newLlmModel.vacalUrl = DEFAULT_VOCAB_URL;
     newLlmModel.defaultSessionConfiguration = defaultSessionConfiguration;
     newLlmModel.supportReasoning = supportReasoning;
+    newLlmModel.isEnableReasoning =
+      supportReasoning && defaultMode === "reasoning";
 
     try {
       await newLlmModel.loadModel(name, chunks);
@@ -484,6 +495,7 @@ export function useModelLoader() {
       supportReasoning: false,
       param: null,
       description: null,
+      defaultMode: "generate",
     });
     setLoadingModelName(null);
   };
@@ -574,6 +586,7 @@ export function useModelLoader() {
         loadFromWebParam: model,
         supportReasoning: model.supportReasoning,
         description: model.description,
+        defaultMode: model.defaultMode,
       });
     } catch (error) {
       toast.update(modelLoadTaster.current, {
@@ -629,6 +642,7 @@ export function useModelLoader() {
           supportReasoning: recentModel.supportReasoning,
           param: recentModel.param,
           description: recentModel.description,
+          defaultMode: recentModel.defaultMode,
         });
       } catch (error) {
         toast.update(modelLoadTaster.current, {
@@ -653,6 +667,8 @@ export function useModelLoader() {
     newLlmModel.defaultSessionConfiguration = model.defaultSessionConfiguration;
     newLlmModel.supportReasoning = model.supportReasoning;
     (newLlmModel as APIInferPort).reasoningModelName = model.reasoningName;
+    newLlmModel.isEnableReasoning =
+      model.supportReasoning && model.defaultMode === "reasoning";
 
     setRecentModel({
       name: model.name,
@@ -666,6 +682,7 @@ export function useModelLoader() {
       loadFromAPIModel: model,
       param: model.param || undefined,
       description: model.description,
+      defaultMode: model.defaultMode,
     });
     setLlmModel(newLlmModel);
   };
@@ -841,6 +858,7 @@ export function ModelLoaderCard({
         defaultSessionConfiguration: DEFAULT_SESSION_CONFIGURATION,
         supportReasoning: false,
         from: "Web",
+        defaultMode: "generate",
       };
       fromWeb(customFileParame, modelName, true);
     } catch (error) {

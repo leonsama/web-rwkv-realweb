@@ -59,6 +59,9 @@ const ChatSession = createContext<
     ) => Promise<void>;
 
     webRWKVLLMInfer: InferPortInterface;
+
+    currentModelName: string | null;
+    setCurrentModelName: (name: string) => void;
   }
 >(null!);
 
@@ -225,6 +228,7 @@ function AssistantContent({
     getActiveMessages,
     checkIsModelLoaded,
     webRWKVLLMInfer,
+    setCurrentModelName,
   } = useContext(ChatSession);
 
   const avatarEle = useRef<HTMLDivElement>(null);
@@ -280,6 +284,9 @@ function AssistantContent({
       result += chunk.word;
       currentMessageBlock.messageContents[activeMessageContentIndex].content =
         result;
+      currentMessageBlock.messageContents[activeMessageContentIndex].modelName =
+        chunk.model;
+      setCurrentModelName(chunk.model);
       updateCurrentMessageBlock(currentMessageBlock);
     }
     currentMessageBlock.messageContents[
@@ -1064,6 +1071,8 @@ export default function Chat() {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const generator = useRef<CompletionGenerator>(null!);
 
+  const [currentModelName, setCurrentModelName] = useState<string | null>(null);
+
   const loadModelModal = useRef<ModalInterface>(null!);
   const checkIsModelLoaded = useSuspendUntilValid(selectedModelName, () => {
     loadModelModal.current.setIsModalOpen(true);
@@ -1140,6 +1149,9 @@ export default function Chat() {
     for await (const chunk of generator.current) {
       result += chunk.word;
       resultBlock.messageContents[activeMessageContentIndex].content = result;
+      resultBlock.messageContents[activeMessageContentIndex].modelName =
+        chunk.model;
+      setCurrentModelName(chunk.model);
       updateCurrentMessageBlock(resultBlock);
     }
     resultBlock.messageContents[activeMessageContentIndex].isGenerating = false;
@@ -1168,6 +1180,7 @@ export default function Chat() {
   }, [chatSessionId]);
 
   useEffect(() => {
+    setCurrentModelName(null);
     contentScrollToBottom(200); // scroll to bottom when change chat session
   }, [currentChatSessionId]);
 
@@ -1261,6 +1274,9 @@ export default function Chat() {
                     completion,
 
                     checkIsModelLoaded,
+
+                    currentModelName,
+                    setCurrentModelName,
                   }}
                 >
                   {activeMessageBlocks.map((v) => {
@@ -1317,6 +1333,7 @@ export default function Chat() {
                 onSubmit={(value) => {
                   startGenerationTask(value);
                 }}
+                currentModelName={currentModelName || undefined}
               ></ChatTextarea>
             </div>
           </div>

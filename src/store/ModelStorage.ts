@@ -8,10 +8,7 @@ import { createJSONStorage, persist, StateStorage } from "zustand/middleware";
 
 import * as idb from "idb-keyval";
 import { CustomError, dangerousUUIDV4 } from "../utils/utils";
-import {
-  APIModel,
-  RWKVModelWeb,
-} from "../components/ModelConfigUI";
+import { APIModel, RWKVModelWeb } from "../components/ModelConfigUI";
 
 interface ModelSession<T extends InferPortInterface = InferPortInterface> {
   llmModel: T;
@@ -101,6 +98,7 @@ export interface RecentModel {
   vocal_url: string;
   vocalCacheItemKey: string | null;
   defaultSessionConfiguration: SessionConfiguration;
+  defaultMode: "generate" | "reasoning";
 }
 
 interface ModelStorage {
@@ -121,6 +119,7 @@ interface ModelStorage {
     supportReasoning,
     param,
     description,
+    defaultMode,
   }: {
     name: string;
     from: "web" | "device" | "URL" | "API";
@@ -136,6 +135,7 @@ interface ModelStorage {
     supportReasoning?: boolean;
     param?: string;
     description?: string | null;
+    defaultMode: "generate" | "reasoning";
   }) => Promise<void>;
   getRecentModel: ({ name }: { name: string }) => RecentModel | undefined;
   deleteRecentModel: ({
@@ -168,6 +168,7 @@ export const useModelStorage = create<ModelStorage>()(
           supportReasoning,
           param,
           description,
+          defaultMode,
         }) {
           set((prev) => ({
             ...prev,
@@ -189,6 +190,7 @@ export const useModelStorage = create<ModelStorage>()(
                 supportReasoning: supportReasoning || false,
                 param: param || null,
                 description: description || null,
+                defaultMode: defaultMode,
               },
             ],
           }));
@@ -229,7 +231,7 @@ export const useModelStorage = create<ModelStorage>()(
       name: "webrwkv-model-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ recentModels: state.recentModels }),
-      version: 1,
+      version: 2,
       migrate(persistedState, version) {
         let currentVersion = version;
         if (currentVersion === 0) {
@@ -243,8 +245,20 @@ export const useModelStorage = create<ModelStorage>()(
             supportReasoning: false,
             param: null,
             description: null,
+            defaultMode: "generate",
           }));
           currentVersion = 1;
+        }
+
+        if (currentVersion === 1) {
+          // add defaultMode
+          (persistedState as ModelStorage).recentModels = (
+            persistedState as ModelStorage
+          ).recentModels.map((v) => ({
+            ...v,
+            defaultMode: "generate",
+          }));
+          currentVersion = 2;
         }
         return persistedState;
       },

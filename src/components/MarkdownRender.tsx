@@ -129,7 +129,7 @@ function ThinkBlock({
       <div className="flex">
         <div
           className={cn(
-            "flex w-48 cursor-pointer select-none items-center gap-2 rounded-3xl p-2 pr-2 text-sm font-semibold transition-all duration-200 md:hover:bg-yellow-500/20",
+            "flex w-48 cursor-pointer select-none items-center gap-2 rounded-3xl p-2 pr-2 text-sm font-semibold transition-all duration-200 md:hover:bg-yellow-500/20 md:active:bg-yellow-500/30 dark:md:hover:bg-yellow-500/10 dark:md:active:bg-yellow-500/20",
             isThinking && "animate-pulse",
           )}
           onClick={() => {
