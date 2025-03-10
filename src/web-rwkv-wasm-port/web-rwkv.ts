@@ -77,7 +77,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
 
     currentInferPort.current = webRWKVInferPort;
 
-    webRWKVInferPort.onCurrentModelChange(onChangeModelHook);
+    webRWKVInferPort.onSelectedModelChange(onChangeModelHook);
 
     return () => {
       webRWKVInferPort.removeCurrentModelChange(onChangeModelHook);
@@ -161,7 +161,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
     const formattedPrompt =
       prompt !== undefined
         ? prompt
-        : `${formatPromptObject(messages!)}\n\n${new_message_role}:`;
+        : `${formatPromptObject(messages!)}\n\n${new_message_role}:${enableReasoning ? " <think" : ""}`;
 
     const generator = {
       [Symbol.asyncIterator]: async function* () {
@@ -204,6 +204,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
     selectedModelTitle,
     defaultSessionConfiguration,
     supportReasoning,
+    currentInferPort,
 
     loadModel,
     unloadModel,
@@ -245,7 +246,7 @@ export interface InferPortInterface {
 
   init(): Promise<void>;
 
-  onCurrentModelChange(cb: (name: string | null) => void): void;
+  onSelectedModelChange(cb: (name: string | null) => void): void;
   removeCurrentModelChange(cb: (name: string | null) => void): void;
 
   resetWorker(): Promise<void>;
@@ -287,7 +288,7 @@ export class WebRWKVInferPort implements InferPortInterface {
     undefined;
   private worker: Comlink.Remote<WEB_RWKV_WASM_PORT> | null = null;
 
-  private currentModelNameCallback: ((name: string | null) => void)[] = [];
+  private selectedModelNameCallback: ((name: string | null) => void)[] = [];
   private consoleLogCallbackList: (typeof console.log)[] = [];
 
   portType: string = "wasm";
@@ -318,14 +319,14 @@ export class WebRWKVInferPort implements InferPortInterface {
 
   private setCurrentModel(name: string | null) {
     this.selectedModelTitle = name;
-    this.currentModelNameCallback.forEach((cb) => cb(name));
+    this.selectedModelNameCallback.forEach((cb) => cb(name));
   }
-  onCurrentModelChange(cb: (name: string | null) => void) {
-    this.currentModelNameCallback.push(cb);
+  onSelectedModelChange(cb: (name: string | null) => void) {
+    this.selectedModelNameCallback.push(cb);
     this.setCurrentModel(this.selectedModelTitle);
   }
   removeCurrentModelChange(cb: (name: string | null) => void) {
-    this.currentModelNameCallback = this.currentModelNameCallback.filter(
+    this.selectedModelNameCallback = this.selectedModelNameCallback.filter(
       (x) => x !== cb,
     );
   }
@@ -475,7 +476,7 @@ export class WebRWKVInferPort implements InferPortInterface {
 }
 
 export class APIInferPort implements InferPortInterface {
-  private currentModelNameCallback: ((name: string | null) => void)[] = [];
+  private selectedModelNameCallback: ((name: string | null) => void)[] = [];
 
   supportReasoning: boolean = false;
   reasoningModelName: string | null = null;
@@ -518,14 +519,14 @@ export class APIInferPort implements InferPortInterface {
 
   private setCurrentModel(name: string | null) {
     this.selectedModelTitle = name;
-    this.currentModelNameCallback.forEach((cb) => cb(name));
+    this.selectedModelNameCallback.forEach((cb) => cb(name));
   }
-  onCurrentModelChange(cb: (name: string | null) => void) {
-    this.currentModelNameCallback.push(cb);
+  onSelectedModelChange(cb: (name: string | null) => void) {
+    this.selectedModelNameCallback.push(cb);
     this.setCurrentModel(this.selectedModelTitle);
   }
   removeCurrentModelChange(cb: (name: string | null) => void) {
-    this.currentModelNameCallback = this.currentModelNameCallback.filter(
+    this.selectedModelNameCallback = this.selectedModelNameCallback.filter(
       (x) => x !== cb,
     );
   }

@@ -17,7 +17,9 @@ const BASENAME = import.meta.env.VITE_BASE_URL;
 function Placeholder() {
   return (
     <div className="flex h-screen w-screen select-none flex-col items-center justify-center">
-      <p className="text-3xl font-medium text-slate-50">WebRWKV</p>
+      <p className="text-3xl font-medium text-slate-50">
+        {import.meta.env.VITE_PAGE_DEFAULT_TITLE}
+      </p>
       <p className="text-2xl font-medium text-slate-50">Loading...</p>
     </div>
   );

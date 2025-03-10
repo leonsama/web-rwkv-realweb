@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn, Timer } from "../utils/utils";
 import { PromptTextarea } from "./PromptTextarea";
 import {
+  APIInferPort,
   cleanChatPrompt,
   useWebRWKVChat,
 } from "../web-rwkv-wasm-port/web-rwkv";
@@ -130,8 +131,12 @@ export function ChatTextarea({
   const [isPannelExpaned, setIsPannelExpaned] = useState(false);
 
   const { llmModel, loadingModelTitle } = useChatModelSession((s) => s);
-  const { selectedModelTitle, unloadModel, supportReasoning } =
-    useWebRWKVChat(llmModel);
+  const {
+    selectedModelTitle,
+    unloadModel,
+    supportReasoning,
+    currentInferPort,
+  } = useWebRWKVChat(llmModel);
 
   const [isEnableReasoning, setEnableReasoning] = useState(
     llmModel.isEnableReasoning,
@@ -430,7 +435,14 @@ export function ChatTextarea({
               </span>
             ) : (
               <span className="motion-preset-slide-right-sm" key={1}>
-                Selected Model: {selectedModelTitle}
+                Selected Model:{" "}
+                {currentInferPort.current &&
+                  (isEnableReasoning
+                    ? currentInferPort.current.portType === "api"
+                      ? (currentInferPort.current as APIInferPort)
+                          .reasoningModelName
+                      : currentInferPort.current.selectedModelTitle
+                    : currentInferPort.current.selectedModelTitle)}
               </span>
             )}
             <button className="pl-2" onClick={openModal}>

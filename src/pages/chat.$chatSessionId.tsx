@@ -550,7 +550,7 @@ function AssistantContent({
                 : "delay-[100ms]",
               currentMessageBlock.messageContents[
                 currentMessageBlock.activeMessageContentIndex
-              ].rank === -1 && "text-slate-700",
+              ].rank === -1 && "text-slate-700 dark:text-zinc-300",
             )}
             onClick={() => {
               if (
