@@ -26,8 +26,8 @@ function RecentModelsCard({
 }) {
   const [showCachedOnly, setShowCachedOnly] = useState(true);
 
-  const { llmModel, loadingModelName } = useChatModelSession((s) => s);
-  const { selectedModelName, defaultSessionConfiguration } =
+  const { llmModel, loadingModelTitle } = useChatModelSession((s) => s);
+  const { selectedModelTitle, defaultSessionConfiguration } =
     useWebRWKVChat(llmModel);
 
   const { fromCache, fromWeb, fromAPI } = useModelLoader();
@@ -189,9 +189,9 @@ function RecentModelsCard({
                         <Button
                           className={cn(
                             "rounded-xl p-1 px-2 font-medium transition-[color,transform]",
-                            loadingModelName === v.name &&
+                            loadingModelTitle === v.name &&
                               "pointer-events-none bg-transparent",
-                            selectedModelName === v.name &&
+                            selectedModelTitle === v.name &&
                               "pointer-events-none bg-transparent px-0.5 text-xs font-semibold hover:bg-white/0 dark:bg-white/0",
                             v.from === "device" &&
                               v.cached === false &&
@@ -199,12 +199,12 @@ function RecentModelsCard({
                           )}
                           onClick={async () => {
                             if (
-                              selectedModelName === v.name ||
+                              selectedModelTitle === v.name ||
                               (v.from === "device" && v.cached === false)
                             )
                               return;
                             if (v.cached) {
-                              fromCache(v.name);
+                              fromCache(v.title);
                             } else {
                               try {
                                 const { shoudLoadFromWeb } =
@@ -219,9 +219,9 @@ function RecentModelsCard({
                             close!();
                           }}
                         >
-                          {loadingModelName === v.name
+                          {loadingModelTitle === v.name
                             ? "Loading"
-                            : selectedModelName === v.name
+                            : selectedModelTitle === v.name
                               ? "Selected"
                               : "Load"}
                         </Button>
@@ -229,18 +229,18 @@ function RecentModelsCard({
                         <Button
                           className={cn(
                             "rounded-xl p-1 px-3 font-medium transition-[color,transform]",
-                            loadingModelName === v.name &&
+                            loadingModelTitle === v.name &&
                               "pointer-events-none bg-transparent px-2",
-                            selectedModelName === v.name &&
+                            selectedModelTitle === v.name &&
                               "pointer-events-none bg-transparent px-0.5 text-xs font-semibold hover:bg-white/0 dark:bg-white/0",
                           )}
                           onClick={() => {
                             fromAPI(v.loadFromAPIModel!);
                           }}
                         >
-                          {loadingModelName === v.name
+                          {loadingModelTitle === v.name
                             ? "Loading"
-                            : selectedModelName === v.name
+                            : selectedModelTitle === v.name
                               ? "Selected"
                               : "Use"}
                         </Button>
@@ -296,8 +296,8 @@ export default function Home() {
 
   const { recentModels } = useModelStorage((s) => s);
 
-  const { llmModel, loadingModelName } = useChatModelSession((s) => s);
-  const { selectedModelName, defaultSessionConfiguration } =
+  const { llmModel, loadingModelTitle } = useChatModelSession((s) => s);
+  const { selectedModelTitle, defaultSessionConfiguration } =
     useWebRWKVChat(llmModel);
 
   const [showUI, setShowUI] = useState(true);

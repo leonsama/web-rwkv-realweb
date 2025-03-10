@@ -2,7 +2,7 @@ import { Suspense, useEffect } from "react";
 import { useLocation, useRoutes, useMatch, useNavigate } from "react-router";
 import routes from "~react-pages";
 import { Bar } from "./components/Bar";
-import { WebRWKVBanner } from "./components/WebRWKVBanner";
+import { WebRWKVBanner } from "./components/Banner";
 import { usePageStorage } from "./store/PageStorage";
 import { isMiddle } from "./utils/utils";
 
@@ -88,7 +88,7 @@ export function App() {
   useEffect(() => {
     if (
       import.meta.env.VITE_AUTO_SET_HF_API === "true" &&
-      !chatModelSession.llmModel.selectedModelName
+      !chatModelSession.llmModel.selectedModelTitle
     ) {
       console.log("Load API Model");
       fromAPI(DEFAULT_API_MODEL);

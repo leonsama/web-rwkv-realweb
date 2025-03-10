@@ -8,7 +8,7 @@ import {
 } from "react-router";
 import { usePageStorage } from "../store/PageStorage";
 import { cn, isEnterIndex } from "../utils/utils";
-import { WebRWKVFixedBanner } from "./WebRWKVBanner";
+import { WebRWKVFixedBanner } from "./Banner";
 import { ReactNode, useEffect } from "react";
 import {
   CloseAllMenu,

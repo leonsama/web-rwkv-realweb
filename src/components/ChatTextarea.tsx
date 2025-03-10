@@ -129,8 +129,8 @@ export function ChatTextarea({
   const [isFocus, setIsFocus] = useState(false);
   const [isPannelExpaned, setIsPannelExpaned] = useState(false);
 
-  const { llmModel, loadingModelName } = useChatModelSession((s) => s);
-  const { selectedModelName, unloadModel, supportReasoning } =
+  const { llmModel, loadingModelTitle } = useChatModelSession((s) => s);
+  const { selectedModelTitle, unloadModel, supportReasoning } =
     useWebRWKVChat(llmModel);
 
   const [isEnableReasoning, setEnableReasoning] = useState(
@@ -430,7 +430,7 @@ export function ChatTextarea({
               </span>
             ) : (
               <span className="motion-preset-slide-right-sm" key={1}>
-                Selected Model: {selectedModelName}
+                Selected Model: {selectedModelTitle}
               </span>
             )}
             <button className="pl-2" onClick={openModal}>
@@ -455,12 +455,12 @@ export function ChatTextarea({
       <div
         className={cn(
           "group absolute bottom-0 left-0 right-0 top-0 flex cursor-pointer items-center backdrop-blur-sm transition-all duration-300",
-          selectedModelName === null
+          selectedModelTitle === null
             ? ""
             : "pointer-events-none scale-95 opacity-0",
         )}
         onClick={() => {
-          if (loadingModelName === null) openModal();
+          if (loadingModelTitle === null) openModal();
         }}
       >
         <div
@@ -482,8 +482,8 @@ export function ChatTextarea({
           </svg>
         </div>
         <div className="flex h-14 w-0 flex-1 cursor-pointer items-center self-end p-2">
-          {selectedModelName === null &&
-            (loadingModelName === null ? (
+          {selectedModelTitle === null &&
+            (loadingModelTitle === null ? (
               <span className="transition-all group-active:scale-95">
                 Model not loaded. Load to interact.
               </span>
@@ -493,7 +493,7 @@ export function ChatTextarea({
                   Loading... Sit back and relax!
                 </span>
                 <span className="ml-2 hidden text-xs text-slate-300 transition-all group-active:scale-95 md:static">
-                  {loadingModelName}
+                  {loadingModelTitle}
                 </span>
               </>
             ))}

@@ -25,6 +25,7 @@ import { cn, CustomError, formatFileSize, TIMEOUT_ERROR } from "../utils/utils";
 import { createContextMenu, Menu, MenuItem } from "./popup/ContentMenu";
 
 export interface RWKVModelWeb {
+  title: string;
   name: string;
   description: string | null;
   supportReasoning: boolean;
@@ -46,6 +47,7 @@ export interface APIModelParam {
 }
 
 export interface APIModel {
+  title: string;
   name: string;
   description: string | null;
   supportReasoning: boolean;
@@ -63,6 +65,7 @@ export interface APIModel {
 // const DEFAULT_VOCAB_URL = "/assets/rwkv_vocab_v20230424.json";
 
 export const DEFAULT_API_MODEL: APIModel = {
+  title: "RWKV Latest",
   name: "rwkv-latest",
   description: "Latest RWKV Official Online Model",
   supportReasoning: true,
@@ -93,6 +96,7 @@ export const DEFAULT_API_MODEL: APIModel = {
 };
 
 export const LOCAL_API_MODEL: APIModel = {
+  title: "RWKV Latest Local",
   name: "rwkv-latest:local",
   description: "For local debug",
   supportReasoning: true,
@@ -131,6 +135,7 @@ const DEFAULT_SYSTEM_PROMPT = `system: You are an AI assistant powered by the RW
 
 const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
   {
+    title: "RWKV x070 World",
     name: "RWKV x070 World",
     description: "Web RWKV model by Cryscan",
     param: "0.1B",
@@ -167,6 +172,7 @@ const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
     defaultMode: "generate",
   },
   {
+    title: "RWKV x070 World",
     name: "RWKV x070 World",
     description: "Web RWKV model by Cryscan",
     size: 945815552,
@@ -209,7 +215,7 @@ export function useModelLoader() {
   const { setRecentModel, getRecentModel } = useModelStorage((s) => s);
   const { llmModel, setLlmModel } = useChatModelSession((s) => s);
 
-  const { setLoadingModelName } = useChatModelSession((s) => s);
+  const { setLoadingModelTitle } = useChatModelSession((s) => s);
   const modelLoadTaster = useRef<Id>(-1);
 
   const wasmWarnup = async (wasmport: InferPortInterface) => {
@@ -300,7 +306,7 @@ export function useModelLoader() {
   };
 
   const shouldOverwriteCacheWhenExisted = async (modelName: string) => {
-    const checkCacheExist = getRecentModel({ name: modelName });
+    const checkCacheExist = getRecentModel({ title: modelName });
     if (checkCacheExist && checkCacheExist.cached) {
       const overwrite =
         (
@@ -353,6 +359,7 @@ export function useModelLoader() {
   };
 
   const WASMCommonLoadHandler = async ({
+    title,
     name,
     chunks,
     from,
@@ -365,6 +372,7 @@ export function useModelLoader() {
     description,
     defaultMode,
   }: {
+    title: string;
     name: string;
     chunks: Uint8Array[];
     from: "web" | "device" | "URL";
@@ -383,6 +391,7 @@ export function useModelLoader() {
     });
 
     setRecentModel({
+      title,
       name,
       from,
       cached: !!cacheItemKey,
@@ -438,7 +447,7 @@ export function useModelLoader() {
   };
 
   const fromDevice = async (file: File) => {
-    setLoadingModelName(file.name);
+    setLoadingModelTitle(file.name);
     console.log("Load model from device:", file.name);
 
     const isCacheModel = await shouldSaveModel();
@@ -488,6 +497,7 @@ export function useModelLoader() {
 
     await cacheItem?.close();
     await WASMCommonLoadHandler({
+      title: file.name,
       name: file.name,
       chunks: chunks,
       from: "device",
@@ -500,7 +510,7 @@ export function useModelLoader() {
       description: null,
       defaultMode: "generate",
     });
-    setLoadingModelName(null);
+    setLoadingModelTitle(null);
   };
 
   const fromWeb = async (
@@ -514,7 +524,7 @@ export function useModelLoader() {
     const modelName =
       name || `${model.name} ${model.param} ${model.dataset} CTX${model.ctx}`;
     console.log(name, modelName);
-    setLoadingModelName(modelName);
+    setLoadingModelTitle(modelName);
 
     const isCacheModel = await shouldSaveModel();
 
@@ -579,6 +589,7 @@ export function useModelLoader() {
       }
       await cacheItem?.close();
       await WASMCommonLoadHandler({
+        title: model.title,
         name: modelName,
         chunks: chunks,
         from: customUrl ? "URL" : "web",
@@ -601,19 +612,19 @@ export function useModelLoader() {
       await cacheItem?.cancel();
       if (error instanceof Error) await showError(error);
     } finally {
-      setLoadingModelName(null);
+      setLoadingModelTitle(null);
       toast.done(modelLoadTaster.current);
       modelLoadTaster.current = -1;
     }
   };
 
-  const fromCache = async (modelName: string) => {
+  const fromCache = async (title: string) => {
     modelLoadTaster.current = toast.loading("Loading from Cache");
-    setLoadingModelName(modelName);
-    console.log("Load model from cache:", modelName);
+    setLoadingModelTitle(title);
+    console.log("Load model from cache:", title);
 
     const recentModel = getRecentModel({
-      name: modelName,
+      title: title,
     })!;
 
     if (recentModel.from === "API") {
@@ -621,7 +632,7 @@ export function useModelLoader() {
     } else {
       try {
         const chunks: Uint8Array[] = [];
-        const generator = readCacheItem({ key: modelName });
+        const generator = readCacheItem({ key: recentModel.name });
 
         const chunkCount = 0;
         let receivedLength = 0;
@@ -635,11 +646,12 @@ export function useModelLoader() {
         }
 
         await WASMCommonLoadHandler({
-          name: modelName,
+          title: recentModel.title,
+          name: recentModel.name,
           chunks: chunks,
           from: recentModel.from,
           size: receivedLength,
-          cacheItemKey: modelName,
+          cacheItemKey: recentModel.name,
           defaultSessionConfiguration: recentModel.defaultSessionConfiguration,
           loadFromWebParam: recentModel.loadFromWebParam || undefined,
           supportReasoning: recentModel.supportReasoning,
@@ -654,7 +666,7 @@ export function useModelLoader() {
         });
         throw error;
       } finally {
-        setLoadingModelName(null);
+        setLoadingModelTitle(null);
       }
     }
   };
@@ -674,6 +686,7 @@ export function useModelLoader() {
       model.supportReasoning && model.defaultMode === "reasoning";
 
     setRecentModel({
+      title: model.title,
       name: model.name,
       supportReasoning: model.supportReasoning,
       reasoningName: model.reasoningName || undefined,
@@ -706,8 +719,8 @@ export function ModelLoaderCard({
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "className">) {
   const { recentModels, deleteRecentModel } = useModelStorage((s) => s);
   const { fromDevice, fromWeb, fromCache, fromAPI } = useModelLoader();
-  const { loadingModelName, llmModel } = useChatModelSession((s) => s);
-  const { selectedModelName } = useWebRWKVChat(llmModel);
+  const { loadingModelTitle, llmModel } = useChatModelSession((s) => s);
+  const { selectedModelTitle } = useWebRWKVChat(llmModel);
 
   const [activeTab, setActiveTab] = useState(enterTabValue || "recent");
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
@@ -849,6 +862,7 @@ export function ModelLoaderCard({
           "Vocal Url can not be empty.",
         );
       const customFileParame: RWKVModelWeb = {
+        title: modelName === "" ? modelUrl : modelName,
         name: modelName === "" ? modelUrl : modelName,
         description: null,
         param: "-",
@@ -919,7 +933,7 @@ export function ModelLoaderCard({
       <MenuItem
         className={"text-red-500"}
         onTrigger={(data) => {
-          deleteRecentModel({ name: data });
+          deleteRecentModel({ title: data });
         }}
       >
         Delete
@@ -1049,8 +1063,8 @@ export function ModelLoaderCard({
                       .map((v) => {
                         return (
                           <RecordManagement.ContextMenuTrigger
-                            key={v.name}
-                            data={v.name}
+                            key={`${v.title}-${v.title}`}
+                            data={v.title}
                             contextMenu={true}
                           >
                             <div className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2 dark:bg-zinc-700">
@@ -1059,7 +1073,7 @@ export function ModelLoaderCard({
                                   "text-fadeout flex w-full overflow-auto text-nowrap pt-2 text-xl font-semibold"
                                 }
                               >
-                                <span className="w-0 flex-1">{v.name}</span>
+                                <span className="w-0 flex-1">{v.title}</span>
                               </div>
                               <div>
                                 {v.description ? (
@@ -1128,9 +1142,9 @@ export function ModelLoaderCard({
                                     <Button
                                       className={cn(
                                         "rounded-xl p-1 px-2 font-medium dark:bg-zinc-600",
-                                        loadingModelName === v.name &&
+                                        loadingModelTitle === v.title &&
                                           "pointer-events-none bg-transparent",
-                                        selectedModelName === v.name &&
+                                        selectedModelTitle === v.title &&
                                           "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                         v.from === "device" &&
                                           v.cached === false &&
@@ -1138,13 +1152,13 @@ export function ModelLoaderCard({
                                       )}
                                       onClick={async () => {
                                         if (
-                                          selectedModelName === v.name ||
+                                          selectedModelTitle === v.title ||
                                           (v.from === "device" &&
                                             v.cached === false)
                                         )
                                           return;
                                         if (v.cached) {
-                                          fromCache(v.name);
+                                          fromCache(v.title);
                                         } else {
                                           try {
                                             const { shoudLoadFromWeb } =
@@ -1159,9 +1173,9 @@ export function ModelLoaderCard({
                                         close!();
                                       }}
                                     >
-                                      {loadingModelName === v.name
+                                      {loadingModelTitle === v.title
                                         ? "Loading"
-                                        : selectedModelName === v.name
+                                        : selectedModelTitle === v.title
                                           ? "Selected"
                                           : "Load"}
                                     </Button>
@@ -1169,9 +1183,9 @@ export function ModelLoaderCard({
                                     <Button
                                       className={cn(
                                         "rounded-xl p-1 px-3 font-medium dark:bg-zinc-600",
-                                        loadingModelName === v.name &&
+                                        loadingModelTitle === v.title &&
                                           "pointer-events-none bg-transparent px-2",
-                                        selectedModelName === v.name &&
+                                        selectedModelTitle === v.title &&
                                           "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                       )}
                                       onClick={() => {
@@ -1179,9 +1193,9 @@ export function ModelLoaderCard({
                                         close!();
                                       }}
                                     >
-                                      {loadingModelName === v.name
+                                      {loadingModelTitle === v.title
                                         ? "Loading"
-                                        : selectedModelName === v.name
+                                        : selectedModelTitle === v.title
                                           ? "Selected"
                                           : "Use"}
                                     </Button>
@@ -1189,7 +1203,7 @@ export function ModelLoaderCard({
 
                                   <RecordManagement.ContextMenuTrigger
                                     click={true}
-                                    data={v.name}
+                                    data={v.title}
                                     position="bottom right"
                                   >
                                     <span>
@@ -1235,7 +1249,7 @@ export function ModelLoaderCard({
                             "text-fadeout flex w-full overflow-auto text-nowrap pt-2 text-xl font-semibold"
                           }
                         >
-                          <span className="w-0 flex-1">{v.name}</span>
+                          <span className="w-0 flex-1">{v.title}</span>
                         </div>
                         <div>
                           {v.description ? (
@@ -1315,13 +1329,13 @@ export function ModelLoaderCard({
                               <Button
                                 className={cn(
                                   "rounded-xl p-1 px-2 font-medium dark:bg-zinc-600",
-                                  loadingModelName === v.name &&
+                                  loadingModelTitle === v.title &&
                                     "pointer-events-none bg-transparent",
-                                  selectedModelName === v.name &&
+                                  selectedModelTitle === v.title &&
                                     "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                 )}
                                 onClick={async () => {
-                                  if (selectedModelName === v.name) return;
+                                  if (selectedModelTitle === v.title) return;
                                   try {
                                     const { shoudLoadFromWeb } =
                                       await shouldLoadFromWeb.open();
@@ -1334,9 +1348,9 @@ export function ModelLoaderCard({
                                   close!();
                                 }}
                               >
-                                {loadingModelName === v.name
+                                {loadingModelTitle === v.title
                                   ? "Loading"
-                                  : selectedModelName === v.name
+                                  : selectedModelTitle === v.title
                                     ? "Selected"
                                     : "Load"}
                               </Button>
@@ -1344,9 +1358,9 @@ export function ModelLoaderCard({
                               <Button
                                 className={cn(
                                   "rounded-xl p-1 px-3 font-medium dark:bg-zinc-600",
-                                  loadingModelName === v.name &&
+                                  loadingModelTitle === v.title &&
                                     "pointer-events-none bg-transparent px-2",
-                                  selectedModelName === v.name &&
+                                  selectedModelTitle === v.title &&
                                     "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                 )}
                                 onClick={() => {
@@ -1354,9 +1368,9 @@ export function ModelLoaderCard({
                                   close!();
                                 }}
                               >
-                                {loadingModelName === v.name
+                                {loadingModelTitle === v.title
                                   ? "Loading"
-                                  : selectedModelName === v.name
+                                  : selectedModelTitle === v.title
                                     ? "Selected"
                                     : "Use"}
                               </Button>

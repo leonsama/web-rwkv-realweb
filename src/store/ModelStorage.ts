@@ -12,18 +12,18 @@ import { APIModel, RWKVModelWeb } from "../components/ModelConfigUI";
 
 interface ModelSession<T extends InferPortInterface = InferPortInterface> {
   llmModel: T;
-  loadingModelName: null | string;
-  setLoadingModelName: (name: null | string) => void;
+  loadingModelTitle: null | string;
+  setLoadingModelTitle: (name: null | string) => void;
   setLlmModel: (inferPort: T) => void;
 }
 
 export const useChatModelSession = create<ModelSession>()((set, get) => {
   return {
-    loadingModelName: null,
+    loadingModelTitle: null,
     // llmModel: new WebRWKVInferPort(),
     llmModel: new APIInferPort(),
-    setLoadingModelName(name) {
-      set({ ...get(), loadingModelName: name });
+    setLoadingModelTitle(name) {
+      set({ ...get(), loadingModelTitle: name });
     },
     setLlmModel(inferPort) {
       set({ ...get(), llmModel: inferPort });
@@ -83,8 +83,9 @@ interface ModelStorage_V0 {
 // ==============================================================================
 
 export interface RecentModel {
-  name: string;
+  title: string;
   description: string | null;
+  name: string;
   supportReasoning: boolean;
   reasoningName: string | null;
   lastLoadedTimestamp: number;
@@ -105,6 +106,7 @@ interface ModelStorage {
   recentModels: RecentModel[];
 
   setRecentModel: ({
+    title,
     name,
     from,
     cached,
@@ -121,6 +123,7 @@ interface ModelStorage {
     description,
     defaultMode,
   }: {
+    title: string;
     name: string;
     from: "web" | "device" | "URL" | "API";
     vocal_url: string;
@@ -137,12 +140,12 @@ interface ModelStorage {
     description?: string | null;
     defaultMode: "generate" | "reasoning";
   }) => Promise<void>;
-  getRecentModel: ({ name }: { name: string }) => RecentModel | undefined;
+  getRecentModel: ({ title }: { title: string }) => RecentModel | undefined;
   deleteRecentModel: ({
-    name,
+    title,
     deleteCacheOnly,
   }: {
-    name: string;
+    title: string;
     deleteCacheOnly?: boolean;
   }) => Promise<void>;
 }
@@ -154,6 +157,7 @@ export const useModelStorage = create<ModelStorage>()(
         recentModels: [],
 
         async setRecentModel({
+          title,
           name,
           from,
           cached,
@@ -175,6 +179,7 @@ export const useModelStorage = create<ModelStorage>()(
             recentModels: [
               ...prev.recentModels.filter((v) => v.name !== name),
               {
+                title,
                 name,
                 from,
                 cached: cached,
@@ -196,11 +201,11 @@ export const useModelStorage = create<ModelStorage>()(
           }));
         },
 
-        getRecentModel({ name }) {
-          return get().recentModels.find((v) => v.name === name);
+        getRecentModel({ title }) {
+          return get().recentModels.find((v) => v.title === title);
         },
-        async deleteRecentModel({ name, deleteCacheOnly = false }) {
-          const recentModel = get().getRecentModel({ name });
+        async deleteRecentModel({ title, deleteCacheOnly = false }) {
+          const recentModel = get().getRecentModel({ title });
           if (!recentModel) {
             return; // Model not found, nothing to delete in recent models
           }
@@ -221,7 +226,7 @@ export const useModelStorage = create<ModelStorage>()(
           } else {
             set((prev) => ({
               ...prev,
-              recentModels: prev.recentModels.filter((v) => v.name !== name),
+              recentModels: prev.recentModels.filter((v) => v.title !== title),
             }));
           }
         },
@@ -237,7 +242,7 @@ export const useModelStorage = create<ModelStorage>()(
         if (currentVersion === 0) {
           // Add API storage
           (persistedState as ModelStorage).recentModels = (
-            persistedState as ModelStorage_V0
+            persistedState as ModelStorage
           ).recentModels.map((v) => ({
             ...v,
             loadFromAPIModel: null,
@@ -257,6 +262,7 @@ export const useModelStorage = create<ModelStorage>()(
           ).recentModels.map((v) => ({
             ...v,
             defaultMode: "generate",
+            title: v.name,
           }));
           currentVersion = 2;
         }

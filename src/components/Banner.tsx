@@ -12,7 +12,9 @@ export function WebRWKVFixedBanner() {
         sessionStorage.isBarOpen ? "opacity-100" : "",
       )}
     >
-      <h1 className="text-2xl font-medium text-gray-300">Web RWKV</h1>
+      <h1 className="text-2xl font-medium text-gray-300">
+        {import.meta.env.VITE_PAGE_DEFAULT_TITLE}
+      </h1>
     </div>
   );
 }
@@ -45,7 +47,7 @@ export function WebRWKVBanner() {
                 isEnterIndex() && "animate-[banner-gradient_3.5s_ease]",
               )}
             >
-              Web RWKV
+              {import.meta.env.VITE_PAGE_DEFAULT_TITLE}
             </h1>
           </Flipped>
         </Flipper>

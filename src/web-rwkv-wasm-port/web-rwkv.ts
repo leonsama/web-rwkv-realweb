@@ -53,8 +53,8 @@ export const DEFAULT_SESSION_CONFIGURATION = {
 };
 
 export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
-  const [selectedModelName, setCurrentModelName] = useState<string | null>(
-    webRWKVInferPort.selectedModelName,
+  const [selectedModelTitle, setSelectedModelName] = useState<string | null>(
+    webRWKVInferPort.selectedModelTitle,
   );
   const [supportReasoning, setSupportReasoning] = useState<boolean>(
     webRWKVInferPort.supportReasoning,
@@ -65,7 +65,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
   const defaultSessionConfiguration = useRef<SessionConfiguration>(null!);
 
   const onChangeModelHook = (name: string | null) => {
-    setCurrentModelName(name);
+    setSelectedModelName(name);
     defaultSessionConfiguration.current =
       webRWKVInferPort.defaultSessionConfiguration;
   };
@@ -201,7 +201,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
   };
 
   return {
-    selectedModelName,
+    selectedModelTitle,
     defaultSessionConfiguration,
     supportReasoning,
 
@@ -236,7 +236,7 @@ export function cleanChatPrompt(prompt: string) {
 export interface InferPortInterface {
   portType: string;
   isLoadingModel: boolean;
-  selectedModelName: string | null;
+  selectedModelTitle: string | null;
   defaultSessionConfiguration: SessionConfiguration;
   vacalUrl: string | null;
 
@@ -296,7 +296,7 @@ export class WebRWKVInferPort implements InferPortInterface {
   isEnableReasoning: boolean = false;
 
   isLoadingModel: boolean = false;
-  selectedModelName: string | null = null;
+  selectedModelTitle: string | null = null;
 
   defaultSessionConfiguration: SessionConfiguration = null!;
 
@@ -317,12 +317,12 @@ export class WebRWKVInferPort implements InferPortInterface {
   // currentModelNameCallback
 
   private setCurrentModel(name: string | null) {
-    this.selectedModelName = name;
+    this.selectedModelTitle = name;
     this.currentModelNameCallback.forEach((cb) => cb(name));
   }
   onCurrentModelChange(cb: (name: string | null) => void) {
     this.currentModelNameCallback.push(cb);
-    this.setCurrentModel(this.selectedModelName);
+    this.setCurrentModel(this.selectedModelTitle);
   }
   removeCurrentModelChange(cb: (name: string | null) => void) {
     this.currentModelNameCallback = this.currentModelNameCallback.filter(
@@ -415,7 +415,7 @@ export class WebRWKVInferPort implements InferPortInterface {
       throw new Error("vocab not loaded");
     }
 
-    if (!this.selectedModelName) {
+    if (!this.selectedModelTitle) {
       throw new Error("model not loaded");
     }
 
@@ -457,14 +457,14 @@ export class WebRWKVInferPort implements InferPortInterface {
         yield {
           type: "token",
           word: result.word,
-          model: this.selectedModelName,
+          model: this.selectedModelTitle,
         };
       }
       if (result.type === "completion") {
         yield {
           type: "token",
           word: result.word,
-          model: this.selectedModelName,
+          model: this.selectedModelTitle,
         };
       }
       if (signal?.aborted) {
@@ -484,7 +484,7 @@ export class APIInferPort implements InferPortInterface {
   portType: string = "api";
 
   isLoadingModel: boolean = false;
-  selectedModelName: string | null = null;
+  selectedModelTitle: string | null = null;
 
   defaultSessionConfiguration: SessionConfiguration = null!;
 
@@ -517,12 +517,12 @@ export class APIInferPort implements InferPortInterface {
   // currentModelNameCallback
 
   private setCurrentModel(name: string | null) {
-    this.selectedModelName = name;
+    this.selectedModelTitle = name;
     this.currentModelNameCallback.forEach((cb) => cb(name));
   }
   onCurrentModelChange(cb: (name: string | null) => void) {
     this.currentModelNameCallback.push(cb);
-    this.setCurrentModel(this.selectedModelName);
+    this.setCurrentModel(this.selectedModelTitle);
   }
   removeCurrentModelChange(cb: (name: string | null) => void) {
     this.currentModelNameCallback = this.currentModelNameCallback.filter(
@@ -564,7 +564,7 @@ export class APIInferPort implements InferPortInterface {
     if (!this.APIModelParam) {
       throw new Error("APIParam not initialized");
     }
-    if (!this.selectedModelName) {
+    if (!this.selectedModelTitle) {
       throw new Error("ModelName not set");
     }
 
@@ -578,7 +578,7 @@ export class APIInferPort implements InferPortInterface {
       model:
         this.portType === "api" && options.enableReasoning
           ? (this as APIInferPort).reasoningModelName!
-          : this.selectedModelName!,
+          : this.selectedModelTitle!,
       // prompt: options.prompt,
       messages: options.messages,
       max_tokens: options.max_tokens,

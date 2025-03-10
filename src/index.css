@@ -35,39 +35,9 @@ body,
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --web-rwkv-title-gradient: linear-gradient(
-    131deg,
-    rgb(238 162 162) 0%,
-    rgb(163 209 191) 54%,
-    rgb(87 197 225) 100%
-  );
-  --web-rwkv-animate-gradient: linear-gradient(
-    78deg,
-    rgb(238, 162, 162) 5%,
-    rgb(157, 213, 194) 13%,
-    rgb(87, 198, 225) 25%,
-    rgb(180, 159, 218) 47%,
-    rgb(122, 197, 216) 60%,
-    transparent 75%
-  );
 }
 
 html.dark {
-  --web-rwkv-animate-gradient: linear-gradient(
-    78deg,
-    hsl(0 69% 67% / 1) 5%,
-    hsl(160 40% 55% / 1) 13%,
-    hsl(192 70% 50% / 1) 25%,
-    hsl(261 44% 58% / 1) 47%,
-    hsl(192 55% 57% / 1) 60%,
-    transparent 75%
-  );
-  --web-rwkv-title-gradient: linear-gradient(
-    131deg,
-    hsl(0 69% 67% / 1) 0%,
-    hsl(160 40% 55% / 1) 54%,
-    hsl(192 70% 50% / 1) 100%
-  );
 }
 
 @keyframes banner-gradient {

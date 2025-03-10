@@ -48,8 +48,8 @@ const ChatSession = createContext<
     isGenerating: boolean;
     setIsGenerating: (value: boolean) => void;
 
-    selectedModelName: string | null;
-    loadingModelName: string | null;
+    selectedModelTitle: string | null;
+    loadingModelTitle: string | null;
 
     generator: React.MutableRefObject<CompletionGenerator>;
     completion: ReturnType<typeof useWebRWKVChat>["completion"];
@@ -221,8 +221,8 @@ function AssistantContent({
     activeMessageBlocks,
     sessionConfiguration,
     updateCurrentMessageBlock,
-    selectedModelName,
-    loadingModelName,
+    selectedModelTitle,
+    loadingModelTitle,
     generator,
     completion,
     getActiveMessages,
@@ -248,7 +248,7 @@ function AssistantContent({
       samplerConfig: sessionConfiguration.defaultSamplerConfig,
       isGenerating: true,
       rank: 0,
-      modelName: selectedModelName,
+      modelName: selectedModelTitle,
       timestamp: Date.now(),
     });
 
@@ -389,9 +389,9 @@ function AssistantContent({
           {currentMessageBlock.messageContents[
             currentMessageBlock.activeMessageContentIndex
           ].isGenerating &&
-            selectedModelName === null && (
+            selectedModelTitle === null && (
               <div className="my-5 text-sm text-gray-400">
-                {loadingModelName === null
+                {loadingModelTitle === null
                   ? "Load a model to interact"
                   : "Loading model... Sit back and relax!"}
               </div>
@@ -1059,10 +1059,10 @@ export default function Chat() {
     currentChatSessionId,
   } = useChatSession(chatSessionId!);
 
-  const { llmModel: webRWKVLLMInfer, loadingModelName } = useChatModelSession(
+  const { llmModel: webRWKVLLMInfer, loadingModelTitle } = useChatModelSession(
     (s) => s,
   );
-  const { selectedModelName, completion, defaultSessionConfiguration } =
+  const { selectedModelTitle, completion, defaultSessionConfiguration } =
     useWebRWKVChat(webRWKVLLMInfer);
 
   const [showSessionConfigurationBar, setShowSessionConfigurationBar] =
@@ -1074,7 +1074,7 @@ export default function Chat() {
   const [currentModelName, setCurrentModelName] = useState<string | null>(null);
 
   const loadModelModal = useRef<ModalInterface>(null!);
-  const checkIsModelLoaded = useSuspendUntilValid(selectedModelName, () => {
+  const checkIsModelLoaded = useSuspendUntilValid(selectedModelTitle, () => {
     loadModelModal.current.setIsModalOpen(true);
   });
 
@@ -1143,7 +1143,7 @@ export default function Chat() {
       enableReasoning: webRWKVLLMInfer.isEnableReasoning,
     });
     resultBlock.messageContents[activeMessageContentIndex].modelName =
-      selectedModelName;
+      selectedModelTitle;
 
     let result = "";
     for await (const chunk of generator.current) {
@@ -1268,8 +1268,8 @@ export default function Chat() {
                     setIsGenerating,
                     webRWKVLLMInfer,
 
-                    selectedModelName,
-                    loadingModelName,
+                    selectedModelTitle,
+                    loadingModelTitle,
 
                     completion,
 
