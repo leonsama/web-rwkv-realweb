@@ -36,15 +36,13 @@ export function RecentModelsCard({
   );
 
   useEffect(() => {
-    setRenderList(
-      recentModels
-        .sort((a, b) =>
-          a.lastLoadedTimestamp < b.lastLoadedTimestamp ? 1 : -1,
-        )
-        .filter((v) =>
-          showCachedOnly ? v.from === "API" || v.cached === true : true,
-        ),
-    );
+    const newRenderList = recentModels
+      .sort((a, b) => (a.lastLoadedTimestamp < b.lastLoadedTimestamp ? 1 : -1))
+      .filter((v) =>
+        showCachedOnly ? v.from === "API" || v.cached === true : true,
+      );
+    console.log(newRenderList);
+    setRenderList(newRenderList);
   }, [recentModels, showCachedOnly]);
 
   const shouldLoadFromWeb = createModalForm<{ shoudLoadFromWeb: string }>(
@@ -186,7 +184,10 @@ export function RecentModelsCard({
                             "h-8 rounded-xl p-1 px-2 font-medium transition-[color,transform]",
                             loadingModelTitle === v.name &&
                               "pointer-events-none bg-transparent",
-                            selectedModelTitle === v.name &&
+                            selectedModelTitle &&
+                              [v.title, v.name, v.reasoningName].includes(
+                                selectedModelTitle,
+                              ) &&
                               "pointer-events-none bg-transparent px-0.5 text-xs font-semibold hover:bg-white/0 dark:bg-white/0",
                             v.from === "device" &&
                               v.cached === false &&
@@ -194,7 +195,10 @@ export function RecentModelsCard({
                           )}
                           onClick={async () => {
                             if (
-                              selectedModelTitle === v.name ||
+                              (selectedModelTitle &&
+                                [v.title, v.name, v.reasoningName].includes(
+                                  selectedModelTitle,
+                                )) ||
                               (v.from === "device" && v.cached === false)
                             )
                               return;
@@ -216,7 +220,10 @@ export function RecentModelsCard({
                         >
                           {loadingModelTitle === v.name
                             ? "Loading"
-                            : selectedModelTitle === v.name
+                            : selectedModelTitle &&
+                                [v.title, v.name, v.reasoningName].includes(
+                                  selectedModelTitle,
+                                )
                               ? "Selected"
                               : "Load"}
                         </Button>
@@ -226,7 +233,9 @@ export function RecentModelsCard({
                             "h-8 rounded-xl p-1 px-3 font-medium transition-[color,transform]",
                             loadingModelTitle === v.name &&
                               "pointer-events-none bg-transparent px-2",
-                            selectedModelTitle === v.name &&
+                            [v.title, v.name, v.reasoningName].includes(
+                              selectedModelTitle,
+                            ) &&
                               "pointer-events-none bg-transparent px-0.5 text-xs font-semibold hover:bg-white/0 dark:bg-white/0",
                           )}
                           onClick={() => {
@@ -235,7 +244,10 @@ export function RecentModelsCard({
                         >
                           {loadingModelTitle === v.name
                             ? "Loading"
-                            : selectedModelTitle === v.name
+                            : selectedModelTitle &&
+                                [v.title, v.name, v.reasoningName].includes(
+                                  selectedModelTitle,
+                                )
                               ? "Selected"
                               : "Use"}
                         </Button>

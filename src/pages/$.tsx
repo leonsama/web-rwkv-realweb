@@ -232,7 +232,8 @@ export default function ChatRouter() {
             </SwitchTransition>
             <div
               key={`chat-textarea`}
-              className="relative flex w-full justify-center px-2 pt-1 md:px-4 md:pb-6"
+              className="relative flex w-full justify-center px-2 pt-1 md:px-4 md:pb-6 md:pr-7"
+              // style={{ scrollbarGutter: "stable both-edges" }}
             >
               <button
                 className={cn(

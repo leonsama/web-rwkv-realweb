@@ -1023,6 +1023,9 @@ export function ChatInterface({
     chatInterfaceUpdateSessionConfiguration,
 
     generalUpdateSessionConfiguration,
+
+    currentModelName,
+    setCurrentModelName,
   } = useContext(ChatInterfaceContext);
 
   //   useEffect(() => {
@@ -1056,8 +1059,6 @@ export function ChatInterface({
 
   //   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   //   const generator = useRef<CompletionGenerator>(null!);
-
-  const [currentModelName, setCurrentModelName] = useState<string | null>(null);
 
   //     const loadModelModal = useRef<ModalInterface>(null!);
   //   const checkIsModelLoaded = useSuspendUntilValid(selectedModelTitle, () => {

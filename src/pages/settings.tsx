@@ -104,7 +104,7 @@ export default function Settings() {
 
   const clearAllCache = async () => {
     recentModels.forEach((v) => {
-      deleteRecentModel({ name: v.name, deleteCacheOnly: true });
+      deleteRecentModel({ title: v.title, deleteCacheOnly: true });
     });
     await clearCache();
     setTotalCacheSize(await getTotalCacheSize());

@@ -375,7 +375,7 @@ export function ChatTextarea({
       {/* bottom bar */}
       <div
         className={cn(
-          "center mr-11 flex gap-1 overflow-hidden overflow-x-auto pl-3 pr-3 transition-all duration-500 [mask-image:linear-gradient(90deg,#ffff_calc(100%_-_1rem),_#0000_100%)] md:pl-5",
+          "center invisibleScrollbar mr-11 flex gap-1 overflow-hidden overflow-x-auto pl-3 pr-3 transition-all duration-500 [mask-image:linear-gradient(90deg,#ffff_calc(100%_-_1rem),_#0000_100%)] md:pl-5",
         )}
       >
         <div

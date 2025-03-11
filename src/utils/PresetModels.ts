@@ -23,14 +23,14 @@ export const DEFAULT_API_MODEL: APIModel = {
     systemPrompt: null,
     defaultSamplerConfig: {
       temperature: 2.0,
-      top_p: 0.5,
+      top_p: 0.3,
       presence_penalty: 0.5,
       count_penalty: 0.5,
       half_life: 200,
     },
   },
   APIParam: {
-    baseUrl: "https://sparkleman-rwkv-hf-space.hf.space/api/v1",
+    baseUrl: "https://rwkv-red-team-rwkv-latestspace.hf.space/api/v1",
     key: "sk-test",
   },
   from: "API",
@@ -54,7 +54,7 @@ export const LOCAL_API_MODEL: APIModel = {
     systemPrompt: null,
     defaultSamplerConfig: {
       temperature: 2.0,
-      top_p: 0.5,
+      top_p: 0.3,
       presence_penalty: 0.5,
       count_penalty: 0.5,
       half_life: 200,
@@ -103,7 +103,7 @@ export const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
       systemPrompt: null,
       defaultSamplerConfig: {
         temperature: 2.0,
-        top_p: 0.5,
+        top_p: 0.3,
         presence_penalty: 0.5,
         count_penalty: 0.5,
         half_life: 200,
@@ -140,7 +140,7 @@ export const ONLINE_RWKV_MODELS: RWKVModelWeb[] = [
       systemPrompt: null,
       defaultSamplerConfig: {
         temperature: 1.0,
-        top_p: 0.5,
+        top_p: 0.3,
         presence_penalty: 0.5,
         count_penalty: 0.5,
         half_life: 200,

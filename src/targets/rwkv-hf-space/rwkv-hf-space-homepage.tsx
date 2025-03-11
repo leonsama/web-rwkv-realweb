@@ -23,7 +23,106 @@ import { Flipped, Flipper } from "react-flip-toolkit";
 import { usePageStorage } from "../../store/PageStorage";
 import { useLocation, useNavigate } from "react-router";
 import { RWKVMarkdown } from "../../components/MarkdownRender";
-import { AVALIABLE_HF_MODELS } from "./rwkv-hf-space-models";
+import {
+  AVALIABLE_HF_MODELS,
+  AVALIABLE_TEMP_HF_MODELS,
+} from "./rwkv-hf-space-models";
+import { Details } from "../../components/Details";
+
+function ModelCard({
+  model: v,
+  className,
+}: {
+  model: APIModel;
+  className?: string;
+}) {
+  const { llmModel, loadingModelTitle } = useChatModelSession((s) => s);
+  const { selectedModelTitle, defaultSessionConfiguration } =
+    useWebRWKVChat(llmModel);
+
+  const { fromAPI } = useModelLoader();
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-2 rounded-2xl bg-white px-4 py-2 dark:bg-zinc-700",
+        className,
+      )}
+    >
+      <div
+        className={
+          "text-fadeout flex w-full overflow-auto text-nowrap pt-2 text-xl font-semibold"
+        }
+      >
+        <span className="w-0 flex-1">{v.title}</span>
+      </div>
+      <div>
+        {v.description ? (
+          <span>{v.description}</span>
+        ) : (
+          <span className="text-gray-500">No description.</span>
+        )}
+      </div>
+      <div className="flex gap-1">
+        <div className="flex flex-1 items-center gap-1 overflow-x-auto">
+          {v.supportReasoning && (
+            <div>
+              <span
+                className={cn(
+                  "border-g flex items-center rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
+                )}
+              >
+                Reasoning
+              </span>
+            </div>
+          )}
+          {v.from === "API" && (
+            <div>
+              <span
+                className={cn(
+                  "border-g flex items-center rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
+                )}
+              >
+                Online
+              </span>
+            </div>
+          )}
+          {v.param && (
+            <div>
+              <span
+                className={cn(
+                  "border-g flex items-center rounded-3xl border border-blue-600 p-0.5 text-xs text-blue-600",
+                )}
+              >
+                {v.param}
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="flex justify-end gap-1">
+          <Button
+            className={cn(
+              "h-8 rounded-xl p-1 px-4 font-medium transition-[background-color] dark:bg-zinc-600",
+              loadingModelTitle === v.title &&
+                "pointer-events-none bg-transparent px-2",
+              [v.title, v.name, v.reasoningName].includes(selectedModelTitle) &&
+                "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
+            )}
+            onClick={() => {
+              fromAPI(v);
+            }}
+          >
+            {loadingModelTitle === v.title
+              ? "Loading"
+              : [v.title, v.name, v.reasoningName].includes(selectedModelTitle)
+                ? "Selected"
+                : "Use"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function RWKVHfSpaceHomePage({
   ref = createRef<HTMLDivElement>(),
@@ -35,13 +134,9 @@ export function RWKVHfSpaceHomePage({
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { llmModel, loadingModelTitle } = useChatModelSession((s) => s);
-  const { selectedModelTitle, defaultSessionConfiguration } =
-    useWebRWKVChat(llmModel);
-
-  const { fromAPI } = useModelLoader();
-
   const [showUI, setShowUI] = useState(true);
+  const [showTempModel, setShowTempModel] = useState(false);
+
   useEffect(() => {
     if (location.pathname.includes("chat")) {
       setShowUI(false);
@@ -102,90 +197,26 @@ export function RWKVHfSpaceHomePage({
                 </svg>
               }
             >
-              {AVALIABLE_HF_MODELS.map((v, k) => {
-                return (
-                  <div
-                    className="flex flex-col gap-2 rounded-2xl bg-white px-4 py-2 dark:bg-zinc-700"
+              {AVALIABLE_HF_MODELS.map((v, k) => (
+                <ModelCard key={k} model={v}></ModelCard>
+              ))}
+              <Details
+                summary={<div>Temp Latest Traininng Models</div>}
+                onTrigger={(e) => setShowTempModel}
+                className="flex flex-col gap-4 py-2 px-2"
+              >
+                <p className="text-sm font-semibold px-2">
+                  Note: These models are not fully trained, and performance may
+                  not be as expected.
+                </p>
+                {AVALIABLE_TEMP_HF_MODELS.map((v, k) => (
+                  <ModelCard
                     key={k}
-                  >
-                    <div
-                      className={
-                        "text-fadeout flex w-full overflow-auto text-nowrap pt-2 text-xl font-semibold"
-                      }
-                    >
-                      <span className="w-0 flex-1">{v.title}</span>
-                    </div>
-                    <div>
-                      {v.description ? (
-                        <span>{v.description}</span>
-                      ) : (
-                        <span className="text-gray-500">No description.</span>
-                      )}
-                    </div>
-                    <div className="flex gap-1">
-                      <div className="flex flex-1 items-center gap-1 overflow-x-auto">
-                        {v.supportReasoning && (
-                          <div>
-                            <span
-                              className={cn(
-                                "border-g flex items-center rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
-                              )}
-                            >
-                              Reasoning
-                            </span>
-                          </div>
-                        )}
-                        {v.from === "API" && (
-                          <div>
-                            <span
-                              className={cn(
-                                "border-g flex items-center rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
-                              )}
-                            >
-                              Online
-                            </span>
-                          </div>
-                        )}
-                        {v.param && (
-                          <div>
-                            <span
-                              className={cn(
-                                "border-g flex items-center rounded-3xl border border-blue-600 p-0.5 text-xs text-blue-600",
-                              )}
-                            >
-                              {v.param}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          className={cn(
-                            "h-8 rounded-xl p-1 px-4 font-medium transition-[background-color] dark:bg-zinc-600",
-                            loadingModelTitle === v.title &&
-                              "pointer-events-none bg-transparent px-2",
-                            [v.title, v.name, v.reasoningName].includes(
-                              selectedModelTitle,
-                            ) &&
-                              "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
-                          )}
-                          onClick={() => {
-                            fromAPI(v);
-                          }}
-                        >
-                          {loadingModelTitle === v.title
-                            ? "Loading"
-                            : [v.title, v.name, v.reasoningName].includes(
-                                  selectedModelTitle,
-                                )
-                              ? "Selected"
-                              : "Use"}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    model={v}
+                    className="bg-slate-100 dark:bg-zinc-600"
+                  ></ModelCard>
+                ))}
+              </Details>
               <Entry className="block">
                 {/* <RecentModelsCard
                   APIModels={AVALIABLE_HF_MODELS}

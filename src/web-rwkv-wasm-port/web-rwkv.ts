@@ -38,7 +38,7 @@ export const DEFAULT_STOP_WORDS = ["\n\nUser"];
 
 export const DEFAULT_SAMPLER_CONFIG = {
   temperature: 1.0,
-  top_p: 0.5,
+  top_p: 0.3,
   presence_penalty: 0.5,
   count_penalty: 0.5,
   half_life: 200,

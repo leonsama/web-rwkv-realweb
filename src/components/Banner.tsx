@@ -78,8 +78,12 @@ export function WebRWKVBanner() {
                 className={cn(
                   "gradientColor mx-0 break-keep box-decoration-slice px-0 text-2xl font-medium leading-none text-transparent transition-colors duration-300",
                   showLargeBanner
-                    ? "xl:mt-30 mt-32 text-6xl md:mt-[7.5rem] md:-indent-1 xl:-indent-2 xl:text-8xl"
+                    ? "xl:mt-30 m mt-32 text-6xl md:mt-[7.5rem] xl:text-8xl"
                     : "ml-16 mt-5 text-gray-300 md:ml-7 md:mt-7",
+                  import.meta.env.VITE_TARGET === "rwkv-hf-space" &&
+                    showLargeBanner
+                    ? "d:-indent-1 xl:-indent-2"
+                    : "",
                   isEnterIndex() && "animate-[banner-gradient_3.5s_ease]",
                 )}
               >

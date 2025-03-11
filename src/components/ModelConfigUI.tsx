@@ -999,7 +999,11 @@ export function ModelLoaderCard({
                                         "rounded-xl p-1 px-2 font-medium dark:bg-zinc-600",
                                         loadingModelTitle === v.title &&
                                           "pointer-events-none bg-transparent",
-                                        selectedModelTitle === v.title &&
+                                        [
+                                          v.title,
+                                          v.name,
+                                          v.reasoningName,
+                                        ].includes(selectedModelTitle) &&
                                           "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                         v.from === "device" &&
                                           v.cached === false &&
@@ -1007,7 +1011,11 @@ export function ModelLoaderCard({
                                       )}
                                       onClick={async () => {
                                         if (
-                                          selectedModelTitle === v.title ||
+                                          [
+                                            v.title,
+                                            v.name,
+                                            v.reasoningName,
+                                          ].includes(selectedModelTitle) ||
                                           (v.from === "device" &&
                                             v.cached === false)
                                         )
@@ -1030,7 +1038,11 @@ export function ModelLoaderCard({
                                     >
                                       {loadingModelTitle === v.title
                                         ? "Loading"
-                                        : selectedModelTitle === v.title
+                                        : [
+                                              v.title,
+                                              v.name,
+                                              v.reasoningName,
+                                            ].includes(selectedModelTitle)
                                           ? "Selected"
                                           : "Load"}
                                     </Button>
@@ -1040,7 +1052,11 @@ export function ModelLoaderCard({
                                         "rounded-xl p-1 px-3 font-medium dark:bg-zinc-600",
                                         loadingModelTitle === v.title &&
                                           "pointer-events-none bg-transparent px-2",
-                                        selectedModelTitle === v.title &&
+                                        [
+                                          v.title,
+                                          v.name,
+                                          v.reasoningName,
+                                        ].includes(selectedModelTitle) &&
                                           "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                       )}
                                       onClick={() => {
@@ -1050,7 +1066,11 @@ export function ModelLoaderCard({
                                     >
                                       {loadingModelTitle === v.title
                                         ? "Loading"
-                                        : selectedModelTitle === v.title
+                                        : [
+                                              v.title,
+                                              v.name,
+                                              v.reasoningName,
+                                            ].includes(selectedModelTitle)
                                           ? "Selected"
                                           : "Use"}
                                     </Button>
@@ -1181,11 +1201,20 @@ export function ModelLoaderCard({
                                   "rounded-xl p-1 px-2 font-medium dark:bg-zinc-600",
                                   loadingModelTitle === v.title &&
                                     "pointer-events-none bg-transparent",
-                                  selectedModelTitle === v.title &&
+                                  selectedModelTitle &&
+                                    [v.title, v.name].includes(
+                                      selectedModelTitle,
+                                    ) &&
                                     "pointer-events-none bg-transparent text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                 )}
                                 onClick={async () => {
-                                  if (selectedModelTitle === v.title) return;
+                                  if (
+                                    selectedModelTitle &&
+                                    [v.title, v.name].includes(
+                                      selectedModelTitle,
+                                    )
+                                  )
+                                    return;
                                   try {
                                     const { shoudLoadFromWeb } =
                                       await shouldLoadFromWeb.open();
@@ -1200,7 +1229,10 @@ export function ModelLoaderCard({
                               >
                                 {loadingModelTitle === v.title
                                   ? "Loading"
-                                  : selectedModelTitle === v.title
+                                  : selectedModelTitle &&
+                                      [v.title, v.name].includes(
+                                        selectedModelTitle,
+                                      )
                                     ? "Selected"
                                     : "Load"}
                               </Button>
@@ -1210,7 +1242,9 @@ export function ModelLoaderCard({
                                   "rounded-xl p-1 px-3 font-medium dark:bg-zinc-600",
                                   loadingModelTitle === v.title &&
                                     "pointer-events-none bg-transparent px-2",
-                                  selectedModelTitle === v.title &&
+                                  [v.title, v.name, v.reasoningName].includes(
+                                    selectedModelTitle,
+                                  ) &&
                                     "pointer-events-none bg-transparent px-0.5 text-sm font-semibold hover:bg-white/0 dark:bg-transparent",
                                 )}
                                 onClick={() => {
@@ -1220,7 +1254,9 @@ export function ModelLoaderCard({
                               >
                                 {loadingModelTitle === v.title
                                   ? "Loading"
-                                  : selectedModelTitle === v.title
+                                  : [v.title, v.name, v.reasoningName].includes(
+                                        selectedModelTitle,
+                                      )
                                     ? "Selected"
                                     : "Use"}
                               </Button>
