@@ -1,71 +1,34 @@
-import { useLocation, useNavigate, useParams } from "react-router";
-import { ChatTextarea } from "../components/ChatTextarea";
-
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createRef, useContext, useEffect, useRef, useState } from "react";
+import {
+  CurrentMessageBlock,
+  useChatSession,
+} from "../store/ChatSessionStorage";
 import {
   cn,
   Timer,
   useMaxWidthBreakpoint,
   useSuspendUntilValid,
 } from "../utils/utils";
+import { Sampler } from "../web-rwkv-wasm-port/types";
+import { Button } from "./Button";
+import { Card, CardTitle, Entry } from "./Cards";
+import { ChatInterfaceContext, ChatSession } from "./ChatInterfaceContext";
+import { RWKVMarkdown } from "./MarkdownRender";
+import { RWKVOutputFormatter } from "../utils/RWKVOutputFormatter";
+import { createModalForm, Modal, ModalInterface } from "./popup/Modals";
+import { InputList, InputRange, InputText } from "./Input";
+import { PromptTextarea } from "./PromptTextarea";
 import {
   CompletionGenerator,
   DEFAULT_SESSION_CONFIGURATION,
-  InferPortInterface,
   SessionConfiguration,
   useWebRWKVChat,
 } from "../web-rwkv-wasm-port/web-rwkv";
-import { useChatModelSession } from "../store/ModelStorage";
-
-import { RWKVOutputFormatter } from "../utils/RWKVOutputFormatter";
-import { RWKVMarkdown } from "../components/MarkdownRender";
 import { usePageStorage } from "../store/PageStorage";
-import {
-  CurrentMessageBlock,
-  useChatSession,
-} from "../store/ChatSessionStorage";
-import { Sampler } from "../web-rwkv-wasm-port/types";
-import {
-  createModalForm,
-  Modal,
-  ModalInterface,
-} from "../components/popup/Modals";
-import { Card, CardTitle, Entry } from "../components/Cards";
-import { Button } from "../components/Button";
-import { PromptTextarea } from "../components/PromptTextarea";
-import { InputList, InputRange, InputText } from "../components/Input";
-import { ModelLoaderCard } from "../components/ModelConfigUI";
+import { useChatModelSession } from "../store/ModelStorage";
+import { useLocation, useNavigate, useParams } from "react-router";
 
-// let colorbg = new BlurGradientBg({
-// 	dom: "box",
-// 	colors: ["#eea2a2","#d0b5ae","#a3d1bf","#8fcec8"],
-// 	loop: true
-// })
-
-const ChatSession = createContext<
-  ReturnType<typeof useChatSession> & {
-    startGenerationTask: (prompt: string, newChat: boolean) => Promise<void>;
-    isGenerating: boolean;
-    setIsGenerating: (value: boolean) => void;
-
-    selectedModelTitle: string | null;
-    loadingModelTitle: string | null;
-
-    generator: React.MutableRefObject<CompletionGenerator>;
-    completion: ReturnType<typeof useWebRWKVChat>["completion"];
-
-    checkIsModelLoaded: (
-      validate: (currentState: string | null) => boolean,
-    ) => Promise<void>;
-
-    webRWKVLLMInfer: InferPortInterface;
-
-    currentModelName: string | null;
-    setCurrentModelName: (name: string) => void;
-  }
->(null!);
-
-function ToolButton({
+export function ToolButton({
   children,
   className,
   disabled,
@@ -92,7 +55,7 @@ function ToolButton({
   );
 }
 
-function MessageInformationViewer({
+export function MessageInformationViewer({
   close,
   currentMessageBlock,
 }: {
@@ -188,7 +151,7 @@ function MessageInformationViewer({
   );
 }
 
-function UserContent({
+export function UserContent({
   currentMessageBlock,
 }: {
   currentMessageBlock: CurrentMessageBlock;
@@ -210,7 +173,7 @@ function UserContent({
   );
 }
 
-function AssistantContent({
+export function AssistantContent({
   currentMessageBlock,
 }: {
   currentMessageBlock: CurrentMessageBlock;
@@ -590,7 +553,7 @@ function AssistantContent({
   );
 }
 
-function MessageBlock({
+export function MessageBlock({
   currentMessageBlock,
 }: {
   currentMessageBlock: CurrentMessageBlock;
@@ -613,18 +576,18 @@ function MessageBlock({
   );
 }
 
-function ChatSessionConfigurationCard({
+export function ChatSessionConfigurationCard({
   isOpen,
   setIsOpen,
   sessionConfiguration,
   updateSessionConfiguration,
 }: {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: (show: boolean) => void;
   sessionConfiguration: SessionConfiguration;
-  updateSessionConfiguration: ReturnType<
-    typeof useChatSession
-  >["updateSessionConfiguration"];
+  updateSessionConfiguration: (
+    sessionConfiguration: SessionConfiguration,
+  ) => void;
 }) {
   return (
     <Card
@@ -870,18 +833,18 @@ function ChatSessionConfigurationCard({
   );
 }
 
-function ChatSessionConfigurationBar({
+export function ChatSessionConfigurationBar({
   isOpen,
   setIsOpen,
   sessionConfiguration,
   updateSessionConfiguration,
 }: {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: (show: boolean) => void;
   sessionConfiguration: SessionConfiguration;
-  updateSessionConfiguration: ReturnType<
-    typeof useChatSession
-  >["updateSessionConfiguration"];
+  updateSessionConfiguration: (
+    sessionConfiguration: SessionConfiguration,
+  ) => void;
 }) {
   const [showConfigurationCard, setShowConfigurationCard] =
     useState<boolean>(false);
@@ -1039,14 +1002,37 @@ function ChatSessionConfigurationBar({
   );
 }
 
-type UnwrapPromise<T> = T extends Promise<infer U> ? UnwrapPromise<U> : T;
-
-export default function Chat() {
-  const sessionStorage = usePageStorage((s) => s);
+export function ChatInterface({
+  chatSessionId,
+  ...prop
+}: {
+  ref?: React.RefObject<HTMLDivElement>;
+  chatSessionId: string;
+} & React.HTMLAttributes<HTMLDivElement>) {
+  //   const sessionStorage = usePageStorage((s) => s);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { chatSessionId } = useParams();
+  const {
+    isGenerating,
+    setIsGenerating,
+    startGenerationTask,
+    generator,
+    checkIsModelLoaded,
+
+    chatInterfaceUpdateSessionConfiguration,
+
+    generalUpdateSessionConfiguration,
+  } = useContext(ChatInterfaceContext);
+
+  //   useEffect(() => {
+  //     if (ref) {
+  //       ref.current = {
+  //         startGenerationTask: startGenerationTask,
+  //         generator: useRef<CompletionGenerator>(null!),
+  //       };
+  //     }
+  //   }, []);
 
   const {
     activeMessageBlocks,
@@ -1057,7 +1043,7 @@ export default function Chat() {
     sessionConfiguration,
     updateSessionConfiguration,
     currentChatSessionId,
-  } = useChatSession(chatSessionId!);
+  } = useChatSession(chatSessionId);
 
   const { llmModel: webRWKVLLMInfer, loadingModelTitle } = useChatModelSession(
     (s) => s,
@@ -1065,18 +1051,18 @@ export default function Chat() {
   const { selectedModelTitle, completion, defaultSessionConfiguration } =
     useWebRWKVChat(webRWKVLLMInfer);
 
-  const [showSessionConfigurationBar, setShowSessionConfigurationBar] =
-    useState(false);
+  //   const [showSessionConfigurationBar, setShowSessionConfigurationBar] =
+  //     useState(false);
 
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const generator = useRef<CompletionGenerator>(null!);
+  //   const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  //   const generator = useRef<CompletionGenerator>(null!);
 
   const [currentModelName, setCurrentModelName] = useState<string | null>(null);
 
-  const loadModelModal = useRef<ModalInterface>(null!);
-  const checkIsModelLoaded = useSuspendUntilValid(selectedModelTitle, () => {
-    loadModelModal.current.setIsModalOpen(true);
-  });
+  //     const loadModelModal = useRef<ModalInterface>(null!);
+  //   const checkIsModelLoaded = useSuspendUntilValid(selectedModelTitle, () => {
+  //     loadModelModal.current.setIsModalOpen(true);
+  //   });
 
   const containerEle = useRef<HTMLDivElement>(null);
   const messagesRenderEle = useRef<HTMLDivElement>(null);
@@ -1089,14 +1075,14 @@ export default function Chat() {
     if (!isSubmited.current) {
       if (location.state?.prompt!) {
         window.history.replaceState({}, "");
-        startGenerationTask(location.state.prompt, true);
+        startGenerationTask.current(location.state.prompt, true);
         updateChatSessionTitle(location.state.prompt);
       }
       isSubmited.current = true;
     }
   }, [activeMessageBlocks]);
 
-  const startGenerationTask = async (
+  startGenerationTask.current = async (
     prompt: string,
     newChat: boolean = false,
   ) => {
@@ -1162,6 +1148,22 @@ export default function Chat() {
     setIsGenerating(false);
   };
 
+  // before chat session change
+
+  useEffect(() => {
+    containerEle.current?.scrollTo({ top: 0, behavior: "instant" }); // reset container scroll anchor
+    chatInterfaceUpdateSessionConfiguration.current =
+      updateSessionConfiguration;
+  }, [chatSessionId]);
+
+  // chat session change
+
+  useEffect(() => {
+    setCurrentModelName(null);
+    contentScrollToBottom(200); // scroll to bottom when change chat session
+    generalUpdateSessionConfiguration(sessionConfiguration); // sync session configuration
+  }, [currentChatSessionId]);
+
   // scroll
 
   const resizeObserver = useRef<ResizeObserver>(null!);
@@ -1176,15 +1178,6 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    containerEle.current?.scrollTo({ top: 0, behavior: "instant" }); // reset container scroll anchor
-  }, [chatSessionId]);
-
-  useEffect(() => {
-    setCurrentModelName(null);
-    contentScrollToBottom(200); // scroll to bottom when change chat session
-  }, [currentChatSessionId]);
-
-  useEffect(() => {
     resizeObserver.current?.disconnect();
 
     if (!isGenerating) return;
@@ -1197,8 +1190,9 @@ export default function Chat() {
           containerEle.current.scrollTop +
             containerEle.current.clientHeight +
             messageLineHeight.current * 4
-      )
+      ) {
         contentScrollToBottom(0);
+      }
     });
 
     if (messagesRenderEle.current) {
@@ -1214,136 +1208,62 @@ export default function Chat() {
   }, [currentChatSessionId, isGenerating]);
 
   return (
-    <div className="flex h-full w-full">
+    <div
+      {...prop}
+      className={cn(
+        "flex h-full w-full flex-1 flex-shrink-0 flex-col items-center overflow-auto px-4 pb-0",
+        prop.className,
+      )}
+      style={{ scrollbarGutter: "stable both-edges", ...prop.style }}
+      ref={containerEle}
+    >
       <div
-        className="flex h-full w-full flex-col items-stretch"
-        data-clarity-unmask="true"
+        className="flex w-full max-w-screen-md flex-col gap-6 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s] md:pb-5"
+        key={currentChatSessionId}
+        ref={messagesRenderEle}
       >
-        <div className="sticky top-0 flex h-16 items-center md:h-20">
-          <div className="ml-auto flex size-16 items-center justify-center">
-            <button
-              className="flex size-10 items-center justify-center rounded-full text-slate-600 transition-all active:bg-slate-300 dark:text-zinc-300 dark:active:bg-zinc-500/50 md:hover:bg-slate-300/50 md:active:bg-slate-300 dark:md:hover:bg-zinc-700/50 dark:md:active:bg-zinc-500/50"
-              onClick={() => {
-                setShowSessionConfigurationBar(!showSessionConfigurationBar);
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="size-6 md:size-7"
-              >
-                <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-1 flex-shrink-0 overflow-hidden">
-          <div className="flex h-full w-full flex-col">
-            <div
-              className="flex flex-1 flex-shrink-0 flex-col items-center overflow-auto px-4 pb-0"
-              style={{ scrollbarGutter: "stable both-edges" }}
-              ref={containerEle}
-            >
-              <div
-                className="flex w-full max-w-screen-md flex-col gap-6 motion-translate-y-in-[40px] motion-opacity-in-[0%] motion-duration-[0.4s] md:pb-5"
-                key={currentChatSessionId}
-                ref={messagesRenderEle}
-              >
-                <ChatSession.Provider
-                  value={{
-                    activeMessageBlocks,
-                    currentChatSessionId,
-                    createNewMessasgeBlock,
-                    updateCurrentMessageBlock,
-                    updateChatSessionTitle,
-                    getActiveMessages,
+        <ChatSession.Provider
+          value={{
+            activeMessageBlocks,
+            currentChatSessionId,
+            createNewMessasgeBlock,
+            updateCurrentMessageBlock,
+            updateChatSessionTitle,
+            getActiveMessages,
 
-                    sessionConfiguration,
-                    updateSessionConfiguration,
+            sessionConfiguration,
+            updateSessionConfiguration,
 
-                    generator,
-                    startGenerationTask,
-                    isGenerating,
-                    setIsGenerating,
-                    webRWKVLLMInfer,
+            generator: generator,
+            startGenerationTask: startGenerationTask.current,
+            isGenerating,
+            setIsGenerating,
+            webRWKVLLMInfer,
 
-                    selectedModelTitle,
-                    loadingModelTitle,
+            selectedModelTitle,
+            loadingModelTitle,
 
-                    completion,
+            completion,
 
-                    checkIsModelLoaded,
+            checkIsModelLoaded,
 
-                    currentModelName,
-                    setCurrentModelName,
-                  }}
-                >
-                  {activeMessageBlocks.map((v) => {
-                    return (
-                      <MessageBlock
-                        currentMessageBlock={v}
-                        key={v.key}
-                        // 惨痛教训：用 chatSessionId 和 index 拼接 key ，
-                        // 但 chatSessionId 和 activeMessageList 刷新时序不同，导致在较慢的设备上出现两次渲染，导致错误组件缓存
-                      ></MessageBlock>
-                    );
-                  })}
-                </ChatSession.Provider>
-                <div ref={scrollerEle}></div>
-                <div className="pointer-events-none sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] dark:bg-zinc-900 md:-mt-8 md:h-8"></div>
-              </div>
-            </div>
-            <div
-              key={`chat-textarea`}
-              className="relative flex w-full justify-center px-2 pt-1 md:px-4 md:pb-6"
-            >
-              <button
-                className={cn(
-                  "absolute left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border bg-white py-1.5 pl-2 pr-4 transition-all dark:border-0 dark:bg-zinc-700",
-                  isGenerating ? "-top-16 shadow-lg" : "-top-0 scale-95",
-                )}
-                onClick={() => {
-                  if (isGenerating) {
-                    generator.current.controller.abort();
-                  }
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm6-2.438c0-.724.588-1.312 1.313-1.312h4.874c.725 0 1.313.588 1.313 1.313v4.874c0 .725-.588 1.313-1.313 1.313H9.564a1.312 1.312 0 0 1-1.313-1.313V9.564Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Stop</span>
-              </button>
-              <Modal ref={loadModelModal}>
-                {({ close }) => {
-                  return <ModelLoaderCard close={close}></ModelLoaderCard>;
-                }}
-              </Modal>
-              <ChatTextarea
-                className="bottom-2 w-full max-w-screen-md bg-white dark:bg-zinc-700 md:bottom-4"
-                onSubmit={(value) => {
-                  startGenerationTask(value);
-                }}
-                currentModelName={currentModelName || undefined}
-              ></ChatTextarea>
-            </div>
-          </div>
-          <ChatSessionConfigurationBar
-            isOpen={showSessionConfigurationBar}
-            setIsOpen={setShowSessionConfigurationBar}
-            sessionConfiguration={sessionConfiguration}
-            updateSessionConfiguration={updateSessionConfiguration}
-          ></ChatSessionConfigurationBar>
-        </div>
+            currentModelName,
+            setCurrentModelName,
+          }}
+        >
+          {activeMessageBlocks.map((v) => {
+            return (
+              <MessageBlock
+                currentMessageBlock={v}
+                key={v.key}
+                // 惨痛教训：用 chatSessionId 和 index 拼接 key ，
+                // 但 chatSessionId 和 activeMessageList 刷新时序不同，导致在较慢的设备上出现两次渲染，导致错误组件缓存
+              ></MessageBlock>
+            );
+          })}
+        </ChatSession.Provider>
+        <div ref={scrollerEle}></div>
+        <div className="pointer-events-none sticky bottom-0 -mt-6 h-6 bg-white [mask-image:linear-gradient(180deg,#0000,#ffff)] dark:bg-zinc-900 md:-mt-8 md:h-8"></div>
       </div>
     </div>
   );

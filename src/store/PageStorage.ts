@@ -57,6 +57,9 @@ interface SessionStorage {
 
   showReasoningContentByDefault: boolean | null;
   setShowReasoningContentByDefault: (show: boolean) => void;
+
+  showSideBar: boolean;
+  setShowSideBar: (show: boolean) => void;
 }
 
 const setTheme = (colorMode: "light" | "dark" | "auto") => {
@@ -109,6 +112,11 @@ export const usePageStorage = create<SessionStorage>()(
         showReasoningContentByDefault: null,
         setShowReasoningContentByDefault(show) {
           set({ showReasoningContentByDefault: show });
+        },
+
+        showSideBar: false,
+        setShowSideBar(show) {
+          set({ showSideBar: show });
         },
       };
     },

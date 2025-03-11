@@ -348,7 +348,7 @@ export function ChatTextarea({
             isFocus={isFocus}
             setIsFocus={setIsFocus}
             isKeepFocus={isKeepFocus}
-            className="dark:caret-zinc-300"
+            className="caret-black dark:caret-zinc-300"
           ></PromptTextarea>
         </div>
         <button

@@ -52,6 +52,19 @@ export interface ChatStorage {
     title: string,
     sessionConfiguration: SessionConfiguration,
   ) => string;
+  generateChatSessionObject: ({
+    title,
+    sessionConfiguration,
+  }: {
+    title: string;
+    sessionConfiguration: SessionConfiguration;
+  }) => ChatSession;
+  getSessionConfigurationById: ({ id }: { id: string }) => SessionConfiguration;
+  createChatSessionWithChatSession: ({
+    chatSession,
+  }: {
+    chatSession: ChatSession;
+  }) => string;
   deleteSessionById: (id: string) => void;
   clearAllSession: () => void;
 }
@@ -135,6 +148,35 @@ export const useChatSessionStore = create<ChatStorage>()(
           sessionInformations: sessionInformations,
           sessions: sessions,
         }));
+      },
+      createChatSessionWithChatSession: ({ chatSession }) => {
+        const sessionInformations: ChatSessionInfomation[] = [
+          ...get().sessionInformations,
+          {
+            id: chatSession.id,
+            title: chatSession.title,
+            updateTimestamp: chatSession.updateTimestamp,
+          },
+        ];
+        set((prev) => ({
+          ...prev,
+          sessionInformations: sessionInformations,
+          sessions: { ...prev.sessions, [chatSession.id]: chatSession },
+        }));
+        return chatSession.id;
+      },
+      generateChatSessionObject({ title, sessionConfiguration }) {
+        const session: ChatSession = {
+          id: dangerousUUIDV4(),
+          messageBlock: [],
+          title: title || "New Session",
+          updateTimestamp: Date.now(),
+          sessionConfiguration: sessionConfiguration,
+        };
+        return session;
+      },
+      getSessionConfigurationById({ id }) {
+        return get().sessions[id].sessionConfiguration;
       },
     }),
     {
@@ -315,9 +357,10 @@ export function useChatSession(id: string) {
           };
         },
       ),
-      sessionConfiguration: window.structuredClone(
-        activeSession.current.sessionConfiguration,
-      ),
+      // sessionConfiguration: window.structuredClone(
+      //   activeSession.current.sessionConfiguration,
+      // ),
+      sessionConfiguration: activeSession.current.sessionConfiguration,
     });
   };
 
@@ -338,9 +381,13 @@ export function useChatSession(id: string) {
   const updateSessionConfiguration = (
     sessionConfiguration: SessionConfiguration,
   ) => {
+    // activeSession.current.sessionConfiguration =
+    //   window.structuredClone(sessionConfiguration);
     activeSession.current.sessionConfiguration = sessionConfiguration;
     setSessionConfiguration(activeSession.current.sessionConfiguration);
+    // window.requestAnimationFrame(() => syncSession());
     syncSession();
+    // return activeSession.current.sessionConfiguration;
   };
 
   const getActiveMessages: ({

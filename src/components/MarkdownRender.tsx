@@ -190,7 +190,11 @@ function ThinkBlock({
           enableAnimation && isThinking && "transition-[opacity]",
         )}
         style={{
-          height: showReasoning ? `${reasonContainerHeight}px` : `0px`,
+          height: showReasoning
+            ? reasonContainerHeight > 0
+              ? `${reasonContainerHeight}px`
+              : undefined
+            : `0px`,
         }}
       >
         <div
@@ -199,7 +203,10 @@ function ThinkBlock({
             enableAnimation && isThinking && "transition-[height] duration-300",
           )}
           style={{
-            height: `${reasonContainerHeight}px`,
+            height:
+              reasonContainerHeight > 0
+                ? `${reasonContainerHeight}px`
+                : undefined,
           }}
         >
           <div

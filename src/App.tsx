@@ -10,8 +10,9 @@ import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 
 import { HashRouter } from "react-router";
 import { useChatModelSession } from "./store/ModelStorage";
-import { DEFAULT_API_MODEL, useModelLoader } from "./components/ModelConfigUI";
+import { useModelLoader } from "./components/ModelConfigUI";
 import { Button } from "./components/Button";
+import { DEFAULT_API_MODEL } from "./utils/PresetModels";
 const BASENAME = import.meta.env.VITE_BASE_URL;
 
 function Placeholder() {
