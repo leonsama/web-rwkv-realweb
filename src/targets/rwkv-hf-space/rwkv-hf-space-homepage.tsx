@@ -23,101 +23,7 @@ import { Flipped, Flipper } from "react-flip-toolkit";
 import { usePageStorage } from "../../store/PageStorage";
 import { useLocation, useNavigate } from "react-router";
 import { RWKVMarkdown } from "../../components/MarkdownRender";
-import { RecentModelsCard } from "./components/RecentModelCard";
-
-const AVALIABLE_HF_MODELS: APIModel[] = [
-  {
-    title: "RWKV Latest",
-    name: "rwkv-latest",
-    description: "Latest RWKV Official Online Model",
-    supportReasoning: true,
-    reasoningName: "rwkv-latest:thinking",
-    param: null,
-    dataset: "v2.8",
-    update: "2024/12/10",
-    ctx: "4096",
-    defaultSessionConfiguration: {
-      stopTokens: DEFAULT_STOP_TOKENS,
-      stopWords: DEFAULT_STOP_WORDS,
-      maxTokens: 2048,
-      systemPrompt: null,
-      defaultSamplerConfig: {
-        temperature: 2.0,
-        top_p: 0.5,
-        presence_penalty: 0.5,
-        count_penalty: 0.5,
-        half_life: 200,
-      },
-    },
-    APIParam: {
-      baseUrl: "https://sparkleman-rwkv-hf-space.hf.space/api/v1",
-      key: "sk-test",
-    },
-    from: "API",
-    defaultMode: "reasoning",
-  },
-  {
-    title: "RWKV7 World 0.1B",
-    name: "RWKV-x070-World-0.1B-v2.8-20241210-ctx4096",
-    description: "RWKV7 World 0.1B",
-    supportReasoning: false,
-    reasoningName: null,
-    param: null,
-    dataset: "v2.8",
-    update: "2024/12/10",
-    ctx: "4096",
-    defaultSessionConfiguration: {
-      stopTokens: DEFAULT_STOP_TOKENS,
-      stopWords: DEFAULT_STOP_WORDS,
-      maxTokens: 2048,
-      systemPrompt: null,
-      defaultSamplerConfig: {
-        temperature: 2.0,
-        top_p: 0.5,
-        presence_penalty: 0.5,
-        count_penalty: 0.5,
-        half_life: 200,
-      },
-    },
-    APIParam: {
-      baseUrl: "https://sparkleman-rwkv-hf-space.hf.space/api/v1",
-      key: "sk-test",
-    },
-    from: "API",
-    defaultMode: "generate",
-  },
-  {
-    title: "RWKV7 G1 0.1B",
-    name: "rwkv7-g1-0.1b-20250307-ctx4096",
-    description:
-      "A tiny but impressive inference model with only 0.1B parameters. ",
-    supportReasoning: true,
-    reasoningName: "rwkv7-g1-0.1b-20250307-ctx4096:thinking",
-    param: null,
-    dataset: "v2.8",
-    update: "2024/12/10",
-    ctx: "4096",
-    defaultSessionConfiguration: {
-      stopTokens: DEFAULT_STOP_TOKENS,
-      stopWords: DEFAULT_STOP_WORDS,
-      maxTokens: 2048,
-      systemPrompt: null,
-      defaultSamplerConfig: {
-        temperature: 2.0,
-        top_p: 0.5,
-        presence_penalty: 0.5,
-        count_penalty: 0.5,
-        half_life: 200,
-      },
-    },
-    APIParam: {
-      baseUrl: "https://sparkleman-rwkv-hf-space.hf.space/api/v1",
-      key: "sk-test",
-    },
-    from: "API",
-    defaultMode: "reasoning",
-  },
-];
+import { AVALIABLE_HF_MODELS } from "./rwkv-hf-space-models";
 
 export function RWKVHfSpaceHomePage({
   ref = createRef<HTMLDivElement>(),
@@ -158,7 +64,7 @@ export function RWKVHfSpaceHomePage({
       <div className="flex w-full max-w-screen-md flex-1 flex-col gap-4">
         <h1
           className={cn(
-            "mt-40 select-none text-4xl sm:text-6xl font-medium text-slate-300 min-[345px]:mt-28 xl:mt-36 xl:text-7xl",
+            "mt-40 select-none text-4xl font-medium text-slate-300 min-[345px]:mt-28 sm:text-6xl xl:mt-36 xl:text-7xl",
             showUI
               ? "motion-translate-y-in-75 motion-opacity-in-0"
               : "motion-translate-y-out-75 motion-opacity-out-0",
@@ -285,7 +191,7 @@ export function RWKVHfSpaceHomePage({
                   APIModels={AVALIABLE_HF_MODELS}
                   showUI={showUI}
                 ></RecentModelsCard> */}
-                <h1 className="mb-2 mt-7 text-2xl font-semibold">About RWKV</h1>
+                <h1 className="mb-2 mt-3 text-2xl font-semibold">About RWKV</h1>
                 <p className="my-4 text-base/7">
                   RWKV (pronounced RwaKuv) is an RNN with great LLM performance
                   and parallelizable like a Transformer. We are at RWKV7-G1
