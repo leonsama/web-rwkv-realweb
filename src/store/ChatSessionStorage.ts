@@ -41,6 +41,7 @@ export interface MessageContent {
   rank: number;
   modelName: string | null;
   timestamp: number;
+  completionId: string | null;
 }
 
 export interface ChatStorage {
@@ -182,6 +183,30 @@ export const useChatSessionStore = create<ChatStorage>()(
     {
       name: "webrwkv-session-storage",
       storage: createJSONStorage(() => localStorage),
+      version: 1,
+      migrate(persistedState, version) {
+        let currentVersion = version;
+        if (currentVersion === 0) {
+          currentVersion = 1;
+          // Add completionId
+          Object.keys((persistedState as ChatStorage).sessions).forEach(
+            (sessionId) => {
+              (persistedState as ChatStorage).sessions[sessionId].messageBlock =
+                (persistedState as ChatStorage).sessions[
+                  sessionId
+                ].messageBlock.map((messageBlock) => {
+                  messageBlock.messageContents =
+                    messageBlock.messageContents.map((messageContent) => {
+                      messageContent.completionId = null;
+                      return messageContent;
+                    });
+                  return messageBlock;
+                });
+            },
+          );
+        }
+        return persistedState;
+      },
     },
   ),
   // )
@@ -286,6 +311,7 @@ export function useChatSession(id: string) {
           rank: 0,
           modelName: null,
           timestamp: Date.now(),
+          completionId: null,
         },
       ],
     };
@@ -339,6 +365,7 @@ export function useChatSession(id: string) {
                 rank,
                 modelName,
                 timestamp,
+                completionId,
               }: CurrentMessageContent) => {
                 return {
                   id,
@@ -351,6 +378,7 @@ export function useChatSession(id: string) {
                   rank,
                   modelName,
                   timestamp,
+                  completionId,
                 };
               },
             ),

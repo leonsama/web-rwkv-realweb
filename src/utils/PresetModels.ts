@@ -37,40 +37,72 @@ export const DEFAULT_API_MODEL: APIModel = {
   defaultMode: "reasoning",
 };
 
-export const LOCAL_API_MODEL: APIModel = {
-  title: "RWKV Latest Local",
-  name: "rwkv-latest:local",
-  description: "For local debug",
-  supportReasoning: true,
-  reasoningName: "rwkv-latest:thinking:local",
-  param: null,
-  dataset: "v2.8",
-  update: "2024/12/10",
-  ctx: "4096",
-  defaultSessionConfiguration: {
-    stopTokens: DEFAULT_STOP_TOKENS,
-    stopWords: DEFAULT_STOP_WORDS,
-    maxTokens: 2048,
-    systemPrompt: null,
-    defaultSamplerConfig: {
-      temperature: 2.0,
-      top_p: 0.3,
-      presence_penalty: 0.5,
-      count_penalty: 0.5,
-      half_life: 200,
+export const LOCAL_API_MODELS: APIModel[] = [
+  {
+    title: "RWKV Latest Local",
+    name: "rwkv-latest:local",
+    description: "For local debug",
+    supportReasoning: true,
+    reasoningName: "rwkv-latest:thinking:local",
+    param: null,
+    dataset: "v2.8",
+    update: "2024/12/10",
+    ctx: "4096",
+    defaultSessionConfiguration: {
+      stopTokens: DEFAULT_STOP_TOKENS,
+      stopWords: DEFAULT_STOP_WORDS,
+      maxTokens: 2048,
+      systemPrompt: null,
+      defaultSamplerConfig: {
+        temperature: 2.0,
+        top_p: 0.3,
+        presence_penalty: 0.5,
+        count_penalty: 0.5,
+        half_life: 200,
+      },
     },
+    APIParam: {
+      baseUrl: "http://127.0.0.1:8000/api/v1",
+      key: "sk-test",
+    },
+    from: "API",
+    defaultMode: "generate",
   },
-  APIParam: {
-    baseUrl: "http://127.0.0.1:8000/api/v1",
-    key: "sk-test",
+  {
+    title: "RWKV7 G1 1.5B 16% trained",
+    name: "RWKV7-G1-1.5B-16%trained-20250308-ctx4k",
+    description: "Local",
+    supportReasoning: true,
+    reasoningName: "RWKV7-G1-1.5B-16%trained-20250308-ctx4k:thinking",
+    param: null,
+    dataset: "v2.8",
+    update: "2025/03/08",
+    ctx: "4096",
+    defaultSessionConfiguration: {
+      stopTokens: DEFAULT_STOP_TOKENS,
+      stopWords: DEFAULT_STOP_WORDS,
+      maxTokens: 4096,
+      systemPrompt: null,
+      defaultSamplerConfig: {
+        temperature: 2.0,
+        top_p: 0.3,
+        presence_penalty: 0.5,
+        count_penalty: 0.5,
+        half_life: 200,
+      },
+    },
+    APIParam: {
+      baseUrl: "http://127.0.0.1:8000/api/v1",
+      key: "sk-test",
+    },
+    from: "API",
+    defaultMode: "reasoning",
   },
-  from: "API",
-  defaultMode: "generate",
-};
+];
 
 export const ONLINE_API_MODELS = [
   DEFAULT_API_MODEL,
-  ...(import.meta.env.DEV ? [LOCAL_API_MODEL] : []),
+  ...(import.meta.env.DEV ? LOCAL_API_MODELS : []),
 ];
 
 export const DEFAULT_SYSTEM_PROMPT = `system: You are an AI assistant powered by the RWKV7 model, and you will communicate with users in markdown text format as per their requests. RWKV (pronounced RWaKuV) is an RNN that delivers performance on par with GPT-level large language models (LLMs) and can be trained directly like a GPT Transformer (parallelizable). RWKV combines the best features of RNNs and Transformers: excellent performance, constant memory usage, constant inference generation speed, "infinite" ctxlen, and free sentence embeddings, all while being 100% free of self-attention mechanisms.`;

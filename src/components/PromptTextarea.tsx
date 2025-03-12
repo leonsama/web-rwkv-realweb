@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import styles from "./PromptTextarea.module.css";
-import { replace } from "react-router";
 
 const globalConfig = {
   cover: true,

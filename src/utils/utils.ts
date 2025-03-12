@@ -212,3 +212,25 @@ export function useSuspendUntilValid<T>(state: T, onSuspend?: () => void) {
 
   return suspendUntilValid;
 }
+
+export function removeOuterThinkTags(text: string): string {
+  if (text.startsWith("<think>")) {
+    let count = 1;
+    let endIndex = -1;
+    for (let i = 7; i < text.length; i++) {
+      if (text.substring(i, i + 7) === "<think>") {
+        count++;
+      } else if (text.substring(i, i + 8) === "</think>") {
+        count--;
+        if (count === 0) {
+          endIndex = i + 8;
+          break;
+        }
+      }
+    }
+    if (endIndex !== -1) {
+      return text.substring(endIndex);
+    }
+  }
+  return text;
+}

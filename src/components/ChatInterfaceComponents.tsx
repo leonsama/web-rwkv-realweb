@@ -138,13 +138,20 @@ export function MessageInformationViewer({
           }
         </div>
       </Entry>
-      <Entry label="Chat Time" className="text-nowrap">
+      <Entry label="Date" className="text-nowrap">
         <div className="w-full">
           {new Date(
             currentMessageBlock.messageContents[
               currentMessageBlock.activeMessageContentIndex
             ].timestamp,
           ).toLocaleString()}
+        </div>
+      </Entry>
+      <Entry label="Completion ID" className="text-nowrap">
+        <div className="w-full">
+          {currentMessageBlock.messageContents[
+            currentMessageBlock.activeMessageContentIndex
+          ].completionId || "-"}
         </div>
       </Entry>
     </Card>
@@ -213,6 +220,7 @@ export function AssistantContent({
       rank: 0,
       modelName: selectedModelTitle,
       timestamp: Date.now(),
+      completionId: null,
     });
 
     const activeMessageContentIndex =
@@ -239,7 +247,7 @@ export function AssistantContent({
         sessionConfiguration.defaultSamplerConfig.presence_penalty,
       count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
       penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
-      enableReasoning: webRWKVLLMInfer.isEnableReasoning,
+      enableReasoning: webRWKVLLMInfer.current.isEnableReasoning,
     });
 
     let result = "";
@@ -249,6 +257,9 @@ export function AssistantContent({
         result;
       currentMessageBlock.messageContents[activeMessageContentIndex].modelName =
         chunk.model;
+      currentMessageBlock.messageContents[
+        activeMessageContentIndex
+      ].completionId = chunk.completionId;
       setCurrentModelName(chunk.model);
       updateCurrentMessageBlock(currentMessageBlock);
     }
@@ -1048,11 +1059,13 @@ export function ChatInterface({
     currentChatSessionId,
   } = useChatSession(chatSessionId);
 
-  const { llmModel: webRWKVLLMInfer, loadingModelTitle } = useChatModelSession(
-    (s) => s,
-  );
-  const { selectedModelTitle, completion, defaultSessionConfiguration } =
-    useWebRWKVChat(webRWKVLLMInfer);
+  const { llmModel, loadingModelTitle } = useChatModelSession((s) => s);
+  const {
+    selectedModelTitle,
+    completion,
+    defaultSessionConfiguration,
+    currentInferPort: webRWKVLLMInfer,
+  } = useWebRWKVChat(llmModel);
 
   //   const [showSessionConfigurationBar, setShowSessionConfigurationBar] =
   //     useState(false);
@@ -1127,7 +1140,7 @@ export function ChatInterface({
         sessionConfiguration.defaultSamplerConfig.presence_penalty,
       count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
       penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
-      enableReasoning: webRWKVLLMInfer.isEnableReasoning,
+      enableReasoning: webRWKVLLMInfer.current.isEnableReasoning,
     });
     resultBlock.messageContents[activeMessageContentIndex].modelName =
       selectedModelTitle;
@@ -1138,6 +1151,8 @@ export function ChatInterface({
       resultBlock.messageContents[activeMessageContentIndex].content = result;
       resultBlock.messageContents[activeMessageContentIndex].modelName =
         chunk.model;
+      resultBlock.messageContents[activeMessageContentIndex].completionId =
+        chunk.completionId;
       setCurrentModelName(chunk.model);
       updateCurrentMessageBlock(resultBlock);
     }

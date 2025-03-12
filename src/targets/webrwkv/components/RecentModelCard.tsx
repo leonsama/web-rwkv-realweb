@@ -41,7 +41,6 @@ export function RecentModelsCard({
       .filter((v) =>
         showCachedOnly ? v.from === "API" || v.cached === true : true,
       );
-    console.log(newRenderList);
     setRenderList(newRenderList);
   }, [recentModels, showCachedOnly]);
 

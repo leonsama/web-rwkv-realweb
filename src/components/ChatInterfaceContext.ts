@@ -24,7 +24,8 @@ export const ChatSession = createContext<
       validate: (currentState: string | null) => boolean,
     ) => Promise<void>;
 
-    webRWKVLLMInfer: InferPortInterface;
+    webRWKVLLMInfer: React.MutableRefObject<InferPortInterface>
+    ;
 
     currentModelName: string | null;
     setCurrentModelName: (name: string) => void;

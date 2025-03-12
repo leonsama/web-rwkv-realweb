@@ -3,7 +3,7 @@ import { Comlink } from "./comlink-helper";
 import WebRWKVWorker from "./web-rwkv.worker?worker";
 import { WEB_RWKV_WASM_PORT } from "./web-rwkv.worker";
 import { Sampler } from "./types";
-import { CustomError } from "../utils/utils";
+import { CustomError, removeOuterThinkTags } from "../utils/utils";
 import { APIModelParam } from "../components/ModelConfigUI";
 
 export interface SessionConfiguration {
@@ -19,15 +19,7 @@ export type CompletionMessage =
   | { text: string };
 
 export type CompletionGenerator = {
-  [Symbol.asyncIterator]: () => AsyncGenerator<
-    {
-      type: "token";
-      word: string;
-      model: string;
-    },
-    void,
-    unknown
-  >;
+  [Symbol.asyncIterator]: () => InferPortGenerator;
   controller: {
     abort(): void;
   };
@@ -157,21 +149,26 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
       throw new Error("messages and prompt cannot be used at the same time");
     }
 
+    const formattedMessage =
+      messages && formatMessages(messages, enableReasoning);
+
     // 格式化prompt参数
     const formattedPrompt =
       prompt !== undefined
         ? prompt
-        : `${formatPromptObject(messages!)}\n\n${new_message_role}:${enableReasoning ? " <think" : ""}`;
+        : `${formatPromptObject(formattedMessage!)}\n\n${new_message_role}:${enableReasoning ? " <think" : ""}`;
 
     const generator = {
       [Symbol.asyncIterator]: async function* () {
         const innerCompletion = currentInferPort.current.completion(
           {
             max_tokens,
-            messages: messages?.filter((v) => !v.hasOwnProperty("text")) as {
-              role: string;
-              content: string;
-            }[],
+            messages:
+              formattedMessage &&
+              (formattedMessage.filter((v) => !v.hasOwnProperty("text")) as {
+                role: string;
+                content: string;
+              }[]),
             prompt: formattedPrompt,
             temperature,
             top_p,
@@ -216,13 +213,38 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
   };
 }
 
+function formatMessages(
+  messages: CompletionMessage[],
+  removeThinkTag: boolean = false,
+): CompletionMessage[] {
+  return messages.map((v) => {
+    if ("text" in v && v.text.trim() !== "") {
+      v.text = v.text.trim();
+      return v;
+    } else if ("role" in v) {
+      if (v.role.toLocaleLowerCase() === "user") {
+        v.content = cleanChatPrompt(v.content);
+      } else if (v.role.toLocaleLowerCase() === "assistant") {
+        v.content = removeThinkTag
+          ? removeOuterThinkTags(v.content)
+          : v.content;
+      }
+      v.content = v.content.trim();
+
+      return v;
+    } else {
+      throw new CustomError("MessageError", v);
+    }
+  });
+}
+
 export function formatPromptObject(prompt: CompletionMessage[]) {
   return prompt
     .map((v) => {
       if ("text" in v && v.text.trim() !== "") {
         return v.text.trim();
       } else if ("role" in v) {
-        return `${v.role}: ${cleanChatPrompt(v.content)}`;
+        return `${v.role}: ${v.content}`;
       } else {
         throw new CustomError("MessageError", v);
       }
@@ -233,6 +255,17 @@ export function formatPromptObject(prompt: CompletionMessage[]) {
 export function cleanChatPrompt(prompt: string) {
   return prompt.trim().replace(/\n+/g, "\n");
 }
+
+type InferPortGenerator = AsyncGenerator<
+  {
+    type: "token" | string;
+    word: string;
+    model: string;
+    completionId: string | null;
+  },
+  void,
+  unknown
+>;
 
 export interface InferPortInterface {
   portType: string;
@@ -272,15 +305,7 @@ export interface InferPortInterface {
       enableReasoning?: boolean;
     },
     signal?: AbortSignal,
-  ): AsyncGenerator<
-    {
-      type: "token";
-      word: string;
-      model: string;
-    },
-    void,
-    unknown
-  >;
+  ): InferPortGenerator;
 }
 
 export class WebRWKVInferPort implements InferPortInterface {
@@ -399,15 +424,7 @@ export class WebRWKVInferPort implements InferPortInterface {
       stop_words?: string[];
     },
     signal?: AbortSignal,
-  ): AsyncGenerator<
-    {
-      type: "token";
-      word: string;
-      model: string;
-    },
-    void,
-    unknown
-  > {
+  ) {
     if (!this.worker) {
       throw new Error("worker not initialized");
     }
@@ -459,6 +476,7 @@ export class WebRWKVInferPort implements InferPortInterface {
           type: "token",
           word: result.word,
           model: this.selectedModelTitle,
+          completionId: null,
         };
       }
       if (result.type === "completion") {
@@ -466,6 +484,7 @@ export class WebRWKVInferPort implements InferPortInterface {
           type: "token",
           word: result.word,
           model: this.selectedModelTitle,
+          completionId: null,
         };
       }
       if (signal?.aborted) {
@@ -553,15 +572,7 @@ export class APIInferPort implements InferPortInterface {
       messages?: { role: string; content: string }[];
     },
     signal?: AbortSignal,
-  ): AsyncGenerator<
-    {
-      type: "token";
-      word: string;
-      model: string;
-    },
-    void,
-    unknown
-  > {
+  ) {
     if (!this.APIModelParam) {
       throw new Error("APIParam not initialized");
     }
@@ -656,6 +667,7 @@ export class APIInferPort implements InferPortInterface {
                       type: "token",
                       word: `<think>`,
                       model: data.model,
+                      completionId: data.id,
                     };
                   } else if (content !== "" && isThinking) {
                     isThinking = false;
@@ -663,12 +675,14 @@ export class APIInferPort implements InferPortInterface {
                       type: "token",
                       word: `</think>`,
                       model: data.model,
+                      completionId: data.id,
                     };
                   }
                   yield {
                     type: "token",
                     word: `${reasoningContent}${content}`,
                     model: data.model,
+                    completionId: data.id,
                   };
                 } catch (e) {
                   console.error("Failed to parse SSE data:", e);
