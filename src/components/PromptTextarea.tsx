@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import styles from "./PromptTextarea.module.css";
+import { replace } from "react-router";
 
 const globalConfig = {
   cover: true,
@@ -80,6 +81,14 @@ export const PromptTextarea = ({
       {
         re: /<br>$/,
         replace: "<br><br>",
+      },
+      {
+        re: /</g,
+        replace: "&lt;",
+      },
+      {
+        re: />/g,
+        replace: "&gt;",
       },
       ...(config.cover ? textContentFilter : []),
     ].forEach((e) => {

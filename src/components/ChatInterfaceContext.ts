@@ -40,7 +40,7 @@ export const ChatInterfaceContext = createContext<{
   generator: React.MutableRefObject<CompletionGenerator>;
 
   currentModelName: string | null;
-  setCurrentModelName: (name: string) => void;
+  setCurrentModelName: (name: string | null) => void;
 
   checkIsModelLoaded: (
     validate: (currentState: string | null) => boolean,
