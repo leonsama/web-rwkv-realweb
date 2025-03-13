@@ -13,7 +13,6 @@ import { useChatModelSession } from "./store/ModelStorage";
 import { useModelLoader } from "./components/ModelConfigUI";
 import { Button } from "./components/Button";
 import { DEFAULT_API_MODEL } from "./utils/PresetModels";
-import { AVALIABLE_HF_MODELS } from "./targets/rwkv-hf-space/rwkv-hf-space-models";
 const BASENAME = import.meta.env.VITE_BASE_URL;
 
 import { Trans } from "@lingui/react/macro";
@@ -103,11 +102,16 @@ export function App() {
       !chatModelSession.llmModel.selectedModelTitle
     ) {
       console.log("Load API Model");
-      if (import.meta.env.VITE_TARGET === "rwkv-hf-space") {
-        fromAPI(AVALIABLE_HF_MODELS[0]);
-      } else {
-        fromAPI(DEFAULT_API_MODEL);
-      }
+      (async () => {
+        const { AVALIABLE_HF_MODELS } = await import(
+          "./targets/rwkv-hf-space/rwkv-hf-space-models"
+        );
+        if (import.meta.env.VITE_TARGET === "rwkv-hf-space") {
+          fromAPI(AVALIABLE_HF_MODELS[0]);
+        } else {
+          fromAPI(DEFAULT_API_MODEL);
+        }
+      })();
     }
   }, []);
 

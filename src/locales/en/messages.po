@@ -41,7 +41,11 @@ msgstr "A Cutting-Edge, RNN-Inspired Large Language Model"
 msgid "A model with the same filename exists in the cache. Overwrite the cache?"
 msgstr "A model with the same filename exists in the cache. Overwrite the cache?"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:240
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:13
+msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
+msgstr "A tiny but impressive reasoning model with only 0.1B parameters. "
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:231
 msgid "About RWKV"
 msgstr "About RWKV"
 
@@ -95,7 +99,7 @@ msgstr "Cached Model Details"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:183
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:184
 msgid "Chat with RWKV"
 msgstr "Chat with RWKV"
 
@@ -293,7 +297,7 @@ msgstr "Loaded model"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:237
 #: src/targets/webrwkv/components/RecentModelCard.tsx:263
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:120
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:121
 #: src/components/ModelConfigUI.tsx:1102
 #: src/components/ModelConfigUI.tsx:1132
 #: src/components/ModelConfigUI.tsx:1297
@@ -301,7 +305,7 @@ msgstr "Loaded model"
 msgid "Loading"
 msgstr "Loading"
 
-#: src/App.tsx:28
+#: src/App.tsx:27
 msgid "Loading..."
 msgstr "Loading..."
 
@@ -346,7 +350,7 @@ msgstr "No"
 msgid "No Cache"
 msgstr "No Cache"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:66
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:67
 #: src/components/ModelConfigUI.tsx:996
 #: src/components/ModelConfigUI.tsx:1195
 msgid "No description."
@@ -361,12 +365,12 @@ msgstr "No model loaded"
 msgid "No Recent Models"
 msgstr "No Recent Models"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:221
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:217
 msgid "Note: These models are not fully trained, and performance may not be as expected."
 msgstr "Note: These models are not fully trained, and performance may not be as expected."
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:185
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:90
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:91
 #: src/components/ModelConfigUI.tsx:1020
 #: src/components/ModelConfigUI.tsx:1219
 msgid "Online"
@@ -376,7 +380,7 @@ msgstr "Online"
 msgid "Online Models"
 msgstr "Online Models"
 
-#: src/App.tsx:76
+#: src/App.tsx:75
 msgid "OOPS..."
 msgstr "OOPS..."
 
@@ -393,7 +397,7 @@ msgid "Reading Model"
 msgstr "Reading Model"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:174
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:79
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:80
 #: src/components/ModelConfigUI.tsx:1009
 #: src/components/ModelConfigUI.tsx:1208
 #: src/components/ChatTextarea.tsx:415
@@ -420,17 +424,25 @@ msgstr "Reset"
 msgid "Reset All Data"
 msgstr "Reset All Data"
 
-#: src/App.tsx:90
+#: src/App.tsx:89
 msgid "Return to home page"
 msgstr "Return to home page"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:178
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:179
 msgid "RNN-Inspired Large Language Model"
 msgstr "RNN-Inspired Large Language Model"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:243
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:234
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:78
+msgid "RWKV G1 2.9B has shown promising potential in the early stages of training."
+msgstr "RWKV G1 2.9B has shown promising potential in the early stages of training."
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:48
+msgid "RWKV7 G1 1.5B shows amazing performance early in training."
+msgstr "RWKV7 G1 1.5B shows amazing performance early in training."
 
 #: src/components/ChatInterfaceComponents.tsx:646
 msgid "Sampler Options"
@@ -446,7 +458,7 @@ msgstr "Select / Drop a .st / .prefab file"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:242
 #: src/targets/webrwkv/components/RecentModelCard.tsx:268
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:124
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:125
 #: src/components/ModelConfigUI.tsx:1108
 #: src/components/ModelConfigUI.tsx:1138
 #: src/components/ModelConfigUI.tsx:1302
@@ -484,7 +496,7 @@ msgstr "Single file only"
 msgid "Size"
 msgstr "Size"
 
-#: src/App.tsx:79
+#: src/App.tsx:78
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
@@ -535,7 +547,7 @@ msgid "Unload"
 msgstr "Unload"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:270
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:126
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:127
 #: src/components/ModelConfigUI.tsx:1140
 #: src/components/ModelConfigUI.tsx:1330
 msgid "Use"

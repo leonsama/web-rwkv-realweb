@@ -26,6 +26,7 @@ import { RWKVMarkdown } from "../../components/MarkdownRender";
 import {
   AVALIABLE_HF_MODELS,
   AVALIABLE_TEMP_HF_MODELS,
+  RWKV_G1_MODELS,
 } from "./rwkv-hf-space-models";
 import { Details } from "../../components/Details";
 
@@ -205,40 +206,30 @@ export function RWKVHfSpaceHomePage({
                 </svg>
               }
             >
-              {AVALIABLE_HF_MODELS.map((v, k) => (
+              <h2 className="mb-2 mt-3 pl-2 text-2xl font-semibold">RWKV G1</h2>
+              {RWKV_G1_MODELS.map((v, k) => (
                 <ModelCard key={k} model={v}></ModelCard>
               ))}
-              <Details
-                summary={
-                  <div>
-                    <Trans>Temp Latest Traininng Models</Trans>
-                  </div>
-                }
-                onTrigger={(e) => setShowTempModel}
-                className="flex flex-col gap-4 px-2 py-2"
-              >
-                <p className="px-2 text-sm font-semibold">
-                  <Trans>
-                    Note: These models are not fully trained, and performance
-                    may not be as expected.
-                  </Trans>
-                </p>
-                {AVALIABLE_TEMP_HF_MODELS.map((v, k) => (
-                  <ModelCard
-                    key={k}
-                    model={v}
-                    className="bg-slate-100 dark:bg-zinc-600"
-                  ></ModelCard>
-                ))}
-              </Details>
+              <h2 className="mb-2 mt-3 pl-2 text-2xl font-semibold">
+                <Trans>Temp Latest Traininng Models</Trans>
+              </h2>
+              <p className="pl-2 text-sm font-semibold">
+                <Trans>
+                  Note: These models are not fully trained, and performance may
+                  not be as expected.
+                </Trans>
+              </p>
+              {AVALIABLE_TEMP_HF_MODELS.map((v, k) => (
+                <ModelCard key={k} model={v}></ModelCard>
+              ))}
               <Entry className="block">
                 {/* <RecentModelsCard
                   APIModels={AVALIABLE_HF_MODELS}
                   showUI={showUI}
                 ></RecentModelsCard> */}
-                <h1 className="mb-2 mt-3 text-2xl font-semibold">
+                <h2 className="mb-2 mt-3 text-2xl font-semibold">
                   <Trans>About RWKV</Trans>
-                </h1>
+                </h2>
                 <p className="my-4 text-base/7">
                   <Trans>
                     RWKV (pronounced RwaKuv) is an RNN with great LLM
