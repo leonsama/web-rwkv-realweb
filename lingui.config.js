@@ -9,4 +9,9 @@ export default defineConfig({
       include: ["src"],
     },
   ],
+  fallbackLocales: {
+    "zh-CN": ["zh"],
+    "zh-Hant": ["zh"],
+    default: "en",
+  },
 });
