@@ -36,7 +36,7 @@ msgstr "<0>URL<1>*</1></0>"
 
 #: src/targets/webrwkv/webrwkv-homepage.tsx:103
 msgid "A Cutting-Edge, RNN-Inspired Large Language Model"
-msgstr "受RNN启发的前沿大型语言模型"
+msgstr "受RNN启发的前沿大语言模型"
 
 #: src/components/ModelConfigUI.tsx:188
 msgid "A model with the same filename exists in the cache. Overwrite the cache?"
@@ -430,7 +430,7 @@ msgstr "返回首页"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:179
 msgid "RNN-Inspired Large Language Model"
-msgstr "类 RNN 大型语言模型"
+msgstr "类 RNN 大语言模型"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:234
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
