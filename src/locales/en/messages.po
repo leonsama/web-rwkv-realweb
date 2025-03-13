@@ -17,7 +17,7 @@ msgstr ""
 msgid " or <0>Your Device</0>"
 msgstr " or <0>Your Device</0>"
 
-#: src/pages/settings.tsx:364
+#: src/pages/settings.tsx:376
 msgid " Reset"
 msgstr " Reset"
 
@@ -45,7 +45,7 @@ msgstr "A model with the same filename exists in the cache. Overwrite the cache?
 msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
 msgstr "A tiny but impressive reasoning model with only 0.1B parameters. "
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:231
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:232
 msgid "About RWKV"
 msgstr "About RWKV"
 
@@ -65,15 +65,15 @@ msgstr "Always Display Pannel?"
 msgid "Always display the session configuration pannel when entering a chat session?"
 msgstr "Always display the session configuration pannel when entering a chat session?"
 
-#: src/pages/settings.tsx:253
+#: src/pages/settings.tsx:265
 msgid "Always open session configuration pannel"
 msgstr "Always open session configuration pannel"
 
-#: src/pages/settings.tsx:191
+#: src/pages/settings.tsx:204
 msgid "Appearance"
 msgstr "Appearance"
 
-#: src/pages/settings.tsx:248
+#: src/pages/settings.tsx:260
 msgid "Auto"
 msgstr "Auto"
 
@@ -107,24 +107,24 @@ msgstr "Cached Model Details"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:184
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:185
 msgid "Chat with RWKV"
 msgstr "Chat with RWKV"
 
-#: src/pages/settings.tsx:329
-#: src/pages/settings.tsx:358
+#: src/pages/settings.tsx:341
+#: src/pages/settings.tsx:370
 msgid "Clear"
 msgstr "Clear"
 
-#: src/pages/settings.tsx:322
+#: src/pages/settings.tsx:334
 msgid "Clear all conversations"
 msgstr "Clear all conversations"
 
-#: src/pages/settings.tsx:356
+#: src/pages/settings.tsx:368
 msgid "Clear Cache"
 msgstr "Clear Cache"
 
-#: src/pages/settings.tsx:166
+#: src/pages/settings.tsx:179
 msgid "Click to open Model loader"
 msgstr "Click to open Model loader"
 
@@ -133,7 +133,7 @@ msgstr "Click to open Model loader"
 msgid "Close"
 msgstr "Close"
 
-#: src/pages/settings.tsx:233
+#: src/pages/settings.tsx:245
 msgid "Color preference"
 msgstr "Color preference"
 
@@ -141,7 +141,7 @@ msgstr "Color preference"
 msgid "Completion Options"
 msgstr "Completion Options"
 
-#: src/pages/settings.tsx:57
+#: src/pages/settings.tsx:70
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -149,7 +149,7 @@ msgstr "Confirm"
 msgid "Content"
 msgstr "Content"
 
-#: src/pages/settings.tsx:216
+#: src/pages/settings.tsx:228
 msgid "Current Language"
 msgstr "English"
 
@@ -165,11 +165,11 @@ msgstr "Current Model: <0>{currentModelName}</0>"
 msgid "Custom URL"
 msgstr "Custom URL"
 
-#: src/pages/settings.tsx:245
+#: src/pages/settings.tsx:257
 msgid "Dark"
 msgstr "Dark"
 
-#: src/pages/settings.tsx:304
+#: src/pages/settings.tsx:316
 msgid "Data"
 msgstr "Data"
 
@@ -178,7 +178,7 @@ msgid "Date"
 msgstr "Date"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
-#: src/pages/settings.tsx:79
+#: src/pages/settings.tsx:92
 #: src/components/ModelConfigUI.tsx:627
 #: src/components/ChatInterfaceComponents.tsx:952
 msgid "Default: No"
@@ -246,16 +246,16 @@ msgstr "How many major planets are there in the Solar System?"
 msgid "Inference engine for RWKV implemented in pure WebGPU"
 msgstr "Inference engine for RWKV implemented in pure WebGPU"
 
-#: src/pages/settings.tsx:203
+#: src/pages/settings.tsx:216
 msgid "Language"
 msgstr "Language"
 
-#: src/pages/settings.tsx:138
+#: src/pages/settings.tsx:151
 msgid "Language Model"
 msgstr "Language Model"
 
 #. placeholder {0}: import.meta.env.VITE_GIT_COMMIT_DATE
-#: src/pages/settings.tsx:375
+#: src/pages/settings.tsx:387
 msgid "Last Commit at {0}"
 msgstr "Last Commit at {0}"
 
@@ -271,7 +271,7 @@ msgstr "Learn more about RWKV7"
 msgid "Learn more about WEBRWKV"
 msgstr "Learn more about WEBRWKV"
 
-#: src/pages/settings.tsx:242
+#: src/pages/settings.tsx:254
 msgid "Light"
 msgstr "Light"
 
@@ -304,7 +304,7 @@ msgstr "Load model from custom URL"
 msgid "Load Models from <0>Web</0> {0}."
 msgstr "Load Models from <0>Web</0> {0}."
 
-#: src/pages/settings.tsx:150
+#: src/pages/settings.tsx:163
 msgid "Loaded model"
 msgstr "Loaded model"
 
@@ -322,7 +322,7 @@ msgstr "Loading"
 msgid "Loading..."
 msgstr "Loading..."
 
-#: src/pages/settings.tsx:371
+#: src/pages/settings.tsx:383
 msgid "Made with ♥ by Leon"
 msgstr "Made with ♥ by Leon"
 
@@ -351,9 +351,9 @@ msgid "New Chat"
 msgstr "New Chat"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:71
-#: src/pages/settings.tsx:89
-#: src/pages/settings.tsx:273
-#: src/pages/settings.tsx:298
+#: src/pages/settings.tsx:102
+#: src/pages/settings.tsx:285
+#: src/pages/settings.tsx:310
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
 #: src/components/ChatInterfaceComponents.tsx:962
@@ -370,7 +370,7 @@ msgstr "No Cache"
 msgid "No description."
 msgstr "No description."
 
-#: src/pages/settings.tsx:151
+#: src/pages/settings.tsx:164
 msgid "No model loaded"
 msgstr "No model loaded"
 
@@ -379,7 +379,7 @@ msgstr "No model loaded"
 msgid "No Recent Models"
 msgstr "No Recent Models"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:217
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:218
 msgid "Note: These models are not fully trained, and performance may not be as expected."
 msgstr "Note: These models are not fully trained, and performance may not be as expected."
 
@@ -426,7 +426,7 @@ msgstr "Recent"
 msgid "Recent Models"
 msgstr "Recent Models"
 
-#: src/pages/settings.tsx:68
+#: src/pages/settings.tsx:81
 #: src/components/ChatInterfaceComponents.tsx:661
 #: src/components/ChatInterfaceComponents.tsx:755
 #: src/components/ChatInterfaceComponents.tsx:783
@@ -434,7 +434,7 @@ msgstr "Recent Models"
 msgid "Reset"
 msgstr "Reset"
 
-#: src/pages/settings.tsx:362
+#: src/pages/settings.tsx:374
 msgid "Reset All Data"
 msgstr "Reset All Data"
 
@@ -442,11 +442,11 @@ msgstr "Reset All Data"
 msgid "Return to home page"
 msgstr "Return to home page"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:179
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:180
 msgid "RNN-Inspired Large Language Model"
 msgstr "RNN-Inspired Large Language Model"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:234
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:235
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 
@@ -489,7 +489,7 @@ msgstr "Selected Model: {0}"
 msgid "Session Configuration"
 msgstr "Session Configuration"
 
-#: src/pages/settings.tsx:135
+#: src/pages/settings.tsx:148
 #: src/components/Bar.tsx:481
 msgid "Settings"
 msgstr "Settings"
@@ -498,7 +498,7 @@ msgstr "Settings"
 msgid "Show reasoning"
 msgstr "Show reasoning"
 
-#: src/pages/settings.tsx:278
+#: src/pages/settings.tsx:290
 msgid "Show reasoning content by default"
 msgstr "Show reasoning content by default"
 
@@ -535,7 +535,7 @@ msgstr "Stop Words & Stop Tokens"
 msgid "Tell me about the Eiffel Tower."
 msgstr "Tell me about the Eiffel Tower."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:214
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:215
 msgid "Temp Latest Traininng Models"
 msgstr "Temp Latest Traininng Models"
 
@@ -548,20 +548,20 @@ msgstr "Thinking..."
 msgid "This model is not cached; load from the web?"
 msgstr "This model is not cached; load from the web?"
 
-#: src/pages/settings.tsx:73
+#: src/pages/settings.tsx:86
 msgid "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
 msgstr "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
 
-#: src/pages/settings.tsx:334
+#: src/pages/settings.tsx:346
 msgid "Total cache size"
 msgstr "Total cache size"
 
-#: src/pages/settings.tsx:158
+#: src/pages/settings.tsx:171
 msgid "Unload"
 msgstr "Unload"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:270
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:127
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:128
 #: src/components/ModelConfigUI.tsx:1140
 #: src/components/ModelConfigUI.tsx:1330
 msgid "Use"
@@ -576,9 +576,9 @@ msgid "What can I help you today?"
 msgstr "What can I help you today?"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:79
-#: src/pages/settings.tsx:97
-#: src/pages/settings.tsx:270
-#: src/pages/settings.tsx:295
+#: src/pages/settings.tsx:110
+#: src/pages/settings.tsx:282
+#: src/pages/settings.tsx:307
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
 #: src/components/ChatInterfaceComponents.tsx:970

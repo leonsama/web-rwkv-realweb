@@ -122,10 +122,10 @@ function ModelCard({
             ) : [v.title, v.name, v.reasoningName].includes(
                 selectedModelTitle,
               ) ? (
-                <span className="text-yellow-600"><Trans>Use</Trans></span>
+                <span className="text-yellow-600"><Trans>Selected</Trans></span>
               
             ) : (
-              <Trans>Selected</Trans>
+              <Trans>Use</Trans>
             )}
           </Button>
         </div>

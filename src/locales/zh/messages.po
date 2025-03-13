@@ -18,7 +18,7 @@ msgstr ""
 msgid " or <0>Your Device</0>"
 msgstr "或<0>你的设备</0>"
 
-#: src/pages/settings.tsx:364
+#: src/pages/settings.tsx:376
 msgid " Reset"
 msgstr "重置"
 
@@ -46,7 +46,7 @@ msgstr "缓存中已存在同名模型。是否覆盖缓存？"
 msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
 msgstr "仅有 0.1B 参数的推理模型，小而惊艳。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:231
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:232
 msgid "About RWKV"
 msgstr "关于 RWKV"
 
@@ -66,15 +66,15 @@ msgstr "始终显示面板吗？"
 msgid "Always display the session configuration pannel when entering a chat session?"
 msgstr "进入聊天会话时始终显示会话配置面板吗？"
 
-#: src/pages/settings.tsx:253
+#: src/pages/settings.tsx:265
 msgid "Always open session configuration pannel"
 msgstr "始终打开会话配置面板"
 
-#: src/pages/settings.tsx:191
+#: src/pages/settings.tsx:204
 msgid "Appearance"
 msgstr "外观"
 
-#: src/pages/settings.tsx:248
+#: src/pages/settings.tsx:260
 msgid "Auto"
 msgstr "自动"
 
@@ -108,24 +108,24 @@ msgstr "缓存模型详情"
 msgid "Cancel"
 msgstr "取消"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:184
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:185
 msgid "Chat with RWKV"
 msgstr "与 RWKV 交互"
 
-#: src/pages/settings.tsx:329
-#: src/pages/settings.tsx:358
+#: src/pages/settings.tsx:341
+#: src/pages/settings.tsx:370
 msgid "Clear"
 msgstr "清除"
 
-#: src/pages/settings.tsx:322
+#: src/pages/settings.tsx:334
 msgid "Clear all conversations"
 msgstr "清除所有对话"
 
-#: src/pages/settings.tsx:356
+#: src/pages/settings.tsx:368
 msgid "Clear Cache"
 msgstr "清除缓存"
 
-#: src/pages/settings.tsx:166
+#: src/pages/settings.tsx:179
 msgid "Click to open Model loader"
 msgstr "点击打开模型加载器"
 
@@ -134,7 +134,7 @@ msgstr "点击打开模型加载器"
 msgid "Close"
 msgstr "关闭"
 
-#: src/pages/settings.tsx:233
+#: src/pages/settings.tsx:245
 msgid "Color preference"
 msgstr "颜色偏好"
 
@@ -142,7 +142,7 @@ msgstr "颜色偏好"
 msgid "Completion Options"
 msgstr "生成选项"
 
-#: src/pages/settings.tsx:57
+#: src/pages/settings.tsx:70
 msgid "Confirm"
 msgstr "确认"
 
@@ -150,7 +150,7 @@ msgstr "确认"
 msgid "Content"
 msgstr "内容"
 
-#: src/pages/settings.tsx:216
+#: src/pages/settings.tsx:228
 msgid "Current Language"
 msgstr "中文"
 
@@ -166,11 +166,11 @@ msgstr "当前模型: <0>{currentModelName}</0>"
 msgid "Custom URL"
 msgstr "自定义 URL"
 
-#: src/pages/settings.tsx:245
+#: src/pages/settings.tsx:257
 msgid "Dark"
 msgstr "深色"
 
-#: src/pages/settings.tsx:304
+#: src/pages/settings.tsx:316
 msgid "Data"
 msgstr "数据"
 
@@ -179,7 +179,7 @@ msgid "Date"
 msgstr "日期"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
-#: src/pages/settings.tsx:79
+#: src/pages/settings.tsx:92
 #: src/components/ModelConfigUI.tsx:627
 #: src/components/ChatInterfaceComponents.tsx:952
 msgid "Default: No"
@@ -246,16 +246,16 @@ msgstr "太阳系中有多少颗主要行星？"
 msgid "Inference engine for RWKV implemented in pure WebGPU"
 msgstr "基于纯WebGPU实现的RWKV推理引擎"
 
-#: src/pages/settings.tsx:203
+#: src/pages/settings.tsx:216
 msgid "Language"
 msgstr "语言"
 
-#: src/pages/settings.tsx:138
+#: src/pages/settings.tsx:151
 msgid "Language Model"
 msgstr "语言模型"
 
 #. placeholder {0}: import.meta.env.VITE_GIT_COMMIT_DATE
-#: src/pages/settings.tsx:375
+#: src/pages/settings.tsx:387
 msgid "Last Commit at {0}"
 msgstr "最后提交于 {0}"
 
@@ -271,7 +271,7 @@ msgstr "了解更多关于RWKV7的信息"
 msgid "Learn more about WEBRWKV"
 msgstr "了解更多关于WEBRWKV的信息"
 
-#: src/pages/settings.tsx:242
+#: src/pages/settings.tsx:254
 msgid "Light"
 msgstr "浅色"
 
@@ -304,7 +304,7 @@ msgstr "从自定义 URL 加载模型"
 msgid "Load Models from <0>Web</0> {0}."
 msgstr "从<0>网络</0>{0}加载模型 。"
 
-#: src/pages/settings.tsx:150
+#: src/pages/settings.tsx:163
 msgid "Loaded model"
 msgstr "已加载模型"
 
@@ -322,7 +322,7 @@ msgstr "加载中"
 msgid "Loading..."
 msgstr "加载中..."
 
-#: src/pages/settings.tsx:371
+#: src/pages/settings.tsx:383
 msgid "Made with ♥ by Leon"
 msgstr "Made with ♥ by Leon"
 
@@ -351,9 +351,9 @@ msgid "New Chat"
 msgstr "新对话"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:71
-#: src/pages/settings.tsx:89
-#: src/pages/settings.tsx:273
-#: src/pages/settings.tsx:298
+#: src/pages/settings.tsx:102
+#: src/pages/settings.tsx:285
+#: src/pages/settings.tsx:310
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
 #: src/components/ChatInterfaceComponents.tsx:962
@@ -370,7 +370,7 @@ msgstr "无缓存"
 msgid "No description."
 msgstr "无描述。"
 
-#: src/pages/settings.tsx:151
+#: src/pages/settings.tsx:164
 msgid "No model loaded"
 msgstr "未加载模型"
 
@@ -379,7 +379,7 @@ msgstr "未加载模型"
 msgid "No Recent Models"
 msgstr "没有最近使用的模型"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:217
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:218
 msgid "Note: These models are not fully trained, and performance may not be as expected."
 msgstr "注意：这些模型尚未完全训练，性能可能不如预期。"
 
@@ -426,7 +426,7 @@ msgstr "最近"
 msgid "Recent Models"
 msgstr "最近使用的模型"
 
-#: src/pages/settings.tsx:68
+#: src/pages/settings.tsx:81
 #: src/components/ChatInterfaceComponents.tsx:661
 #: src/components/ChatInterfaceComponents.tsx:755
 #: src/components/ChatInterfaceComponents.tsx:783
@@ -434,7 +434,7 @@ msgstr "最近使用的模型"
 msgid "Reset"
 msgstr "重置"
 
-#: src/pages/settings.tsx:362
+#: src/pages/settings.tsx:374
 msgid "Reset All Data"
 msgstr "重置所有数据"
 
@@ -442,11 +442,11 @@ msgstr "重置所有数据"
 msgid "Return to home page"
 msgstr "返回首页"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:179
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:180
 msgid "RNN-Inspired Large Language Model"
 msgstr "类 RNN 大语言模型"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:234
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:235
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV（发音为 RwaKuv）是一种具有出色 LLM 性能的 RNN，并且可以像 Transformer 一样并行化。我们目前处于 RWKV7-G1 \"GooseOne\" 推理模型阶段。"
 
@@ -489,7 +489,7 @@ msgstr "已选模型: {0}"
 msgid "Session Configuration"
 msgstr "会话配置"
 
-#: src/pages/settings.tsx:135
+#: src/pages/settings.tsx:148
 #: src/components/Bar.tsx:481
 msgid "Settings"
 msgstr "设置"
@@ -498,7 +498,7 @@ msgstr "设置"
 msgid "Show reasoning"
 msgstr "显示推理过程"
 
-#: src/pages/settings.tsx:278
+#: src/pages/settings.tsx:290
 msgid "Show reasoning content by default"
 msgstr "默认显示推理内容"
 
@@ -535,7 +535,7 @@ msgstr "停止词与停止词元（Token）"
 msgid "Tell me about the Eiffel Tower."
 msgstr "请帮我介绍埃菲尔铁塔。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:214
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:215
 msgid "Temp Latest Traininng Models"
 msgstr "正在训练的临时模型"
 
@@ -548,20 +548,20 @@ msgstr "思考中..."
 msgid "This model is not cached; load from the web?"
 msgstr "此模型未缓存；是否从网络加载？"
 
-#: src/pages/settings.tsx:73
+#: src/pages/settings.tsx:86
 msgid "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
 msgstr "这将清除您的聊天记录和缓存，并可能解决一些问题。此操作不可逆。"
 
-#: src/pages/settings.tsx:334
+#: src/pages/settings.tsx:346
 msgid "Total cache size"
 msgstr "总缓存大小"
 
-#: src/pages/settings.tsx:158
+#: src/pages/settings.tsx:171
 msgid "Unload"
 msgstr "卸载"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:270
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:127
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:128
 #: src/components/ModelConfigUI.tsx:1140
 #: src/components/ModelConfigUI.tsx:1330
 msgid "Use"
@@ -575,9 +575,9 @@ msgid "What can I help you today?"
 msgstr "今天有什么可以帮您的？"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:79
-#: src/pages/settings.tsx:97
-#: src/pages/settings.tsx:270
-#: src/pages/settings.tsx:295
+#: src/pages/settings.tsx:110
+#: src/pages/settings.tsx:282
+#: src/pages/settings.tsx:307
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
 #: src/components/ChatInterfaceComponents.tsx:970
