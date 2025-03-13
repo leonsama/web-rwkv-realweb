@@ -16,35 +16,18 @@ switch (import.meta.env.VITE_TARGET) {
 
 import { App } from "./App";
 import { StrictMode } from "react";
-import { ToastContainer } from "react-toastify";
 import { PositionObserver } from "./utils/position-observer";
-import { PopupRoot } from "./components/popup/utils";
 
-import {
-  detect,
-  fromUrl,
-  fromStorage,
-  fromNavigator,
-} from "@lingui/detect-locale";
+
+// i18n
 import { i18n } from "@lingui/core";
-import { I18nProvider } from "@lingui/react";
-import { i18nSetLocale } from "./i18n";
-
 import { messages as enMessages } from "./locales/en/messages";
+import { detectLocals, i18nSetLocale } from "./i18n";
 i18n.load({
   en: enMessages,
 });
-i18n.activate("cs");
-
-const LOCALE_DEFAULT_FALLBACK = () => "en";
-i18nSetLocale(
-  detect(
-    fromUrl("lang"),
-    fromStorage("lang"),
-    fromNavigator(),
-    LOCALE_DEFAULT_FALLBACK,
-  )!,
-);
+i18n.activate("en");
+i18nSetLocale(detectLocals()[0]);
 
 const app = createRoot(document.getElementById("root")!);
 
@@ -52,10 +35,6 @@ PositionObserver;
 
 app.render(
   <StrictMode>
-    <I18nProvider i18n={i18n}>
-      <App />
-      <ToastContainer></ToastContainer>
-      <PopupRoot></PopupRoot>
-    </I18nProvider>
+    <App />
   </StrictMode>,
 );

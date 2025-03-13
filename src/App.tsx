@@ -16,6 +16,10 @@ import { DEFAULT_API_MODEL } from "./utils/PresetModels";
 const BASENAME = import.meta.env.VITE_BASE_URL;
 
 import { Trans } from "@lingui/react/macro";
+import { I18nProvider } from "@lingui/react";
+import { ToastContainer } from "react-toastify";
+import { PopupRoot } from "./components/popup/utils";
+import { i18n } from "@lingui/core";
 
 function Placeholder() {
   return (
@@ -116,19 +120,23 @@ export function App() {
   }, []);
 
   return (
-    <Suspense fallback={<Placeholder></Placeholder>}>
-      <div className="flex h-screen w-screen select-none bg-white text-black transition-[background-color] duration-500 dark:bg-zinc-900 dark:text-zinc-300">
-        <Bar></Bar>
+    <I18nProvider i18n={i18n}>
+      <Suspense fallback={<Placeholder></Placeholder>}>
+        <div className="flex h-screen w-screen select-none bg-white text-black transition-[background-color] duration-500 dark:bg-zinc-900 dark:text-zinc-300">
+          <Bar></Bar>
 
-        <div className="relative flex-1 overflow-auto">
-          <ErrorBoundary fallbackRender={fallbackRender}>
-            <WebRWKVBanner></WebRWKVBanner>
-            <HashRouter basename={BASENAME}>
-              <PageContent></PageContent>
-            </HashRouter>
-          </ErrorBoundary>
+          <div className="relative flex-1 overflow-auto">
+            <ErrorBoundary fallbackRender={fallbackRender}>
+              <WebRWKVBanner></WebRWKVBanner>
+              <HashRouter basename={BASENAME}>
+                <PageContent></PageContent>
+              </HashRouter>
+            </ErrorBoundary>
+          </div>
         </div>
-      </div>
-    </Suspense>
+        <ToastContainer></ToastContainer>
+        <PopupRoot></PopupRoot>
+      </Suspense>
+    </I18nProvider>
   );
 }
