@@ -19,6 +19,8 @@ import { useChatSessionStore } from "../store/ChatSessionStorage";
 import { usePageStorage } from "../store/PageStorage";
 import { Button } from "../components/Button";
 
+import { Trans } from "@lingui/react/macro";
+
 export default function Settings() {
   const webRWKVLLMInfer = useChatModelSession((s) => s.llmModel);
   const { selectedModelTitle, unloadModel } = useWebRWKVChat(webRWKVLLMInfer);
@@ -52,7 +54,7 @@ export default function Settings() {
           clearAllSession();
         }}
       >
-        确认删除
+        <Trans>Confirm</Trans>
       </MenuItem>
     </Menu>,
   );
@@ -62,14 +64,20 @@ export default function Settings() {
       const { isReset } = await createModalForm(
         <Card className="m-4 max-w-sm bg-white">
           <CardTitle className="bg-white text-red-500">
-            <span className="text-lg font-bold">Reset</span>
+            <span className="text-lg font-bold">
+              <Trans>Reset</Trans>
+            </span>
           </CardTitle>
           <div className="flex flex-col gap-1 text-wrap text-sm text-gray-600">
             <p>
-              This will clear your chat history and cache, and may resolve some
-              issues. This is irreversible.
+              <Trans>
+                This will clear your chat history and cache, and may resolve
+                some issues. This is irreversible.
+              </Trans>
             </p>
-            <p className="mt-4 text-gray-400">Default: No</p>
+            <p className="mt-4 text-gray-400">
+              <Trans>Default: No</Trans>
+            </p>
           </div>
           <div className="-mb-1 flex justify-end gap-2">
             <Button
@@ -78,7 +86,7 @@ export default function Settings() {
               name="isReset"
               value={"No"}
             >
-              No
+              <Trans>No</Trans>
             </Button>
             <Button
               type="submit"
@@ -86,7 +94,7 @@ export default function Settings() {
               name="isReset"
               value={"Yes"}
             >
-              Yes
+              <Trans>Yes</Trans>
             </Button>
           </div>
         </Card>,
@@ -123,9 +131,11 @@ export default function Settings() {
         style={{ scrollbarGutter: "stable both-edges" }}
       >
         <div className="flex w-full max-w-screen-md flex-col gap-4 px-2 motion-translate-y-in-[20%] motion-opacity-in-[0%] motion-duration-[0.4s] md:gap-8">
-          <h1 className="py-2 pb-8 pl-4 text-5xl">Settings</h1>
+          <h1 className="py-2 pb-8 pl-4 text-5xl">
+            <Trans>Settings</Trans>
+          </h1>
           <Card
-            title="Language Model"
+            title={<Trans>Language Model</Trans>}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -137,22 +147,24 @@ export default function Settings() {
               </svg>
             }
           >
-            <Entry label="Loaded model">
-              {selectedModelTitle || "No model loaded"}
+            <Entry label={<Trans>Loaded model</Trans>}>
+              {selectedModelTitle || <Trans>No model loaded</Trans>}
               {selectedModelTitle && (
                 <Button
                   onClick={() => {
                     unloadModel();
                   }}
                 >
-                  Unload
+                  <Trans>Unload</Trans>
                 </Button>
               )}
             </Entry>
             <Modal
               trigger={
                 <div className="-mb-1 flex min-h-10 cursor-pointer items-center justify-start gap-2 rounded-xl bg-[image:var(--web-rwkv-title-gradient)] px-2 font-bold text-white transition-all active:scale-[0.98] md:active:scale-[0.98]">
-                  <div className="flex-1">Click To Load Chat Model</div>
+                  <div className="flex-1">
+                    <Trans>Click to open Model loader</Trans>
+                  </div>
                   <div>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +188,7 @@ export default function Settings() {
             </Modal>
           </Card>
           <Card
-            title="Appearance"
+            title={<Trans>Appearance</Trans>}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -188,15 +200,17 @@ export default function Settings() {
               </svg>
             }
           >
-            <Entry label="Language">
+            <Entry label={<Trans>Language</Trans>}>
               <LanguageMenu.ContextMenuTrigger
                 click={true}
                 position="bottom right"
               >
-                <span>English</span>
+                <span>
+                  <Trans>Current Language</Trans>
+                </span>
               </LanguageMenu.ContextMenuTrigger>
             </Entry>
-            <Entry label="Theme">
+            <Entry label={<Trans>Color preference</Trans>}>
               <RadioGroup
                 className="-m-2 h-10 gap-1 bg-slate-200 p-1"
                 value={theme}
@@ -204,13 +218,19 @@ export default function Settings() {
                   setTheme(value);
                 }}
               >
-                <RadioGroupOption value={"light"}>Light</RadioGroupOption>
-                <RadioGroupOption value={"dark"}>Dark</RadioGroupOption>
-                <RadioGroupOption value={"auto"}>Auto</RadioGroupOption>
+                <RadioGroupOption value={"light"}>
+                  <Trans>Light</Trans>
+                </RadioGroupOption>
+                <RadioGroupOption value={"dark"}>
+                  <Trans>Dark</Trans>
+                </RadioGroupOption>
+                <RadioGroupOption value={"auto"}>
+                  <Trans>Auto</Trans>
+                </RadioGroupOption>
               </RadioGroup>
             </Entry>
             <Entry
-              label="Always open session configuration pannel"
+              label={<Trans>Always open session configuration pannel</Trans>}
               className="max-md:text-sm"
             >
               <RadioGroup
@@ -226,12 +246,16 @@ export default function Settings() {
                   setAlwaysOpenSessionConfigurationPannel(value === "Yes");
                 }}
               >
-                <RadioGroupOption value={"Yes"}>Yes</RadioGroupOption>
-                <RadioGroupOption value={"No"}>No</RadioGroupOption>
+                <RadioGroupOption value={"Yes"}>
+                  <Trans>Yes</Trans>
+                </RadioGroupOption>
+                <RadioGroupOption value={"No"}>
+                  <Trans>No</Trans>
+                </RadioGroupOption>
               </RadioGroup>
             </Entry>
             <Entry
-              label="Show reasoning content by default"
+              label={<Trans>Show reasoning content by default</Trans>}
               className="max-md:text-sm"
             >
               <RadioGroup
@@ -247,13 +271,17 @@ export default function Settings() {
                   setShowReasoningContentByDefault(value === "Yes");
                 }}
               >
-                <RadioGroupOption value={"Yes"}>Yes</RadioGroupOption>
-                <RadioGroupOption value={"No"}>No</RadioGroupOption>
+                <RadioGroupOption value={"Yes"}>
+                  <Trans>Yes</Trans>
+                </RadioGroupOption>
+                <RadioGroupOption value={"No"}>
+                  <Trans>No</Trans>
+                </RadioGroupOption>
               </RadioGroup>
             </Entry>
           </Card>
           <Card
-            title="Data"
+            title={<Trans>Data</Trans>}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -271,17 +299,19 @@ export default function Settings() {
               </svg>
             }
           >
-            <Entry label="Clear all conversations">
+            <Entry label={<Trans>Clear all conversations</Trans>}>
               <ClearAllConversationsConfirmMenu.ContextMenuTrigger
                 click={true}
                 position={"bottom right"}
               >
                 {/* <span> */}
-                <Button className="text-red-500">Clear</Button>
+                <Button className="text-red-500">
+                  <Trans>Clear</Trans>
+                </Button>
                 {/* </span> */}
               </ClearAllConversationsConfirmMenu.ContextMenuTrigger>
             </Entry>
-            <Entry label="Cache size">
+            <Entry label={<Trans>Total cache size</Trans>}>
               <Button
                 onClick={async () => {
                   setTotalCacheSize(await getTotalCacheSize());
@@ -303,24 +333,28 @@ export default function Settings() {
                 </svg>
               </Button>
             </Entry>
-            <Entry label="Clear Cache">
+            <Entry label={<Trans>Clear Cache</Trans>}>
               <Button className="text-red-500" onClick={clearAllCache}>
-                Clear
+                <Trans>Clear</Trans>
               </Button>
             </Entry>
             <hr className="border-1"></hr>
-            <Entry label="Reset All Data">
+            <Entry label={<Trans>Reset All Data</Trans>}>
               <Button className="text-red-500" onClick={resetAllData}>
-                Reset
+                <Trans> Reset</Trans>
               </Button>
             </Entry>
           </Card>
           <div className="flex h-36 flex-col items-center justify-center pb-6">
             <h2 className="text-lg text-slate-300">
-              <span>Made with ♥ by Leon</span>
+              <span>
+                <Trans>Made with ♥ by Leon</Trans>
+              </span>
             </h2>
             <h3 className="text-xs text-slate-300">
-              Last Commit at {import.meta.env.VITE_GIT_COMMIT_DATE}
+              <Trans>
+                Last Commit at {import.meta.env.VITE_GIT_COMMIT_DATE}
+              </Trans>
             </h3>
             <h3 className="text-xs text-slate-300">
               {import.meta.env.VITE_GIT_BRANCH} · {import.meta.env.VITE_GIT_SHA}

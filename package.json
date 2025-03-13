@@ -11,13 +11,18 @@
     "build": "pnpm run wasm:build && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "pnpm dlx eslint . --ext .ts,.tsx",
-    "lint:fix": "pnpm dlx eslint --fix . --ext .ts,.tsx"
+    "lint:fix": "pnpm dlx eslint --fix . --ext .ts,.tsx",
+    "extract": "lingui extract",
+    "compile": "lingui compile --typescript"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@lingui/babel-plugin-lingui-macro": "^5.2.0",
+    "@lingui/cli": "^5.2.0",
+    "@lingui/vite-plugin": "^5.2.0",
     "@types/node": "^22.13.9",
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
@@ -25,6 +30,7 @@
     "autoprefixer": "^10.4.20",
     "cross-env": "^7.0.3",
     "eslint": "^9.17.0",
+    "eslint-plugin-lingui": "^0.10.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "eslint-plugin-unused-imports": "^4.1.4",
@@ -42,6 +48,9 @@
     "vite-plugin-wasm-pack": "^0.1.12"
   },
   "dependencies": {
+    "@lingui/core": "^5.2.0",
+    "@lingui/detect-locale": "^5.2.0",
+    "@lingui/react": "^5.2.0",
     "@mdxeditor/editor": "^3.21.2",
     "@types/react-transition-group": "^4.4.12",
     "clsx": "^2.1.1",

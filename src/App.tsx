@@ -16,13 +16,17 @@ import { DEFAULT_API_MODEL } from "./utils/PresetModels";
 import { AVALIABLE_HF_MODELS } from "./targets/rwkv-hf-space/rwkv-hf-space-models";
 const BASENAME = import.meta.env.VITE_BASE_URL;
 
+import { Trans } from "@lingui/react/macro";
+
 function Placeholder() {
   return (
     <div className="flex h-screen w-screen select-none flex-col items-center justify-center">
       <p className="text-3xl font-medium text-slate-50">
         {import.meta.env.VITE_PAGE_DEFAULT_TITLE}
       </p>
-      <p className="text-2xl font-medium text-slate-50">Loading...</p>
+      <p className="text-2xl font-medium text-slate-50">
+        <Trans>Loading...</Trans>
+      </p>
     </div>
   );
 }
@@ -68,8 +72,12 @@ function fallbackRender({ error, resetErrorBoundary }: FallbackProps) {
       role="alert"
       className="flex h-full w-full flex-col items-center justify-center gap-2 p-2"
     >
-      <p className="text-5xl font-light">OOPS...</p>
-      <p>Something went wrong</p>
+      <p className="text-5xl font-light">
+        <Trans>OOPS...</Trans>
+      </p>
+      <p>
+        <Trans>Something went wrong</Trans>
+      </p>
       <div className="max-w-md select-text overflow-auto rounded-lg bg-red-100 p-2">
         <code style={{ color: "red" }}>{error.message}</code>
       </div>
@@ -79,7 +87,7 @@ function fallbackRender({ error, resetErrorBoundary }: FallbackProps) {
           window.location.reload();
         }}
       >
-        Return to home page
+        <Trans>Return to home page</Trans>
       </Button>
     </div>
   );

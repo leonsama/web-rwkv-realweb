@@ -12,6 +12,8 @@ import { RadioGroup, RadioGroupOption } from "../../../components/RadioGroup";
 import { cn, isEnterIndex } from "../../../utils/utils";
 import { Flipped, Flipper } from "../../../components/Flipper";
 
+import { Trans } from "@lingui/react/macro";
+
 export function RecentModelsCard({
   recentModels,
   showUI,
@@ -47,11 +49,17 @@ export function RecentModelsCard({
   const shouldLoadFromWeb = createModalForm<{ shoudLoadFromWeb: string }>(
     <Card className="bg-white">
       <CardTitle className="bg-white">
-        <span className="text-lg font-bold">Load file from the web?</span>
+        <span className="text-lg font-bold">
+          <Trans>Load file from the web?</Trans>
+        </span>
       </CardTitle>
       <div className="text-sm text-gray-600">
-        <p>This model is not cached; load from the web?</p>
-        <p className="text-gray-400">Default: No</p>
+        <p>
+          <Trans>This model is not cached; load from the web?</Trans>
+        </p>
+        <p className="text-gray-400">
+          <Trans>Default: No</Trans>
+        </p>
       </div>
       <div className="-mb-1 flex justify-end gap-2">
         <Button
@@ -60,7 +68,7 @@ export function RecentModelsCard({
           name="shoudLoadFromWeb"
           value={"No"}
         >
-          No
+          <Trans>No</Trans>
         </Button>
         <Button
           type="submit"
@@ -68,7 +76,7 @@ export function RecentModelsCard({
           name="shoudLoadFromWeb"
           value={"Yes"}
         >
-          Yes
+          <Trans>Yes</Trans>
         </Button>
       </div>
     </Card>,
@@ -78,14 +86,20 @@ export function RecentModelsCard({
     <Card
       title={
         <>
-          <span>Recent Models</span>
+          <span>
+            <Trans>Recent Models</Trans>
+          </span>
           <RadioGroup
             value={"cached"}
             className="ml-auto h-8 gap-0 bg-slate-200 p-1 text-sm text-gray-600 dark:text-zinc-300"
             onChange={(value) => setShowCachedOnly(value === "cached")}
           >
-            <RadioGroupOption value={"all"}>All</RadioGroupOption>
-            <RadioGroupOption value={"cached"}>Available</RadioGroupOption>
+            <RadioGroupOption value={"all"}>
+              <Trans>All</Trans>
+            </RadioGroupOption>
+            <RadioGroupOption value={"cached"}>
+              <Trans>Available</Trans>
+            </RadioGroupOption>
           </RadioGroup>
         </>
       }
@@ -136,7 +150,9 @@ export function RecentModelsCard({
                 className="selected"
               ></path>
             </svg>
-            <span>No Recent Models</span>
+            <span>
+              <Trans>No Recent Models</Trans>
+            </span>
           </div>
         ) : (
           <div className="-mt-2 flex w-full flex-col gap-1 overflow-auto px-1 py-2 [mask-image:linear-gradient(0deg,_#0000_0px_,#ffff_8px,_#ffff_calc(100%_-_8px),_#0000_100%)] max-md:h-28 md:flex-1">
@@ -155,7 +171,7 @@ export function RecentModelsCard({
                               "border-g rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
                             )}
                           >
-                            Reasoning
+                            <Trans>Reasoning</Trans>
                           </span>
                         </div>
                       )}
@@ -166,14 +182,14 @@ export function RecentModelsCard({
                               "border-g rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
                             )}
                           >
-                            Online
+                            <Trans>Online</Trans>
                           </span>
                         </div>
                       )}
                       {v.cached && (
                         <div>
                           <span className="rounded-3xl border border-green-700 p-0.5 text-xs text-green-700">
-                            Cached
+                            <Trans>Cached</Trans>
                           </span>
                         </div>
                       )}
@@ -217,14 +233,16 @@ export function RecentModelsCard({
                             close!();
                           }}
                         >
-                          {loadingModelTitle === v.name
-                            ? "Loading"
-                            : selectedModelTitle &&
-                                [v.title, v.name, v.reasoningName].includes(
-                                  selectedModelTitle,
-                                )
-                              ? "Selected"
-                              : "Load"}
+                          {loadingModelTitle === v.name ? (
+                            <Trans>Loading</Trans>
+                          ) : selectedModelTitle &&
+                            [v.title, v.name, v.reasoningName].includes(
+                              selectedModelTitle,
+                            ) ? (
+                            <Trans>Selected</Trans>
+                          ) : (
+                            <Trans>Load</Trans>
+                          )}
                         </Button>
                       ) : (
                         <Button
@@ -241,14 +259,16 @@ export function RecentModelsCard({
                             fromAPI(v.loadFromAPIModel!);
                           }}
                         >
-                          {loadingModelTitle === v.name
-                            ? "Loading"
-                            : selectedModelTitle &&
-                                [v.title, v.name, v.reasoningName].includes(
-                                  selectedModelTitle,
-                                )
-                              ? "Selected"
-                              : "Use"}
+                          {loadingModelTitle === v.name ? (
+                            <Trans>Loading</Trans>
+                          ) : selectedModelTitle &&
+                            [v.title, v.name, v.reasoningName].includes(
+                              selectedModelTitle,
+                            ) ? (
+                            <Trans>Selected</Trans>
+                          ) : (
+                            <Trans>Use</Trans>
+                          )}
                         </Button>
                       )}
                     </div>
@@ -266,7 +286,9 @@ export function RecentModelsCard({
                 "-mb-1 flex min-h-10 cursor-pointer items-center justify-start gap-2 rounded-xl bg-[image:var(--web-rwkv-title-gradient)] px-2 font-bold text-white transition-all active:scale-[0.98] md:active:scale-[0.98]",
               )}
             >
-              <div className="flex-1">Open Model Loader</div>
+              <div className="flex-1">
+                <Trans>Open Model Loader</Trans>
+              </div>
               <div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

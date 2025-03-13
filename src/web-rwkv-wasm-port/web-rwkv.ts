@@ -150,13 +150,12 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
     }
 
     const formattedMessage =
-      messages && formatMessages(messages, enableReasoning);
+      messages && formatMessages({ messages, removeThinkTag: enableReasoning });
 
-    // 格式化prompt参数
-    const formattedPrompt =
+    const formattedRWKVPromptStr =
       prompt !== undefined
         ? prompt
-        : `${formatPromptObject(formattedMessage!)}\n\n${new_message_role}:${enableReasoning ? " <think" : ""}`;
+        : `${formatPromptObject(formatMessages({ messages: formattedMessage!, removeThinkTag: enableReasoning, formatForRWKV: true }))}\n\n${new_message_role}:${enableReasoning ? " <think" : ""}`;
 
     const generator = {
       [Symbol.asyncIterator]: async function* () {
@@ -169,7 +168,7 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
                 role: string;
                 content: string;
               }[]),
-            prompt: formattedPrompt,
+            prompt: formattedRWKVPromptStr,
             temperature,
             top_p,
             presence_penalty,
@@ -213,21 +212,28 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
   };
 }
 
-function formatMessages(
-  messages: CompletionMessage[],
-  removeThinkTag: boolean = false,
-): CompletionMessage[] {
+function formatMessages({
+  messages,
+  removeThinkTag = false,
+  formatForRWKV = false,
+}: {
+  messages: CompletionMessage[];
+  removeThinkTag: boolean;
+  formatForRWKV?: boolean;
+}): CompletionMessage[] {
   return messages.map((v) => {
     if ("text" in v && v.text.trim() !== "") {
       v.text = v.text.trim();
       return v;
     } else if ("role" in v) {
-      if (v.role.toLocaleLowerCase() === "user") {
-        v.content = cleanChatPrompt(v.content);
-      } else if (v.role.toLocaleLowerCase() === "assistant") {
+      if (v.role.toLocaleLowerCase() === "assistant") {
         v.content = removeThinkTag
           ? removeOuterThinkTags(v.content)
           : v.content;
+      }
+
+      if (formatForRWKV) {
+        v.content = cleanChatPromptForRWKV(v.content);
       }
       v.content = v.content.trim();
 
@@ -252,7 +258,7 @@ export function formatPromptObject(prompt: CompletionMessage[]) {
     .join("\n\n");
 }
 
-export function cleanChatPrompt(prompt: string) {
+export function cleanChatPromptForRWKV(prompt: string) {
   return prompt.trim().replace(/\n+/g, "\n");
 }
 

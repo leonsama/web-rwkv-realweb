@@ -21,6 +21,8 @@ import { useChatSessionStore } from "../store/ChatSessionStorage";
 import { useShallow } from "zustand/react/shallow";
 import { Slide, toast } from "react-toastify";
 
+import { Trans } from "@lingui/react/macro";
+
 function usePageNavigate() {
   const sessionStorage = usePageStorage((s) => s);
 
@@ -371,7 +373,7 @@ function BarChatRouter() {
                     </svg>
                   </span>
                   <span className={cn("flex-shrink-0 break-keep")}>
-                    New Chat
+                    <Trans>New Chat</Trans>
                   </span>
                 </button>
               </div>
@@ -476,7 +478,7 @@ function BarChatRouter() {
                     </svg>
                   }
                 >
-                  Settings
+                  <Trans>Settings</Trans>
                 </BarButtom>
               </div>
             </>

@@ -17,6 +17,8 @@ import { ReasoningIcon } from "./ChatTextarea";
 import { type KatexOptions } from "katex";
 import { usePageStorage } from "../store/PageStorage";
 
+import { Trans } from "@lingui/react/macro";
+
 const CodeHighlight = lazy(() => import("./CodeHighlight"));
 const KatexRender = lazy(() => import("./KatexRender"));
 
@@ -140,15 +142,15 @@ function ThinkBlock({
           <ReasoningIcon enableReasoning={true}></ReasoningIcon>{" "}
           {isThinking ? (
             <span key={10} className="motion-preset-slide-down-md">
-              Thinking...
+              <Trans>Thinking...</Trans>
             </span>
           ) : showReasoning ? (
             <span key={0} className="motion-preset-slide-down-md">
-              Hide reasoning
+              <Trans>Hide reasoning</Trans>
             </span>
           ) : (
             <span key={1} className="motion-preset-slide-up-md">
-              Show reasoning
+              <Trans>Show reasoning</Trans>
             </span>
           )}
           {showReasoning ? (

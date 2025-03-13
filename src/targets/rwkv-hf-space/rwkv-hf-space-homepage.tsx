@@ -29,6 +29,8 @@ import {
 } from "./rwkv-hf-space-models";
 import { Details } from "../../components/Details";
 
+import { Trans } from "@lingui/react/macro";
+
 function ModelCard({
   model: v,
   className,
@@ -60,7 +62,9 @@ function ModelCard({
         {v.description ? (
           <span>{v.description}</span>
         ) : (
-          <span className="text-gray-500">No description.</span>
+          <span className="text-gray-500">
+            <Trans>No description.</Trans>
+          </span>
         )}
       </div>
       <div className="flex gap-1">
@@ -72,7 +76,7 @@ function ModelCard({
                   "border-g flex items-center rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
                 )}
               >
-                Reasoning
+                <Trans>Reasoning</Trans>
               </span>
             </div>
           )}
@@ -83,7 +87,7 @@ function ModelCard({
                   "border-g flex items-center rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
                 )}
               >
-                Online
+                <Trans>Online</Trans>
               </span>
             </div>
           )}
@@ -112,11 +116,15 @@ function ModelCard({
               fromAPI(v);
             }}
           >
-            {loadingModelTitle === v.title
-              ? "Loading"
-              : [v.title, v.name, v.reasoningName].includes(selectedModelTitle)
-                ? "Selected"
-                : "Use"}
+            {loadingModelTitle === v.title ? (
+              <Trans>Loading</Trans>
+            ) : [v.title, v.name, v.reasoningName].includes(
+                selectedModelTitle,
+              ) ? (
+              <Trans>Selected</Trans>
+            ) : (
+              <Trans>Use</Trans>
+            )}
           </Button>
         </div>
       </div>
@@ -167,12 +175,12 @@ export function RWKVHfSpaceHomePage({
               "motion-preset-fade motion-duration-1000 motion-delay-700",
           )}
         >
-          RNN-Inspired Large Language Model
+          <Trans>RNN-Inspired Large Language Model</Trans>
         </h1>
         <div className={cn("flex flex-1 flex-col pt-4")}>
           <div className="grid gap-2 lg:gap-5">
             <Card
-              title="Chat with RWKV"
+              title={<Trans>Chat with RWKV</Trans>}
               className={cn(
                 "transition-all",
                 isEnterIndex()
@@ -201,13 +209,19 @@ export function RWKVHfSpaceHomePage({
                 <ModelCard key={k} model={v}></ModelCard>
               ))}
               <Details
-                summary={<div>Temp Latest Traininng Models</div>}
+                summary={
+                  <div>
+                    <Trans>Temp Latest Traininng Models</Trans>
+                  </div>
+                }
                 onTrigger={(e) => setShowTempModel}
-                className="flex flex-col gap-4 py-2 px-2"
+                className="flex flex-col gap-4 px-2 py-2"
               >
-                <p className="text-sm font-semibold px-2">
-                  Note: These models are not fully trained, and performance may
-                  not be as expected.
+                <p className="px-2 text-sm font-semibold">
+                  <Trans>
+                    Note: These models are not fully trained, and performance
+                    may not be as expected.
+                  </Trans>
                 </p>
                 {AVALIABLE_TEMP_HF_MODELS.map((v, k) => (
                   <ModelCard
@@ -222,11 +236,15 @@ export function RWKVHfSpaceHomePage({
                   APIModels={AVALIABLE_HF_MODELS}
                   showUI={showUI}
                 ></RecentModelsCard> */}
-                <h1 className="mb-2 mt-3 text-2xl font-semibold">About RWKV</h1>
+                <h1 className="mb-2 mt-3 text-2xl font-semibold">
+                  <Trans>About RWKV</Trans>
+                </h1>
                 <p className="my-4 text-base/7">
-                  RWKV (pronounced RwaKuv) is an RNN with great LLM performance
-                  and parallelizable like a Transformer. We are at RWKV7-G1
-                  "GooseOne" reasoning model.
+                  <Trans>
+                    RWKV (pronounced RwaKuv) is an RNN with great LLM
+                    performance and parallelizable like a Transformer. We are at
+                    RWKV7-G1 "GooseOne" reasoning model.
+                  </Trans>
                 </p>
               </Entry>
             </Card>

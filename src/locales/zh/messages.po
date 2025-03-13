@@ -1,0 +1,559 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-13 16:33+0800\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: @lingui/cli\n"
+
+#: src/components/ModelConfigUI.tsx:949
+msgid " or <0>Your Device</0>"
+msgstr "或<0>你的设备</0>"
+
+#: src/pages/settings.tsx:344
+msgid " Reset"
+msgstr "重置"
+
+#: src/components/ModelConfigUI.tsx:823
+msgid ".st or .prefab file only"
+msgstr "仅支持 .st 或 .prefab 文件"
+
+#: src/components/ChatTextarea.tsx:508
+msgid "<0>Loading... Sit back and relax!</0><1>{loadingModelTitle}</1>"
+msgstr "<0>加载中... 坐和放宽！</0><1>{loadingModelTitle}</1>"
+
+#: src/components/ModelConfigUI.tsx:667
+msgid "<0>URL<1>*</1></0>"
+msgstr "<0>URL<1>*</1></0>"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:103
+msgid "A Cutting-Edge, RNN-Inspired Large Language Model"
+msgstr "受RNN启发的前沿大型语言模型"
+
+#: src/components/ModelConfigUI.tsx:188
+msgid "A model with the same filename exists in the cache. Overwrite the cache?"
+msgstr "缓存中已存在同名模型。是否覆盖缓存？"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:240
+msgid "About RWKV"
+msgstr "关于 RWKV"
+
+#: src/components/ModelConfigUI.tsx:685
+msgid "Advance"
+msgstr "高级"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:98
+msgid "All"
+msgstr "全部"
+
+#: src/pages/settings.tsx:233
+msgid "Always open session configuration pannel"
+msgstr "始终打开会话配置面板"
+
+#: src/pages/settings.tsx:191
+msgid "Appearance"
+msgstr "外观"
+
+#: src/pages/settings.tsx:228
+msgid "Auto"
+msgstr "自动"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:101
+msgid "Available"
+msgstr "可用"
+
+#: src/components/ModelConfigUI.tsx:136
+msgid "Cache Model"
+msgstr "缓存模型"
+
+#: src/components/ModelConfigUI.tsx:184
+msgid "Cache Model Existed"
+msgstr "缓存模型已存在"
+
+#: src/components/ModelConfigUI.tsx:141
+msgid "Cache model file in your browser storage?"
+msgstr "是否将模型文件缓存到浏览器存储中？"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:192
+#: src/components/ModelConfigUI.tsx:1046
+msgid "Cached"
+msgstr "已缓存"
+
+#: src/components/ModelConfigUI.tsx:195
+msgid "Cached Model Details"
+msgstr "缓存模型详情"
+
+#: src/components/ModelConfigUI.tsx:219
+#: src/components/ModelConfigUI.tsx:725
+msgid "Cancel"
+msgstr "取消"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:183
+msgid "Chat with RWKV"
+msgstr "与 RWKV 交互"
+
+#: src/pages/settings.tsx:309
+#: src/pages/settings.tsx:338
+msgid "Clear"
+msgstr "清除"
+
+#: src/pages/settings.tsx:302
+msgid "Clear all conversations"
+msgstr "清除所有对话"
+
+#: src/pages/settings.tsx:336
+msgid "Clear Cache"
+msgstr "清除缓存"
+
+#: src/pages/settings.tsx:166
+msgid "Click to open Model loader"
+msgstr "点击打开模型加载器"
+
+#: src/components/ModelConfigUI.tsx:118
+#: src/components/ModelConfigUI.tsx:795
+msgid "Close"
+msgstr "关闭"
+
+#: src/pages/settings.tsx:213
+msgid "Color preference"
+msgstr "颜色偏好"
+
+#: src/components/ChatInterfaceComponents.tsx:740
+msgid "Completion Options"
+msgstr "完成选项"
+
+#: src/pages/settings.tsx:57
+msgid "Confirm"
+msgstr "确认"
+
+#: src/components/ChatInterfaceComponents.tsx:105
+msgid "Content"
+msgstr "内容"
+
+#: src/pages/settings.tsx:209
+msgid "Current Language"
+msgstr "中文"
+
+#: src/components/ChatTextarea.tsx:433
+msgid "Current Model: <0>{currentModelName}</0>"
+msgstr "当前模型: <0>{currentModelName}</0>"
+
+#: src/components/ModelConfigUI.tsx:662
+msgid "Custom URL"
+msgstr "自定义 URL"
+
+#: src/pages/settings.tsx:225
+msgid "Dark"
+msgstr "深色"
+
+#: src/pages/settings.tsx:284
+msgid "Data"
+msgstr "数据"
+
+#: src/components/ChatInterfaceComponents.tsx:145
+msgid "Date"
+msgstr "日期"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:61
+#: src/pages/settings.tsx:79
+#: src/components/ModelConfigUI.tsx:627
+msgid "Default: No"
+msgstr "默认：否"
+
+#: src/components/ModelConfigUI.tsx:144
+msgid "Default: Yes"
+msgstr "默认：是"
+
+#: src/components/ModelConfigUI.tsx:838
+msgid "Delete"
+msgstr "删除"
+
+#: src/components/ModelConfigUI.tsx:899
+msgid "Device"
+msgstr "设备"
+
+#: src/components/ModelConfigUI.tsx:466
+msgid "Downloading"
+msgstr "下载中"
+
+#: src/components/ModelConfigUI.tsx:401
+msgid "Downloading Model"
+msgstr "下载模型中"
+
+#: src/pages/settings.tsx:209
+#~ msgid "English"
+#~ msgstr "英语"
+
+#: src/components/ModelConfigUI.tsx:98
+#: src/components/ModelConfigUI.tsx:785
+msgid "Error"
+msgstr "错误"
+
+#: src/components/ModelConfigUI.tsx:789
+msgid "Error Message"
+msgstr "错误信息"
+
+#: src/components/ModelConfigUI.tsx:788
+msgid "Error Name"
+msgstr "错误名称"
+
+#: src/components/ModelConfigUI.tsx:450
+msgid "Failed to write model to cache, loading model directly."
+msgstr "无法将模型写入缓存，直接加载模型。"
+
+#: src/components/ModelConfigUI.tsx:197
+msgid "Filename"
+msgstr "文件名"
+
+#: src/components/ModelConfigUI.tsx:200
+msgid "From"
+msgstr "来源"
+
+#: src/components/MarkdownRender.tsx:149
+msgid "Hide reasoning"
+msgstr "隐藏推理过程"
+
+#: src/components/ChatTextarea.tsx:23
+#: src/components/ChatTextarea.tsx:24
+msgid "How many major planets are there in the Solar System?"
+msgstr "太阳系中有多少颗主要行星？"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:133
+msgid "Inference engine for RWKV implemented in pure WebGPU"
+msgstr "基于纯WebGPU实现的RWKV推理引擎"
+
+#: src/pages/settings.tsx:203
+msgid "Language"
+msgstr "语言"
+
+#: src/pages/settings.tsx:138
+msgid "Language Model"
+msgstr "语言模型"
+
+#. placeholder {0}: import.meta.env.VITE_GIT_COMMIT_DATE
+#: src/pages/settings.tsx:355
+msgid "Last Commit at {0}"
+msgstr "最后提交于 {0}"
+
+#: src/components/ModelConfigUI.tsx:206
+msgid "Last Loaded"
+msgstr "上次加载"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:106
+msgid "Learn more about RWKV7"
+msgstr "了解更多关于RWKV7的信息"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:138
+msgid "Learn more about WEBRWKV"
+msgstr "了解更多关于WEBRWKV的信息"
+
+#: src/pages/settings.tsx:222
+msgid "Light"
+msgstr "浅色"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:65
+msgid "LLM In Your Browser"
+msgstr "浏览器里的大语言模型"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:244
+#: src/components/ModelConfigUI.tsx:733
+#: src/components/ModelConfigUI.tsx:1110
+#: src/components/ModelConfigUI.tsx:1304
+msgid "Load"
+msgstr "加载"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:53
+#: src/components/ModelConfigUI.tsx:619
+msgid "Load file from the web?"
+msgstr "是否从网络加载文件？"
+
+#: src/components/ModelConfigUI.tsx:863
+msgid "Load Model"
+msgstr "加载模型"
+
+#: src/components/ModelConfigUI.tsx:1350
+msgid "Load model from custom URL"
+msgstr "从自定义 URL 加载模型"
+
+#. placeholder {0}: import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true" && ( <> <Trans> {" "} or{" "} <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("device"); }} className="font-semibold text-gray-700 underline dark:text-zinc-300" > Your Device </a> </Trans> </> )
+#: src/components/ModelConfigUI.tsx:935
+msgid "Load Models from <0>Web</0> {0}."
+msgstr "从<0>网络</0>{0}加载模型 。"
+
+#: src/pages/settings.tsx:150
+msgid "Loaded model"
+msgstr "已加载模型"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:237
+#: src/targets/webrwkv/components/RecentModelCard.tsx:263
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:120
+#: src/components/ModelConfigUI.tsx:1102
+#: src/components/ModelConfigUI.tsx:1132
+#: src/components/ModelConfigUI.tsx:1297
+#: src/components/ModelConfigUI.tsx:1324
+msgid "Loading"
+msgstr "加载中"
+
+#: src/App.tsx:28
+msgid "Loading..."
+msgstr "加载中..."
+
+#: src/pages/settings.tsx:351
+msgid "Made with ♥ by Leon"
+msgstr "由 Leon 用心制作"
+
+#: src/components/ChatInterfaceComponents.tsx:756
+msgid "Max Output Tokens"
+msgstr "最大输出 Token 数"
+
+#: src/components/ChatInterfaceComponents.tsx:88
+msgid "Message Information"
+msgstr "消息信息"
+
+#: src/components/ChatInterfaceComponents.tsx:136
+msgid "Model Name"
+msgstr "模型名称"
+
+#: src/components/ChatTextarea.tsx:504
+msgid "Model not loaded. Click to open model loader."
+msgstr "模型未加载。点击打开模型加载器。"
+
+#: src/components/ModelConfigUI.tsx:676
+msgid "Name"
+msgstr "名称"
+
+#: src/components/Bar.tsx:376
+msgid "New Chat"
+msgstr "开启新对话"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:71
+#: src/pages/settings.tsx:89
+#: src/pages/settings.tsx:253
+#: src/pages/settings.tsx:278
+#: src/components/ModelConfigUI.tsx:154
+#: src/components/ModelConfigUI.tsx:637
+msgid "No"
+msgstr "否"
+
+#: src/components/ModelConfigUI.tsx:1048
+msgid "No Cache"
+msgstr "无缓存"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:66
+#: src/components/ModelConfigUI.tsx:996
+#: src/components/ModelConfigUI.tsx:1195
+msgid "No description."
+msgstr "无描述。"
+
+#: src/pages/settings.tsx:151
+msgid "No model loaded"
+msgstr "未加载模型"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:154
+#: src/components/ModelConfigUI.tsx:932
+msgid "No Recent Models"
+msgstr "没有最近使用的模型"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:221
+msgid "Note: These models are not fully trained, and performance may not be as expected."
+msgstr "注意：这些模型尚未完全训练，性能可能不如预期。"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:185
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:90
+#: src/components/ModelConfigUI.tsx:1020
+#: src/components/ModelConfigUI.tsx:1219
+msgid "Online"
+msgstr "在线"
+
+#: src/components/ModelConfigUI.tsx:895
+msgid "Online Models"
+msgstr "在线模型"
+
+#: src/App.tsx:76
+msgid "OOPS..."
+msgstr "哎呀..."
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:290
+msgid "Open Model Loader"
+msgstr "打开模型加载器"
+
+#: src/components/ModelConfigUI.tsx:227
+msgid "Overwrite"
+msgstr "覆盖"
+
+#: src/components/ModelConfigUI.tsx:346
+msgid "Reading Model"
+msgstr "读取模型中"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:174
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:79
+#: src/components/ModelConfigUI.tsx:1009
+#: src/components/ModelConfigUI.tsx:1208
+#: src/components/ChatTextarea.tsx:415
+msgid "Reasoning"
+msgstr "推理"
+
+#: src/components/ModelConfigUI.tsx:892
+msgid "Recent"
+msgstr "最近"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:90
+msgid "Recent Models"
+msgstr "最近使用的模型"
+
+#: src/pages/settings.tsx:68
+#: src/components/ChatInterfaceComponents.tsx:658
+#: src/components/ChatInterfaceComponents.tsx:752
+#: src/components/ChatInterfaceComponents.tsx:780
+#: src/components/ChatInterfaceComponents.tsx:817
+msgid "Reset"
+msgstr "重置"
+
+#: src/pages/settings.tsx:342
+msgid "Reset All Data"
+msgstr "重置所有数据"
+
+#: src/App.tsx:90
+msgid "Return to home page"
+msgstr "返回首页"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:178
+msgid "RNN-Inspired Large Language Model"
+msgstr "类 RNN 大型语言模型"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:243
+msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
+msgstr "RWKV（发音为 RwaKuv）是一种具有出色 LLM 性能的 RNN，并且可以像 Transformer 一样并行化。我们目前处于 RWKV7-G1 \"GooseOne\" 推理模型阶段。"
+
+#: src/components/ChatInterfaceComponents.tsx:646
+msgid "Sampler Options"
+msgstr "采样器选项"
+
+#: src/components/ChatInterfaceComponents.tsx:119
+msgid "Sampler params"
+msgstr "采样器参数"
+
+#: src/components/ModelConfigUI.tsx:1401
+msgid "Select / Drop a .st / .prefab file"
+msgstr "选择 / 拖放 .st 或 .prefab 文件"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:242
+#: src/targets/webrwkv/components/RecentModelCard.tsx:268
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:124
+#: src/components/ModelConfigUI.tsx:1108
+#: src/components/ModelConfigUI.tsx:1138
+#: src/components/ModelConfigUI.tsx:1302
+#: src/components/ModelConfigUI.tsx:1328
+msgid "Selected"
+msgstr "已选择"
+
+#. placeholder {0}: currentInferPort.current && (isEnableReasoning ? currentInferPort.current.portType === "api" ? (currentInferPort.current as APIInferPort) .reasoningModelName : currentInferPort.current.selectedModelTitle : currentInferPort.current.selectedModelTitle)
+#: src/components/ChatTextarea.tsx:440
+msgid "Selected Model: {0}"
+msgstr "已选模型: {0}"
+
+#: src/components/ChatInterfaceComponents.tsx:627
+msgid "Session Configuration"
+msgstr "会话配置"
+
+#: src/pages/settings.tsx:135
+#: src/components/Bar.tsx:481
+msgid "Settings"
+msgstr "设置"
+
+#: src/components/MarkdownRender.tsx:153
+msgid "Show reasoning"
+msgstr "显示推理过程"
+
+#: src/pages/settings.tsx:258
+msgid "Show reasoning content by default"
+msgstr "默认显示推理内容"
+
+#: src/components/ModelConfigUI.tsx:817
+msgid "Single file only"
+msgstr "仅支持单个文件"
+
+#: src/components/ModelConfigUI.tsx:203
+msgid "Size"
+msgstr "大小"
+
+#: src/App.tsx:79
+msgid "Something went wrong"
+msgstr "出错了"
+
+#: src/components/ModelConfigUI.tsx:106
+msgid "Stack"
+msgstr "堆栈"
+
+#: src/components/ChatInterfaceComponents.tsx:841
+msgid "Stop Tokens"
+msgstr "停止词元（Token）"
+
+#: src/components/ChatInterfaceComponents.tsx:821
+msgid "Stop Words"
+msgstr "停止词"
+
+#: src/components/ChatInterfaceComponents.tsx:803
+msgid "Stop Words & Stop Tokens"
+msgstr "停止词与停止词元（Token）"
+
+#: src/components/ChatTextarea.tsx:19
+#: src/components/ChatTextarea.tsx:20
+msgid "Tell me about the Eiffel Tower."
+msgstr "请帮我介绍埃菲尔铁塔。"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:214
+msgid "Temp Latest Traininng Models"
+msgstr "正在训练的临时模型"
+
+#: src/components/MarkdownRender.tsx:145
+msgid "Thinking..."
+msgstr "思考中..."
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:58
+#: src/components/ModelConfigUI.tsx:624
+msgid "This model is not cached; load from the web?"
+msgstr "此模型未缓存；是否从网络加载？"
+
+#: src/pages/settings.tsx:73
+msgid "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
+msgstr "这将清除您的聊天记录和缓存，并可能解决一些问题。此操作不可逆。"
+
+#: src/pages/settings.tsx:314
+msgid "Total cache size"
+msgstr "总缓存大小"
+
+#: src/pages/settings.tsx:158
+msgid "Unload"
+msgstr "卸载"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:270
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:126
+#: src/components/ModelConfigUI.tsx:1140
+#: src/components/ModelConfigUI.tsx:1330
+msgid "Use"
+msgstr "使用"
+
+#~ msgid "Web"
+#~ msgstr "网络"
+
+#: src/components/ChatTextarea.tsx:145
+msgid "What can I help you today?"
+msgstr "今天有什么可以帮您的？"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:79
+#: src/pages/settings.tsx:97
+#: src/pages/settings.tsx:250
+#: src/pages/settings.tsx:275
+#: src/components/ModelConfigUI.tsx:162
+#: src/components/ModelConfigUI.tsx:645
+msgid "Yes"
+msgstr "是"

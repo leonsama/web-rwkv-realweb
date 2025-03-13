@@ -32,6 +32,8 @@ import { CSSTransition, SwitchTransition } from "react-transition-group";
 import path from "path";
 import { RWKVHfSpaceHomePage } from "../targets/rwkv-hf-space/rwkv-hf-space-homepage";
 
+import { Trans } from "@lingui/react/macro";
+
 function AnimatedOutlet({ children }: { children: ReactNode }) {
   const [outlet] = useState(children);
   return outlet;

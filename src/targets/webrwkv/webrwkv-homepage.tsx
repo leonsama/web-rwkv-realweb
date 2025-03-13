@@ -19,6 +19,8 @@ import { usePageStorage } from "../../store/PageStorage";
 import { useLocation, useNavigate } from "react-router";
 import { RecentModelsCard } from "./components/RecentModelCard";
 
+import { Trans } from "@lingui/react/macro";
+
 export function WebRWKVHomePage({
   ref = createRef<HTMLDivElement>(),
   ...prop
@@ -60,7 +62,7 @@ export function WebRWKVHomePage({
               "motion-preset-fade motion-duration-1000 motion-delay-700",
           )}
         >
-          LLM In Your Browser
+          <Trans>LLM In Your Browser</Trans>
         </h1>
         <div className={cn("flex flex-1 flex-col justify-center")}>
           <div className="grid gap-2 lg:grid-cols-2 lg:gap-5">
@@ -97,9 +99,11 @@ export function WebRWKVHomePage({
                 window.open("https://github.com/BlinkDL/RWKV-LM", "_blank");
               }}
             >
-              <p>A Cutting-Edge, RNN-Inspired Large Language Model</p>
+              <p>
+                <Trans>A Cutting-Edge, RNN-Inspired Large Language Model</Trans>
+              </p>
               <p className="text-xs text-gray-500 underline">
-                Learn more about RWKV7
+                <Trans>Learn more about RWKV7</Trans>
               </p>
             </Card>
             <Card
@@ -125,9 +129,13 @@ export function WebRWKVHomePage({
                 window.open("https://github.com/cryscan/web-rwkv", "_blank");
               }}
             >
-              <p>Inference engine for RWKV implemented in pure WebGPU</p>
+              <p>
+                <Trans>
+                  Inference engine for RWKV implemented in pure WebGPU
+                </Trans>
+              </p>
               <p className="text-xs text-gray-500 underline">
-                Learn more about WEBRWKV
+                <Trans>Learn more about WEBRWKV</Trans>
               </p>
             </Card>
           </div>

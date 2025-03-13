@@ -25,6 +25,8 @@ import { cn, CustomError, formatFileSize, TIMEOUT_ERROR } from "../utils/utils";
 import { createContextMenu, Menu, MenuItem } from "./popup/ContentMenu";
 import { AVALIABLE_ONLINE_MODEL_LIST } from "../utils/PresetModels";
 
+import { Trans } from "@lingui/react/macro";
+
 export interface RWKVModelWeb {
   title: string;
   name: string;
@@ -92,13 +94,17 @@ export function useModelLoader() {
     await createModalForm(
       <Card className="bg-white">
         <CardTitle className="bg-white">
-          <span className="text-lg font-bold text-red-500">Error</span>
+          <span className="text-lg font-bold text-red-500">
+            <Trans>Error</Trans>
+          </span>
         </CardTitle>
         <Entry label="Name">{error.name}</Entry>
         <Entry label="Message">{error.message}</Entry>
         {error.stack && (
           <details>
-            <summary>Stack</summary>
+            <summary>
+              <Trans>Stack</Trans>
+            </summary>
             <div className="max-w-md overflow-auto rounded-lg bg-red-100 p-2">
               <pre>{error.stack}</pre>
             </div>
@@ -109,7 +115,7 @@ export function useModelLoader() {
             type="submit"
             className="cursor-pointer rounded-xl bg-transparent px-4 py-2 font-semibold active:scale-95"
           >
-            Close
+            <Trans>Close</Trans>
           </Button>
         </div>
       </Card>,
@@ -126,11 +132,17 @@ export function useModelLoader() {
           await createModalForm<{ isCacheModel: string }>(
             <Card className="bg-white">
               <CardTitle className="bg-white">
-                <span className="text-lg font-bold">Cache Model</span>
+                <span className="text-lg font-bold">
+                  <Trans>Cache Model</Trans>
+                </span>
               </CardTitle>
               <div className="text-sm text-gray-600">
-                <p>Cache model file in your browser storage?</p>
-                <p className="text-gray-400">Default: Yes</p>
+                <p>
+                  <Trans>Cache model file in your browser storage?</Trans>
+                </p>
+                <p className="text-gray-400">
+                  <Trans>Default: Yes</Trans>
+                </p>
               </div>
               <div className="-mb-1 flex justify-end gap-2">
                 <Button
@@ -139,7 +151,7 @@ export function useModelLoader() {
                   name="isCacheModel"
                   value={"No"}
                 >
-                  No
+                  <Trans>No</Trans>
                 </Button>
                 <Button
                   type="submit"
@@ -147,7 +159,7 @@ export function useModelLoader() {
                   name="isCacheModel"
                   value={"Yes"}
                 >
-                  Yes
+                  <Trans>Yes</Trans>
                 </Button>
               </div>
             </Card>,
@@ -168,20 +180,30 @@ export function useModelLoader() {
           await createModalForm<{ overwriteExistingModel: string }>(
             <Card className="bg-white">
               <CardTitle className="bg-white">
-                <span className="font-bold">Cache Model Existed</span>
+                <span className="font-bold">
+                  <Trans>Cache Model Existed</Trans>
+                </span>
               </CardTitle>
               <p>
-                A model with the same filename exists in the cache. Overwrite
-                the cache?
+                <Trans>
+                  A model with the same filename exists in the cache. Overwrite
+                  the cache?
+                </Trans>
               </p>
               <details className="flex flex-col">
-                <summary>Cached Model Details</summary>
-                <Entry label="Filename">{checkCacheExist.name}</Entry>
-                <Entry label="From">{checkCacheExist.from}</Entry>
-                <Entry label="Size">
+                <summary>
+                  <Trans>Cached Model Details</Trans>
+                </summary>
+                <Entry label={<Trans>Filename</Trans>}>
+                  {checkCacheExist.name}
+                </Entry>
+                <Entry label={<Trans>From</Trans>}>
+                  {checkCacheExist.from}
+                </Entry>
+                <Entry label={<Trans>Size</Trans>}>
                   {formatFileSize(checkCacheExist.size)}
                 </Entry>
-                <Entry label="Last Loaded">
+                <Entry label={<Trans>Last Loaded</Trans>}>
                   {new Date(
                     checkCacheExist.lastLoadedTimestamp,
                   ).toLocaleString()}
@@ -194,7 +216,7 @@ export function useModelLoader() {
                   name="overwriteExistingModel"
                   value={"Cancel"}
                 >
-                  Cancel
+                  <Trans>Cancel</Trans>
                 </Button>
                 <Button
                   type="submit"
@@ -202,7 +224,7 @@ export function useModelLoader() {
                   name="overwriteExistingModel"
                   value={"Overwrite"}
                 >
-                  Overwrite
+                  <Trans>Overwrite</Trans>
                 </Button>
               </div>
             </Card>,
@@ -321,7 +343,9 @@ export function useModelLoader() {
 
     let isError = false;
 
-    modelLoadTaster.current = toast.loading("Reading Model", { progress: 0 });
+    modelLoadTaster.current = toast.loading(<Trans>Reading Model</Trans>, {
+      progress: 0,
+    });
 
     while (true) {
       const { done, value } = await reader.read();
@@ -374,7 +398,7 @@ export function useModelLoader() {
     customUrl?: boolean,
   ) => {
     console.log("Load model from web:", model);
-    modelLoadTaster.current = toast.loading("Downloading Model");
+    modelLoadTaster.current = toast.loading(<Trans>Downloading Model</Trans>);
 
     const modelName =
       name || `${model.name} ${model.param} ${model.dataset} CTX${model.ctx}`;
@@ -422,7 +446,11 @@ export function useModelLoader() {
             showError(
               new CustomError(
                 "Cache Failure",
-                "Model cache failed, loading model directly.",
+                (
+                  <Trans>
+                    Failed to write model to cache, loading model directly.
+                  </Trans>
+                ),
               ),
             );
           }
@@ -434,7 +462,9 @@ export function useModelLoader() {
             : undefined,
           render: (
             <div>
-              <span>Downloading</span>
+              <span>
+                <Trans>Downloading</Trans>
+              </span>
               {contentLength
                 ? ` ${formatFileSize(receivedLength)}/${formatFileSize(contentLength)} ${((receivedLength / contentLength) * 100).toFixed(2)}%`
                 : ""}
@@ -585,11 +615,17 @@ export function ModelLoaderCard({
   const shouldLoadFromWeb = createModalForm<{ shoudLoadFromWeb: string }>(
     <Card className="bg-white">
       <CardTitle className="bg-white">
-        <span className="text-lg font-bold">Load file from the web?</span>
+        <span className="text-lg font-bold">
+          <Trans>Load file from the web?</Trans>
+        </span>
       </CardTitle>
       <div className="text-sm text-gray-600">
-        <p>This model is not cached; load from the web?</p>
-        <p className="text-gray-400">Default: No</p>
+        <p>
+          <Trans>This model is not cached; load from the web?</Trans>
+        </p>
+        <p className="text-gray-400">
+          <Trans>Default: No</Trans>
+        </p>
       </div>
       <div className="-mb-1 flex justify-end gap-2">
         <Button
@@ -598,7 +634,7 @@ export function ModelLoaderCard({
           name="shoudLoadFromWeb"
           value={"No"}
         >
-          No
+          <Trans>No</Trans>
         </Button>
         <Button
           type="submit"
@@ -606,7 +642,7 @@ export function ModelLoaderCard({
           name="shoudLoadFromWeb"
           value={"Yes"}
         >
-          Yes
+          <Trans>Yes</Trans>
         </Button>
       </div>
     </Card>,
@@ -622,18 +658,22 @@ export function ModelLoaderCard({
       return (
         <Card className="bg-white">
           <CardTitle className="bg-white">
-            <span className="text-lg font-bold">Custom URL</span>
+            <span className="text-lg font-bold">
+              <Trans>Custom URL</Trans>
+            </span>
           </CardTitle>
           <Entry
             label={
-              <span>
-                URL<span className="text-red-500">*</span>
-              </span>
+              <Trans>
+                <span>
+                  URL<span className="text-red-500">*</span>
+                </span>
+              </Trans>
             }
           >
             <input name="modelUrl" className="rounded-lg border p-2"></input>
           </Entry>
-          <Entry label={"Name"}>
+          <Entry label={<Trans>Name</Trans>}>
             <input
               name="modelName"
               className="rounded-lg border p-2"
@@ -641,7 +681,9 @@ export function ModelLoaderCard({
             ></input>
           </Entry>
           <details>
-            <summary>Advance</summary>
+            <summary>
+              <Trans>Advance</Trans>
+            </summary>
             <div className="flex flex-col gap-4">
               <Entry
                 label={
@@ -680,7 +722,7 @@ export function ModelLoaderCard({
                 close();
               }}
             >
-              Cancel
+              <Trans>Cancel</Trans>
             </Button>
             <Button
               type="submit"
@@ -688,7 +730,7 @@ export function ModelLoaderCard({
               name="shoudLoadFromWeb"
               value={"Yes"}
             >
-              Load
+              <Trans>Load</Trans>
             </Button>
           </div>
         </Card>
@@ -739,16 +781,18 @@ export function ModelLoaderCard({
         createModalForm(
           <Card className="bg-white">
             <CardTitle className="bg-white">
-              <span className="text-lg font-bold">Error</span>
+              <span className="text-lg font-bold">
+                <Trans>Error</Trans>
+              </span>
             </CardTitle>
-            <Entry label="Name">{error.name}</Entry>
-            <Entry label="Message">{error.message}</Entry>
+            <Entry label={<Trans>Error Name</Trans>}>{error.name}</Entry>
+            <Entry label={<Trans>Error Message</Trans>}>{error.message}</Entry>
             <div className="-mb-1 flex justify-end gap-2">
               <Button
                 type="submit"
                 className="cursor-pointer rounded-xl bg-transparent px-4 py-2 font-semibold active:scale-95"
               >
-                Close
+                <Trans>Close</Trans>
               </Button>
             </div>
           </Card>,
@@ -770,13 +814,13 @@ export function ModelLoaderCard({
 
   const handelFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
     if (e.dataTransfer.files.length !== 1) {
-      toast.error("Single file only");
+      toast.error(<Trans>Single file only</Trans>);
       return;
     } else if (
       !e.dataTransfer.files[0].name.endsWith(".st") &&
       !e.dataTransfer.files[0].name.endsWith(".prefab")
     ) {
-      toast.error(".st or .prefab file only");
+      toast.error(<Trans>.st or .prefab file only</Trans>);
       return;
     }
     close?.();
@@ -791,7 +835,7 @@ export function ModelLoaderCard({
           deleteRecentModel({ title: data });
         }}
       >
-        Delete
+        <Trans>Delete</Trans>
       </MenuItem>
     </Menu>,
   );
@@ -815,7 +859,9 @@ export function ModelLoaderCard({
       }
       title={
         <>
-          <span>Load Model</span>
+          <span>
+            <Trans>Load Model</Trans>
+          </span>
           <div className="flex-1"></div>
           {close && (
             <Button className="rounded-full p-2" onClick={() => close()}>
@@ -842,10 +888,16 @@ export function ModelLoaderCard({
             className="max-md:flex-1"
           >
             <TabsList className={"h-10 flex-shrink-0 gap-1 bg-slate-200 p-1"}>
-              <TabsTrigger value="recent">Recent</TabsTrigger>
-              <TabsTrigger value="web">Web</TabsTrigger>
+              <TabsTrigger value="recent">
+                <Trans>Recent</Trans>
+              </TabsTrigger>
+              <TabsTrigger value="web">
+                <Trans>Online Models</Trans>
+              </TabsTrigger>
               {import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true" && (
-                <TabsTrigger value="device">Device</TabsTrigger>
+                <TabsTrigger value="device">
+                  <Trans>Device</Trans>
+                </TabsTrigger>
               )}
             </TabsList>
 
@@ -876,36 +928,42 @@ export function ModelLoaderCard({
                       className="selected"
                     ></path>
                   </svg>
-                  <span>No Recent Models</span>
+                  <span>
+                    <Trans>No Recent Models</Trans>
+                  </span>
                   <span className="text-sm text-gray-500">
-                    Load Models from{" "}
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setActiveTab("web");
-                      }}
-                      className="font-semibold text-gray-700 underline dark:text-zinc-300"
-                    >
-                      Web
-                    </a>{" "}
-                    {import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true" && (
-                      <>
-                        {" "}
-                        or{" "}
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setActiveTab("device");
-                          }}
-                          className="font-semibold text-gray-700 underline dark:text-zinc-300"
-                        >
-                          Your Device
-                        </a>
-                      </>
-                    )}
-                    .
+                    <Trans>
+                      Load Models from{" "}
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setActiveTab("web");
+                        }}
+                        className="font-semibold text-gray-700 underline dark:text-zinc-300"
+                      >
+                        Web
+                      </a>{" "}
+                      {import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true" && (
+                        <>
+                          <Trans>
+                            {" "}
+                            or{" "}
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setActiveTab("device");
+                              }}
+                              className="font-semibold text-gray-700 underline dark:text-zinc-300"
+                            >
+                              Your Device
+                            </a>
+                          </Trans>
+                        </>
+                      )}
+                      .
+                    </Trans>
                   </span>
                 </div>
               ) : (
@@ -935,7 +993,7 @@ export function ModelLoaderCard({
                                   <span>{v.description}</span>
                                 ) : (
                                   <span className="text-gray-500">
-                                    No description.
+                                    <Trans>No description.</Trans>
                                   </span>
                                 )}
                               </div>
@@ -948,7 +1006,7 @@ export function ModelLoaderCard({
                                           "border-g flex items-center rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
                                         )}
                                       >
-                                        Reasoning
+                                        <Trans>Reasoning</Trans>
                                       </span>
                                     </div>
                                   )}
@@ -959,7 +1017,7 @@ export function ModelLoaderCard({
                                           "border-g flex items-center rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
                                         )}
                                       >
-                                        Online
+                                        <Trans>Online</Trans>
                                       </span>
                                     </div>
                                   )}
@@ -984,7 +1042,11 @@ export function ModelLoaderCard({
                                           "flex items-center rounded-3xl border p-0.5 text-xs",
                                         )}
                                       >
-                                        {v.cached ? "Cached" : "No Cache"}{" "}
+                                        {v.cached ? (
+                                          <Trans>Cached</Trans>
+                                        ) : (
+                                          <Trans>No Cache</Trans>
+                                        )}{" "}
                                         {v.size && v.size > 0
                                           ? formatFileSize(v.size)
                                           : ""}
@@ -1036,15 +1098,17 @@ export function ModelLoaderCard({
                                         close!();
                                       }}
                                     >
-                                      {loadingModelTitle === v.title
-                                        ? "Loading"
-                                        : [
-                                              v.title,
-                                              v.name,
-                                              v.reasoningName,
-                                            ].includes(selectedModelTitle)
-                                          ? "Selected"
-                                          : "Load"}
+                                      {loadingModelTitle === v.title ? (
+                                        <Trans>Loading</Trans>
+                                      ) : [
+                                          v.title,
+                                          v.name,
+                                          v.reasoningName,
+                                        ].includes(selectedModelTitle) ? (
+                                        <Trans>Selected</Trans>
+                                      ) : (
+                                        <Trans>Load</Trans>
+                                      )}
                                     </Button>
                                   ) : (
                                     <Button
@@ -1064,15 +1128,17 @@ export function ModelLoaderCard({
                                         close!();
                                       }}
                                     >
-                                      {loadingModelTitle === v.title
-                                        ? "Loading"
-                                        : [
-                                              v.title,
-                                              v.name,
-                                              v.reasoningName,
-                                            ].includes(selectedModelTitle)
-                                          ? "Selected"
-                                          : "Use"}
+                                      {loadingModelTitle === v.title ? (
+                                        <Trans>Loading</Trans>
+                                      ) : [
+                                          v.title,
+                                          v.name,
+                                          v.reasoningName,
+                                        ].includes(selectedModelTitle) ? (
+                                        <Trans>Selected</Trans>
+                                      ) : (
+                                        <Trans>Use</Trans>
+                                      )}
                                     </Button>
                                   )}
 
@@ -1126,7 +1192,7 @@ export function ModelLoaderCard({
                             <span>{v.description}</span>
                           ) : (
                             <span className="text-gray-500">
-                              No description.
+                              <Trans>No description.</Trans>
                             </span>
                           )}
                         </div>
@@ -1139,7 +1205,7 @@ export function ModelLoaderCard({
                                     "border-g flex items-center rounded-3xl border border-yellow-600 p-0.5 text-xs text-yellow-600",
                                   )}
                                 >
-                                  Reasoning
+                                  <Trans>Reasoning</Trans>
                                 </span>
                               </div>
                             )}
@@ -1150,7 +1216,7 @@ export function ModelLoaderCard({
                                     "border-g flex items-center rounded-3xl border border-purple-600 p-0.5 text-xs text-purple-600",
                                   )}
                                 >
-                                  Online
+                                  <Trans>Online</Trans>
                                 </span>
                               </div>
                             )}
@@ -1227,14 +1293,16 @@ export function ModelLoaderCard({
                                   close!();
                                 }}
                               >
-                                {loadingModelTitle === v.title
-                                  ? "Loading"
-                                  : selectedModelTitle &&
-                                      [v.title, v.name].includes(
-                                        selectedModelTitle,
-                                      )
-                                    ? "Selected"
-                                    : "Load"}
+                                {loadingModelTitle === v.title ? (
+                                  <Trans>Loading</Trans>
+                                ) : selectedModelTitle &&
+                                  [v.title, v.name].includes(
+                                    selectedModelTitle,
+                                  ) ? (
+                                  <Trans>Selected</Trans>
+                                ) : (
+                                  <Trans>Load</Trans>
+                                )}
                               </Button>
                             ) : (
                               <Button
@@ -1252,13 +1320,15 @@ export function ModelLoaderCard({
                                   close!();
                                 }}
                               >
-                                {loadingModelTitle === v.title
-                                  ? "Loading"
-                                  : [v.title, v.name, v.reasoningName].includes(
-                                        selectedModelTitle,
-                                      )
-                                    ? "Selected"
-                                    : "Use"}
+                                {loadingModelTitle === v.title ? (
+                                  <Trans>Loading</Trans>
+                                ) : [v.title, v.name, v.reasoningName].includes(
+                                    selectedModelTitle,
+                                  ) ? (
+                                  <Trans>Selected</Trans>
+                                ) : (
+                                  <Trans>Use</Trans>
+                                )}
                               </Button>
                             )}
                           </div>
@@ -1277,7 +1347,7 @@ export function ModelLoaderCard({
                       }}
                       className="text-sm font-semibold text-gray-500 underline"
                     >
-                      Loading a model using a custom URL
+                      <Trans>Load model from custom URL</Trans>
                     </a>
                   )}
                 </div>
@@ -1327,7 +1397,9 @@ export function ModelLoaderCard({
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Select / Drop a .st / .prefab file</span>
+                <span>
+                  <Trans>Select / Drop a .st / .prefab file</Trans>
+                </span>
               </div>
               <input
                 className="hidden"

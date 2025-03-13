@@ -1,0 +1,559 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-03-13 16:33+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/components/ModelConfigUI.tsx:949
+msgid " or <0>Your Device</0>"
+msgstr " or <0>Your Device</0>"
+
+#: src/pages/settings.tsx:344
+msgid " Reset"
+msgstr " Reset"
+
+#: src/components/ModelConfigUI.tsx:823
+msgid ".st or .prefab file only"
+msgstr ".st or .prefab file only"
+
+#: src/components/ChatTextarea.tsx:508
+msgid "<0>Loading... Sit back and relax!</0><1>{loadingModelTitle}</1>"
+msgstr "<0>Loading... Sit back and relax!</0><1>{loadingModelTitle}</1>"
+
+#: src/components/ModelConfigUI.tsx:667
+msgid "<0>URL<1>*</1></0>"
+msgstr "<0>URL<1>*</1></0>"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:103
+msgid "A Cutting-Edge, RNN-Inspired Large Language Model"
+msgstr "A Cutting-Edge, RNN-Inspired Large Language Model"
+
+#: src/components/ModelConfigUI.tsx:188
+msgid "A model with the same filename exists in the cache. Overwrite the cache?"
+msgstr "A model with the same filename exists in the cache. Overwrite the cache?"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:240
+msgid "About RWKV"
+msgstr "About RWKV"
+
+#: src/components/ModelConfigUI.tsx:685
+msgid "Advance"
+msgstr "Advance"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:98
+msgid "All"
+msgstr "All"
+
+#: src/pages/settings.tsx:233
+msgid "Always open session configuration pannel"
+msgstr "Always open session configuration pannel"
+
+#: src/pages/settings.tsx:191
+msgid "Appearance"
+msgstr "Appearance"
+
+#: src/pages/settings.tsx:228
+msgid "Auto"
+msgstr "Auto"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:101
+msgid "Available"
+msgstr "Available"
+
+#: src/components/ModelConfigUI.tsx:136
+msgid "Cache Model"
+msgstr "Cache Model"
+
+#: src/components/ModelConfigUI.tsx:184
+msgid "Cache Model Existed"
+msgstr "Cache Model Existed"
+
+#: src/components/ModelConfigUI.tsx:141
+msgid "Cache model file in your browser storage?"
+msgstr "Cache model file in your browser storage?"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:192
+#: src/components/ModelConfigUI.tsx:1046
+msgid "Cached"
+msgstr "Cached"
+
+#: src/components/ModelConfigUI.tsx:195
+msgid "Cached Model Details"
+msgstr "Cached Model Details"
+
+#: src/components/ModelConfigUI.tsx:219
+#: src/components/ModelConfigUI.tsx:725
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:183
+msgid "Chat with RWKV"
+msgstr "Chat with RWKV"
+
+#: src/pages/settings.tsx:309
+#: src/pages/settings.tsx:338
+msgid "Clear"
+msgstr "Clear"
+
+#: src/pages/settings.tsx:302
+msgid "Clear all conversations"
+msgstr "Clear all conversations"
+
+#: src/pages/settings.tsx:336
+msgid "Clear Cache"
+msgstr "Clear Cache"
+
+#: src/pages/settings.tsx:166
+msgid "Click to open Model loader"
+msgstr "Click to open Model loader"
+
+#: src/components/ModelConfigUI.tsx:118
+#: src/components/ModelConfigUI.tsx:795
+msgid "Close"
+msgstr "Close"
+
+#: src/pages/settings.tsx:213
+msgid "Color preference"
+msgstr "Color preference"
+
+#: src/components/ChatInterfaceComponents.tsx:740
+msgid "Completion Options"
+msgstr "Completion Options"
+
+#: src/pages/settings.tsx:57
+msgid "Confirm"
+msgstr "Confirm"
+
+#: src/components/ChatInterfaceComponents.tsx:105
+msgid "Content"
+msgstr "Content"
+
+#: src/pages/settings.tsx:209
+msgid "Current Language"
+msgstr "English"
+
+#: src/components/ChatTextarea.tsx:433
+msgid "Current Model: <0>{currentModelName}</0>"
+msgstr "Current Model: <0>{currentModelName}</0>"
+
+#: src/components/ModelConfigUI.tsx:662
+msgid "Custom URL"
+msgstr "Custom URL"
+
+#: src/pages/settings.tsx:225
+msgid "Dark"
+msgstr "Dark"
+
+#: src/pages/settings.tsx:284
+msgid "Data"
+msgstr "Data"
+
+#: src/components/ChatInterfaceComponents.tsx:145
+msgid "Date"
+msgstr "Date"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:61
+#: src/pages/settings.tsx:79
+#: src/components/ModelConfigUI.tsx:627
+msgid "Default: No"
+msgstr "Default: No"
+
+#: src/components/ModelConfigUI.tsx:144
+msgid "Default: Yes"
+msgstr "Default: Yes"
+
+#: src/components/ModelConfigUI.tsx:838
+msgid "Delete"
+msgstr "Delete"
+
+#: src/components/ModelConfigUI.tsx:899
+msgid "Device"
+msgstr "Device"
+
+#: src/components/ModelConfigUI.tsx:466
+msgid "Downloading"
+msgstr "Downloading"
+
+#: src/components/ModelConfigUI.tsx:401
+msgid "Downloading Model"
+msgstr "Downloading Model"
+
+#: src/pages/settings.tsx:209
+#~ msgid "English"
+#~ msgstr "English"
+
+#: src/components/ModelConfigUI.tsx:98
+#: src/components/ModelConfigUI.tsx:785
+msgid "Error"
+msgstr "Error"
+
+#: src/components/ModelConfigUI.tsx:789
+msgid "Error Message"
+msgstr "Error Message"
+
+#: src/components/ModelConfigUI.tsx:788
+msgid "Error Name"
+msgstr "Error Name"
+
+#: src/components/ModelConfigUI.tsx:450
+msgid "Failed to write model to cache, loading model directly."
+msgstr "Failed to write model to cache, loading model directly."
+
+#: src/components/ModelConfigUI.tsx:197
+msgid "Filename"
+msgstr "Filename"
+
+#: src/components/ModelConfigUI.tsx:200
+msgid "From"
+msgstr "From"
+
+#: src/components/MarkdownRender.tsx:149
+msgid "Hide reasoning"
+msgstr "Hide reasoning"
+
+#: src/components/ChatTextarea.tsx:23
+#: src/components/ChatTextarea.tsx:24
+msgid "How many major planets are there in the Solar System?"
+msgstr "How many major planets are there in the Solar System?"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:133
+msgid "Inference engine for RWKV implemented in pure WebGPU"
+msgstr "Inference engine for RWKV implemented in pure WebGPU"
+
+#: src/pages/settings.tsx:203
+msgid "Language"
+msgstr "Language"
+
+#: src/pages/settings.tsx:138
+msgid "Language Model"
+msgstr "Language Model"
+
+#. placeholder {0}: import.meta.env.VITE_GIT_COMMIT_DATE
+#: src/pages/settings.tsx:355
+msgid "Last Commit at {0}"
+msgstr "Last Commit at {0}"
+
+#: src/components/ModelConfigUI.tsx:206
+msgid "Last Loaded"
+msgstr "Last Loaded"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:106
+msgid "Learn more about RWKV7"
+msgstr "Learn more about RWKV7"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:138
+msgid "Learn more about WEBRWKV"
+msgstr "Learn more about WEBRWKV"
+
+#: src/pages/settings.tsx:222
+msgid "Light"
+msgstr "Light"
+
+#: src/targets/webrwkv/webrwkv-homepage.tsx:65
+msgid "LLM In Your Browser"
+msgstr "LLM In Your Browser"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:244
+#: src/components/ModelConfigUI.tsx:733
+#: src/components/ModelConfigUI.tsx:1110
+#: src/components/ModelConfigUI.tsx:1304
+msgid "Load"
+msgstr "Load"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:53
+#: src/components/ModelConfigUI.tsx:619
+msgid "Load file from the web?"
+msgstr "Load file from the web?"
+
+#: src/components/ModelConfigUI.tsx:863
+msgid "Load Model"
+msgstr "Load Model"
+
+#: src/components/ModelConfigUI.tsx:1350
+msgid "Load model from custom URL"
+msgstr "Load model from custom URL"
+
+#. placeholder {0}: import.meta.env.VITE_ENABLE_WASM_ENDPOINT === "true" && ( <> <Trans> {" "} or{" "} <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab("device"); }} className="font-semibold text-gray-700 underline dark:text-zinc-300" > Your Device </a> </Trans> </> )
+#: src/components/ModelConfigUI.tsx:935
+msgid "Load Models from <0>Web</0> {0}."
+msgstr "Load Models from <0>Web</0> {0}."
+
+#: src/pages/settings.tsx:150
+msgid "Loaded model"
+msgstr "Loaded model"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:237
+#: src/targets/webrwkv/components/RecentModelCard.tsx:263
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:120
+#: src/components/ModelConfigUI.tsx:1102
+#: src/components/ModelConfigUI.tsx:1132
+#: src/components/ModelConfigUI.tsx:1297
+#: src/components/ModelConfigUI.tsx:1324
+msgid "Loading"
+msgstr "Loading"
+
+#: src/App.tsx:28
+msgid "Loading..."
+msgstr "Loading..."
+
+#: src/pages/settings.tsx:351
+msgid "Made with ♥ by Leon"
+msgstr "Made with ♥ by Leon"
+
+#: src/components/ChatInterfaceComponents.tsx:756
+msgid "Max Output Tokens"
+msgstr "Max Output Tokens"
+
+#: src/components/ChatInterfaceComponents.tsx:88
+msgid "Message Information"
+msgstr "Message Information"
+
+#: src/components/ChatInterfaceComponents.tsx:136
+msgid "Model Name"
+msgstr "Model Name"
+
+#: src/components/ChatTextarea.tsx:504
+msgid "Model not loaded. Click to open model loader."
+msgstr "Model not loaded. Click to open model loader."
+
+#: src/components/ModelConfigUI.tsx:676
+msgid "Name"
+msgstr "Name"
+
+#: src/components/Bar.tsx:376
+msgid "New Chat"
+msgstr "New Chat"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:71
+#: src/pages/settings.tsx:89
+#: src/pages/settings.tsx:253
+#: src/pages/settings.tsx:278
+#: src/components/ModelConfigUI.tsx:154
+#: src/components/ModelConfigUI.tsx:637
+msgid "No"
+msgstr "No"
+
+#: src/components/ModelConfigUI.tsx:1048
+msgid "No Cache"
+msgstr "No Cache"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:66
+#: src/components/ModelConfigUI.tsx:996
+#: src/components/ModelConfigUI.tsx:1195
+msgid "No description."
+msgstr "No description."
+
+#: src/pages/settings.tsx:151
+msgid "No model loaded"
+msgstr "No model loaded"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:154
+#: src/components/ModelConfigUI.tsx:932
+msgid "No Recent Models"
+msgstr "No Recent Models"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:221
+msgid "Note: These models are not fully trained, and performance may not be as expected."
+msgstr "Note: These models are not fully trained, and performance may not be as expected."
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:185
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:90
+#: src/components/ModelConfigUI.tsx:1020
+#: src/components/ModelConfigUI.tsx:1219
+msgid "Online"
+msgstr "Online"
+
+#: src/components/ModelConfigUI.tsx:895
+msgid "Online Models"
+msgstr "Online Models"
+
+#: src/App.tsx:76
+msgid "OOPS..."
+msgstr "OOPS..."
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:290
+msgid "Open Model Loader"
+msgstr "Open Model Loader"
+
+#: src/components/ModelConfigUI.tsx:227
+msgid "Overwrite"
+msgstr "Overwrite"
+
+#: src/components/ModelConfigUI.tsx:346
+msgid "Reading Model"
+msgstr "Reading Model"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:174
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:79
+#: src/components/ModelConfigUI.tsx:1009
+#: src/components/ModelConfigUI.tsx:1208
+#: src/components/ChatTextarea.tsx:415
+msgid "Reasoning"
+msgstr "Reasoning"
+
+#: src/components/ModelConfigUI.tsx:892
+msgid "Recent"
+msgstr "Recent"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:90
+msgid "Recent Models"
+msgstr "Recent Models"
+
+#: src/pages/settings.tsx:68
+#: src/components/ChatInterfaceComponents.tsx:658
+#: src/components/ChatInterfaceComponents.tsx:752
+#: src/components/ChatInterfaceComponents.tsx:780
+#: src/components/ChatInterfaceComponents.tsx:817
+msgid "Reset"
+msgstr "Reset"
+
+#: src/pages/settings.tsx:342
+msgid "Reset All Data"
+msgstr "Reset All Data"
+
+#: src/App.tsx:90
+msgid "Return to home page"
+msgstr "Return to home page"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:178
+msgid "RNN-Inspired Large Language Model"
+msgstr "RNN-Inspired Large Language Model"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:243
+msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
+msgstr "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
+
+#: src/components/ChatInterfaceComponents.tsx:646
+msgid "Sampler Options"
+msgstr "Sampler Options"
+
+#: src/components/ChatInterfaceComponents.tsx:119
+msgid "Sampler params"
+msgstr "Sampler params"
+
+#: src/components/ModelConfigUI.tsx:1401
+msgid "Select / Drop a .st / .prefab file"
+msgstr "Select / Drop a .st / .prefab file"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:242
+#: src/targets/webrwkv/components/RecentModelCard.tsx:268
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:124
+#: src/components/ModelConfigUI.tsx:1108
+#: src/components/ModelConfigUI.tsx:1138
+#: src/components/ModelConfigUI.tsx:1302
+#: src/components/ModelConfigUI.tsx:1328
+msgid "Selected"
+msgstr "Selected"
+
+#. placeholder {0}: currentInferPort.current && (isEnableReasoning ? currentInferPort.current.portType === "api" ? (currentInferPort.current as APIInferPort) .reasoningModelName : currentInferPort.current.selectedModelTitle : currentInferPort.current.selectedModelTitle)
+#: src/components/ChatTextarea.tsx:440
+msgid "Selected Model: {0}"
+msgstr "Selected Model: {0}"
+
+#: src/components/ChatInterfaceComponents.tsx:627
+msgid "Session Configuration"
+msgstr "Session Configuration"
+
+#: src/pages/settings.tsx:135
+#: src/components/Bar.tsx:481
+msgid "Settings"
+msgstr "Settings"
+
+#: src/components/MarkdownRender.tsx:153
+msgid "Show reasoning"
+msgstr "Show reasoning"
+
+#: src/pages/settings.tsx:258
+msgid "Show reasoning content by default"
+msgstr "Show reasoning content by default"
+
+#: src/components/ModelConfigUI.tsx:817
+msgid "Single file only"
+msgstr "Single file only"
+
+#: src/components/ModelConfigUI.tsx:203
+msgid "Size"
+msgstr "Size"
+
+#: src/App.tsx:79
+msgid "Something went wrong"
+msgstr "Something went wrong"
+
+#: src/components/ModelConfigUI.tsx:106
+msgid "Stack"
+msgstr "Stack"
+
+#: src/components/ChatInterfaceComponents.tsx:841
+msgid "Stop Tokens"
+msgstr "Stop Tokens"
+
+#: src/components/ChatInterfaceComponents.tsx:821
+msgid "Stop Words"
+msgstr "Stop Words"
+
+#: src/components/ChatInterfaceComponents.tsx:803
+msgid "Stop Words & Stop Tokens"
+msgstr "Stop Words & Stop Tokens"
+
+#: src/components/ChatTextarea.tsx:19
+#: src/components/ChatTextarea.tsx:20
+msgid "Tell me about the Eiffel Tower."
+msgstr "Tell me about the Eiffel Tower."
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:214
+msgid "Temp Latest Traininng Models"
+msgstr "Temp Latest Traininng Models"
+
+#: src/components/MarkdownRender.tsx:145
+msgid "Thinking..."
+msgstr "Thinking..."
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:58
+#: src/components/ModelConfigUI.tsx:624
+msgid "This model is not cached; load from the web?"
+msgstr "This model is not cached; load from the web?"
+
+#: src/pages/settings.tsx:73
+msgid "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
+msgstr "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
+
+#: src/pages/settings.tsx:314
+msgid "Total cache size"
+msgstr "Total cache size"
+
+#: src/pages/settings.tsx:158
+msgid "Unload"
+msgstr "Unload"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:270
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:126
+#: src/components/ModelConfigUI.tsx:1140
+#: src/components/ModelConfigUI.tsx:1330
+msgid "Use"
+msgstr "Use"
+
+#: src/components/ModelConfigUI.tsx:895
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#: src/components/ChatTextarea.tsx:145
+msgid "What can I help you today?"
+msgstr "What can I help you today?"
+
+#: src/targets/webrwkv/components/RecentModelCard.tsx:79
+#: src/pages/settings.tsx:97
+#: src/pages/settings.tsx:250
+#: src/pages/settings.tsx:275
+#: src/components/ModelConfigUI.tsx:162
+#: src/components/ModelConfigUI.tsx:645
+msgid "Yes"
+msgstr "Yes"

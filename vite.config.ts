@@ -5,6 +5,8 @@ import react from "@vitejs/plugin-react";
 import wasmPack from "vite-plugin-wasm-pack";
 import Pages from "vite-plugin-pages";
 
+import { lingui } from "@lingui/vite-plugin";
+
 import { visualizer } from "rollup-plugin-visualizer";
 
 function getGitInfo() {
@@ -31,7 +33,11 @@ export default defineConfig(({ mode }) => {
     base: "./",
     plugins: [
       wasmPack("./web-rwkv-wasm"),
-      react(),
+      react({
+        babel: {
+          plugins: ["@lingui/babel-plugin-lingui-macro"],
+        },
+      }),
       Pages({
         routeStyle: "remix",
         importMode(filepath, options) {
@@ -55,6 +61,7 @@ export default defineConfig(({ mode }) => {
         open: true,
         template: "flamegraph",
       }),
+      lingui(),
     ],
   };
 });

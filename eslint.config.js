@@ -6,6 +6,8 @@ import tseslint from "typescript-eslint";
 
 import unusedImports from "eslint-plugin-unused-imports";
 
+import pluginLingui from "eslint-plugin-lingui";
+
 export default tseslint.config(
   { ignores: ["dist"] },
   {
@@ -19,6 +21,7 @@ export default tseslint.config(
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
       "unused-imports": unusedImports,
+      lingui: pluginLingui,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,

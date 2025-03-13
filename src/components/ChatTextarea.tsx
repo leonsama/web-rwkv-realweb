@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { cn, Timer } from "../utils/utils";
 import { PromptTextarea } from "./PromptTextarea";
-import {
-  APIInferPort,
-  cleanChatPrompt,
-  useWebRWKVChat,
-} from "../web-rwkv-wasm-port/web-rwkv";
+import { APIInferPort, useWebRWKVChat } from "../web-rwkv-wasm-port/web-rwkv";
 import { useChatModelSession } from "../store/ModelStorage";
 import { Modal, ModalInterface } from "./popup/Modals";
 import { ModelLoaderCard } from "./ModelConfigUI";
+
+import { Trans } from "@lingui/react/macro";
+import { t } from "@lingui/core/macro";
 
 interface Suggestion {
   prompt: string;
@@ -17,12 +16,12 @@ interface Suggestion {
 
 const suggestions: Suggestion[] = [
   {
-    prompt: "Tell me about the Eiffel Tower.",
-    title: "Tell me about the Eiffel Tower.",
+    prompt: t`Tell me about the Eiffel Tower.`,
+    title: <Trans>Tell me about the Eiffel Tower.</Trans>,
   },
   {
-    prompt: "How many major planets are there in the Solar System?",
-    title: "How many major planets are there in the Solar System?",
+    prompt: t`How many major planets are there in the Solar System?`,
+    title: <Trans>How many major planets are there in the Solar System?</Trans>,
   },
 ];
 
@@ -143,7 +142,7 @@ export function ChatTextarea({
   );
 
   const [textareaPlaceholder, setTextareaPlaceholder] = useState(
-    "What can I help you today?",
+    t`What can I help you today?`,
   );
 
   const rootEle = useRef<HTMLDivElement>(null);
@@ -163,8 +162,8 @@ export function ChatTextarea({
   }, [value]);
 
   const submitPrompt = (value: string) => {
-    if (cleanChatPrompt(value) === "") return;
-    onSubmit(cleanChatPrompt(value), isEnableReasoning);
+    if (value.trim() === "") return;
+    onSubmit(value.trim(), isEnableReasoning);
     setValue("");
     hidePannel(0);
     setIsPannelExpaned(false);
@@ -354,8 +353,7 @@ export function ChatTextarea({
         <button
           className={cn(
             "absolute bottom-0 right-0 m-2 h-10 w-10 self-end rounded-full p-2.5 text-slate-400 transition-[background-color,margin] duration-[200ms,500ms] hover:bg-slate-100 dark:text-zinc-400",
-            cleanChatPrompt(value) !== "" &&
-              "text-slate-600 dark:text-zinc-300",
+            value.trim() !== "" && "text-slate-600 dark:text-zinc-300",
             isPannelExpaned ? "max-md:my-0" : "",
           )}
           onClick={() => {
@@ -413,7 +411,9 @@ export function ChatTextarea({
             onClick={() => setEnableReasoning(!isEnableReasoning)}
           >
             <ReasoningIcon enableReasoning={isEnableReasoning}></ReasoningIcon>
-            <span>Reasoning</span>
+            <span>
+              <Trans>Reasoning</Trans>
+            </span>
           </button>
         </div>
         <div
@@ -430,19 +430,23 @@ export function ChatTextarea({
           >
             {currentModelName ? (
               <span className="motion-preset-slide-left-sm" key={0}>
-                Current Model:{" "}
-                <span className="font-semibold">{currentModelName}</span>
+                <Trans>
+                  Current Model:{" "}
+                  <span className="font-semibold">{currentModelName}</span>
+                </Trans>
               </span>
             ) : (
               <span className="motion-preset-slide-right-sm" key={1}>
-                Selected Model:{" "}
-                {currentInferPort.current &&
-                  (isEnableReasoning
-                    ? currentInferPort.current.portType === "api"
-                      ? (currentInferPort.current as APIInferPort)
-                          .reasoningModelName
-                      : currentInferPort.current.selectedModelTitle
-                    : currentInferPort.current.selectedModelTitle)}
+                <Trans>
+                  Selected Model:{" "}
+                  {currentInferPort.current &&
+                    (isEnableReasoning
+                      ? currentInferPort.current.portType === "api"
+                        ? (currentInferPort.current as APIInferPort)
+                            .reasoningModelName
+                        : currentInferPort.current.selectedModelTitle
+                      : currentInferPort.current.selectedModelTitle)}
+                </Trans>
               </span>
             )}
             <button className="pl-2" onClick={openModal}>
@@ -496,17 +500,19 @@ export function ChatTextarea({
         <div className="flex h-14 w-0 flex-1 cursor-pointer items-center self-end p-2">
           {selectedModelTitle === null &&
             (loadingModelTitle === null ? (
-              <span className="transition-all group-active:scale-95">
-                Model not loaded. Load to interact.
+              <span className="transition-all group-active:scale-95 max-md:text-xs">
+                <Trans>Model not loaded. Click to open model loader.</Trans>
               </span>
             ) : (
               <>
-                <span className="font-semibold underline transition-all group-active:scale-95">
-                  Loading... Sit back and relax!
-                </span>
-                <span className="ml-2 hidden text-xs text-slate-300 transition-all group-active:scale-95 md:static">
-                  {loadingModelTitle}
-                </span>
+                <Trans>
+                  <span className="font-semibold underline transition-all group-active:scale-95">
+                    Loading... Sit back and relax!
+                  </span>
+                  <span className="ml-2 text-xs text-slate-300 transition-all group-active:scale-95 md:static">
+                    {loadingModelTitle}
+                  </span>
+                </Trans>
               </>
             ))}
         </div>

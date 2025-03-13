@@ -28,6 +28,8 @@ import { usePageStorage } from "../store/PageStorage";
 import { useChatModelSession } from "../store/ModelStorage";
 import { useLocation, useNavigate, useParams } from "react-router";
 
+import { Trans } from "@lingui/react/macro";
+
 export function ToolButton({
   children,
   className,
@@ -82,7 +84,9 @@ export function MessageInformationViewer({
           </svg>
         }
       >
-        <span>Message Information</span>
+        <span>
+          <Trans>Message Information</Trans>
+        </span>
         <div className="flex-1"></div>
         {close && (
           <Button className="rounded-full p-2" onClick={() => close()}>
@@ -98,8 +102,8 @@ export function MessageInformationViewer({
         )}
       </CardTitle>
       <Entry
-        label="Content"
-        className="min-h-min flex-1 flex-shrink-0 md:items-start"
+        label={<Trans>Content</Trans>}
+        className="min-h-min flex-1 flex-shrink-0 md:items-start text-nowrap"
       >
         <textarea
           value={
@@ -112,7 +116,7 @@ export function MessageInformationViewer({
           className="h-full min-h-80 w-full rounded-lg bg-white p-2 dark:bg-zinc-700"
         ></textarea>
       </Entry>
-      <Entry label="Sampler" className="md:items-start">
+      <Entry label={<Trans>Sampler params</Trans>} className="md:items-start text-nowrap">
         <div className="w-full">
           {currentMessageBlock.messageContents[
             currentMessageBlock.activeMessageContentIndex
@@ -129,7 +133,7 @@ export function MessageInformationViewer({
             : "Empty"}
         </div>
       </Entry>
-      <Entry label="Model Name" className="text-nowrap">
+      <Entry label={<Trans>Model Name</Trans>} className="text-nowrap">
         <div className="w-full text-wrap">
           {
             currentMessageBlock.messageContents[
@@ -138,7 +142,7 @@ export function MessageInformationViewer({
           }
         </div>
       </Entry>
-      <Entry label="Date" className="text-nowrap">
+      <Entry label={<Trans>Date</Trans>} className="text-nowrap">
         <div className="w-full">
           {new Date(
             currentMessageBlock.messageContents[
@@ -619,7 +623,9 @@ export function ChatSessionConfigurationCard({
           </svg>
         }
       >
-        <span className="min-[1220px]:text-base">Session Configuration</span>
+        <span className="min-[1220px]:text-base">
+          <Trans>Session Configuration</Trans>
+        </span>
 
         <Button
           className="ml-auto rounded-full p-2"
@@ -636,7 +642,9 @@ export function ChatSessionConfigurationCard({
         </Button>
       </CardTitle>
       <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 dark:bg-zinc-700">
-        <span>Sampler Options</span>
+        <span>
+          <Trans>Sampler Options</Trans>
+        </span>
         <Button
           className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
@@ -647,7 +655,7 @@ export function ChatSessionConfigurationCard({
             );
           }}
         >
-          Reset
+          <Trans>Reset</Trans>
         </Button>
       </div>
 
@@ -728,7 +736,9 @@ export function ChatSessionConfigurationCard({
         ></InputRange>
       </div>
       <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 dark:bg-zinc-700">
-        <span>Completion Options</span>
+        <span>
+          <Trans>Completion Options</Trans>
+        </span>
         <Button
           className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
@@ -739,11 +749,11 @@ export function ChatSessionConfigurationCard({
             );
           }}
         >
-          Reset
+          <Trans>Reset</Trans>
         </Button>
       </div>
 
-      <Entry label="Max Output Tokens" className="text-nowrap">
+      <Entry label={<Trans>Max Output Tokens</Trans>} className="text-nowrap">
         <InputText
           value={sessionConfiguration.maxTokens.toString()}
           onChange={(v) => {
@@ -767,7 +777,7 @@ export function ChatSessionConfigurationCard({
             );
           }}
         >
-          Reset
+          <Trans>Reset</Trans>
         </Button>
       </div>
       <Entry
@@ -789,7 +799,9 @@ export function ChatSessionConfigurationCard({
       </Entry>
 
       <div className="flex h-12 items-center rounded-2xl bg-slate-200 p-1 pl-2 text-sm dark:bg-zinc-700">
-        <span>Stop Words & Stop Tokens</span>
+        <span>
+          <Trans>Stop Words & Stop Tokens</Trans>
+        </span>
         <Button
           className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
@@ -802,11 +814,11 @@ export function ChatSessionConfigurationCard({
             );
           }}
         >
-          Reset
+          <Trans>Reset</Trans>
         </Button>
       </div>
       <Entry
-        label="Stop Words"
+        label={<Trans>Stop Words</Trans>}
         className="md:flex-col md:items-start md:justify-end"
       >
         <InputList
@@ -826,7 +838,7 @@ export function ChatSessionConfigurationCard({
       </Entry>
 
       <Entry
-        label="Stop Tokens"
+        label={<Trans>Stop Tokens</Trans>}
         className="mb-2 md:flex-col md:items-start md:justify-end"
       >
         <InputList
