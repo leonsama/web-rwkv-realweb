@@ -17,7 +17,7 @@ msgstr ""
 msgid " or <0>Your Device</0>"
 msgstr " or <0>Your Device</0>"
 
-#: src/pages/settings.tsx:344
+#: src/pages/settings.tsx:364
 msgid " Reset"
 msgstr " Reset"
 
@@ -57,7 +57,15 @@ msgstr "Advance"
 msgid "All"
 msgstr "All"
 
-#: src/pages/settings.tsx:233
+#: src/components/ChatInterfaceComponents.tsx:938
+msgid "Always Display Pannel?"
+msgstr "Always Display Pannel?"
+
+#: src/components/ChatInterfaceComponents.tsx:943
+msgid "Always display the session configuration pannel when entering a chat session?"
+msgstr "Always display the session configuration pannel when entering a chat session?"
+
+#: src/pages/settings.tsx:253
 msgid "Always open session configuration pannel"
 msgstr "Always open session configuration pannel"
 
@@ -65,7 +73,7 @@ msgstr "Always open session configuration pannel"
 msgid "Appearance"
 msgstr "Appearance"
 
-#: src/pages/settings.tsx:228
+#: src/pages/settings.tsx:248
 msgid "Auto"
 msgstr "Auto"
 
@@ -103,16 +111,16 @@ msgstr "Cancel"
 msgid "Chat with RWKV"
 msgstr "Chat with RWKV"
 
-#: src/pages/settings.tsx:309
-#: src/pages/settings.tsx:338
+#: src/pages/settings.tsx:329
+#: src/pages/settings.tsx:358
 msgid "Clear"
 msgstr "Clear"
 
-#: src/pages/settings.tsx:302
+#: src/pages/settings.tsx:322
 msgid "Clear all conversations"
 msgstr "Clear all conversations"
 
-#: src/pages/settings.tsx:336
+#: src/pages/settings.tsx:356
 msgid "Clear Cache"
 msgstr "Clear Cache"
 
@@ -125,11 +133,11 @@ msgstr "Click to open Model loader"
 msgid "Close"
 msgstr "Close"
 
-#: src/pages/settings.tsx:213
+#: src/pages/settings.tsx:233
 msgid "Color preference"
 msgstr "Color preference"
 
-#: src/components/ChatInterfaceComponents.tsx:740
+#: src/components/ChatInterfaceComponents.tsx:743
 msgid "Completion Options"
 msgstr "Completion Options"
 
@@ -141,9 +149,13 @@ msgstr "Confirm"
 msgid "Content"
 msgstr "Content"
 
-#: src/pages/settings.tsx:209
+#: src/pages/settings.tsx:216
 msgid "Current Language"
 msgstr "English"
+
+#: src/pages/settings.tsx:216
+#~ msgid "Current Language "
+#~ msgstr "Current Language "
 
 #: src/components/ChatTextarea.tsx:433
 msgid "Current Model: <0>{currentModelName}</0>"
@@ -153,21 +165,22 @@ msgstr "Current Model: <0>{currentModelName}</0>"
 msgid "Custom URL"
 msgstr "Custom URL"
 
-#: src/pages/settings.tsx:225
+#: src/pages/settings.tsx:245
 msgid "Dark"
 msgstr "Dark"
 
-#: src/pages/settings.tsx:284
+#: src/pages/settings.tsx:304
 msgid "Data"
 msgstr "Data"
 
-#: src/components/ChatInterfaceComponents.tsx:145
+#: src/components/ChatInterfaceComponents.tsx:148
 msgid "Date"
 msgstr "Date"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
 #: src/pages/settings.tsx:79
 #: src/components/ModelConfigUI.tsx:627
+#: src/components/ChatInterfaceComponents.tsx:952
 msgid "Default: No"
 msgstr "Default: No"
 
@@ -242,7 +255,7 @@ msgid "Language Model"
 msgstr "Language Model"
 
 #. placeholder {0}: import.meta.env.VITE_GIT_COMMIT_DATE
-#: src/pages/settings.tsx:355
+#: src/pages/settings.tsx:375
 msgid "Last Commit at {0}"
 msgstr "Last Commit at {0}"
 
@@ -258,7 +271,7 @@ msgstr "Learn more about RWKV7"
 msgid "Learn more about WEBRWKV"
 msgstr "Learn more about WEBRWKV"
 
-#: src/pages/settings.tsx:222
+#: src/pages/settings.tsx:242
 msgid "Light"
 msgstr "Light"
 
@@ -305,15 +318,15 @@ msgstr "Loaded model"
 msgid "Loading"
 msgstr "Loading"
 
-#: src/App.tsx:27
+#: src/App.tsx:31
 msgid "Loading..."
 msgstr "Loading..."
 
-#: src/pages/settings.tsx:351
+#: src/pages/settings.tsx:371
 msgid "Made with ♥ by Leon"
 msgstr "Made with ♥ by Leon"
 
-#: src/components/ChatInterfaceComponents.tsx:756
+#: src/components/ChatInterfaceComponents.tsx:759
 msgid "Max Output Tokens"
 msgstr "Max Output Tokens"
 
@@ -321,7 +334,7 @@ msgstr "Max Output Tokens"
 msgid "Message Information"
 msgstr "Message Information"
 
-#: src/components/ChatInterfaceComponents.tsx:136
+#: src/components/ChatInterfaceComponents.tsx:139
 msgid "Model Name"
 msgstr "Model Name"
 
@@ -339,10 +352,11 @@ msgstr "New Chat"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:71
 #: src/pages/settings.tsx:89
-#: src/pages/settings.tsx:253
-#: src/pages/settings.tsx:278
+#: src/pages/settings.tsx:273
+#: src/pages/settings.tsx:298
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
+#: src/components/ChatInterfaceComponents.tsx:962
 msgid "No"
 msgstr "No"
 
@@ -380,7 +394,7 @@ msgstr "Online"
 msgid "Online Models"
 msgstr "Online Models"
 
-#: src/App.tsx:75
+#: src/App.tsx:79
 msgid "OOPS..."
 msgstr "OOPS..."
 
@@ -413,18 +427,18 @@ msgid "Recent Models"
 msgstr "Recent Models"
 
 #: src/pages/settings.tsx:68
-#: src/components/ChatInterfaceComponents.tsx:658
-#: src/components/ChatInterfaceComponents.tsx:752
-#: src/components/ChatInterfaceComponents.tsx:780
-#: src/components/ChatInterfaceComponents.tsx:817
+#: src/components/ChatInterfaceComponents.tsx:661
+#: src/components/ChatInterfaceComponents.tsx:755
+#: src/components/ChatInterfaceComponents.tsx:783
+#: src/components/ChatInterfaceComponents.tsx:820
 msgid "Reset"
 msgstr "Reset"
 
-#: src/pages/settings.tsx:342
+#: src/pages/settings.tsx:362
 msgid "Reset All Data"
 msgstr "Reset All Data"
 
-#: src/App.tsx:89
+#: src/App.tsx:93
 msgid "Return to home page"
 msgstr "Return to home page"
 
@@ -444,11 +458,11 @@ msgstr "RWKV G1 2.9B has shown promising potential in the early stages of traini
 msgid "RWKV7 G1 1.5B shows amazing performance early in training."
 msgstr "RWKV7 G1 1.5B shows amazing performance early in training."
 
-#: src/components/ChatInterfaceComponents.tsx:646
+#: src/components/ChatInterfaceComponents.tsx:649
 msgid "Sampler Options"
 msgstr "Sampler Options"
 
-#: src/components/ChatInterfaceComponents.tsx:119
+#: src/components/ChatInterfaceComponents.tsx:120
 msgid "Sampler params"
 msgstr "Sampler params"
 
@@ -471,7 +485,7 @@ msgstr "Selected"
 msgid "Selected Model: {0}"
 msgstr "Selected Model: {0}"
 
-#: src/components/ChatInterfaceComponents.tsx:627
+#: src/components/ChatInterfaceComponents.tsx:630
 msgid "Session Configuration"
 msgstr "Session Configuration"
 
@@ -484,7 +498,7 @@ msgstr "Settings"
 msgid "Show reasoning"
 msgstr "Show reasoning"
 
-#: src/pages/settings.tsx:258
+#: src/pages/settings.tsx:278
 msgid "Show reasoning content by default"
 msgstr "Show reasoning content by default"
 
@@ -496,7 +510,7 @@ msgstr "Single file only"
 msgid "Size"
 msgstr "Size"
 
-#: src/App.tsx:78
+#: src/App.tsx:82
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
@@ -504,15 +518,15 @@ msgstr "Something went wrong"
 msgid "Stack"
 msgstr "Stack"
 
-#: src/components/ChatInterfaceComponents.tsx:841
+#: src/components/ChatInterfaceComponents.tsx:844
 msgid "Stop Tokens"
 msgstr "Stop Tokens"
 
-#: src/components/ChatInterfaceComponents.tsx:821
+#: src/components/ChatInterfaceComponents.tsx:824
 msgid "Stop Words"
 msgstr "Stop Words"
 
-#: src/components/ChatInterfaceComponents.tsx:803
+#: src/components/ChatInterfaceComponents.tsx:806
 msgid "Stop Words & Stop Tokens"
 msgstr "Stop Words & Stop Tokens"
 
@@ -538,7 +552,7 @@ msgstr "This model is not cached; load from the web?"
 msgid "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
 msgstr "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
 
-#: src/pages/settings.tsx:314
+#: src/pages/settings.tsx:334
 msgid "Total cache size"
 msgstr "Total cache size"
 
@@ -563,9 +577,14 @@ msgstr "What can I help you today?"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:79
 #: src/pages/settings.tsx:97
-#: src/pages/settings.tsx:250
-#: src/pages/settings.tsx:275
+#: src/pages/settings.tsx:270
+#: src/pages/settings.tsx:295
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
+#: src/components/ChatInterfaceComponents.tsx:970
 msgid "Yes"
 msgstr "Yes"
+
+#: src/components/ChatInterfaceComponents.tsx:949
+msgid "You can adjust this preference in the settings."
+msgstr "You can adjust this preference in the settings."

@@ -107,7 +107,7 @@ function ModelCard({
         <div className="flex justify-end gap-1">
           <Button
             className={cn(
-              "h-8 rounded-xl p-1 px-4 font-medium transition-[background-color] dark:bg-zinc-600",
+              "h-8 w-20 rounded-xl p-1 px-4 font-medium transition-[background-color,transform] dark:bg-zinc-600",
               loadingModelTitle === v.title &&
                 "pointer-events-none bg-transparent px-2",
               [v.title, v.name, v.reasoningName].includes(selectedModelTitle) &&
@@ -122,9 +122,10 @@ function ModelCard({
             ) : [v.title, v.name, v.reasoningName].includes(
                 selectedModelTitle,
               ) ? (
-              <Trans>Selected</Trans>
+                <span className="text-yellow-600"><Trans>Use</Trans></span>
+              
             ) : (
-              <Trans>Use</Trans>
+              <Trans>Selected</Trans>
             )}
           </Button>
         </div>

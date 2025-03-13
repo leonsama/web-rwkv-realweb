@@ -34,4 +34,5 @@ export async function i18nSetLocale(locale: string) {
 
   i18n.load(locale, messages);
   i18n.activate(locale);
+  localStorage.setItem("lang", locale);
 }

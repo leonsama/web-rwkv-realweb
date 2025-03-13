@@ -18,7 +18,7 @@ msgstr ""
 msgid " or <0>Your Device</0>"
 msgstr "或<0>你的设备</0>"
 
-#: src/pages/settings.tsx:344
+#: src/pages/settings.tsx:364
 msgid " Reset"
 msgstr "重置"
 
@@ -58,7 +58,15 @@ msgstr "高级"
 msgid "All"
 msgstr "全部"
 
-#: src/pages/settings.tsx:233
+#: src/components/ChatInterfaceComponents.tsx:938
+msgid "Always Display Pannel?"
+msgstr "始终显示面板吗？"
+
+#: src/components/ChatInterfaceComponents.tsx:943
+msgid "Always display the session configuration pannel when entering a chat session?"
+msgstr "进入聊天会话时始终显示会话配置面板吗？"
+
+#: src/pages/settings.tsx:253
 msgid "Always open session configuration pannel"
 msgstr "始终打开会话配置面板"
 
@@ -66,7 +74,7 @@ msgstr "始终打开会话配置面板"
 msgid "Appearance"
 msgstr "外观"
 
-#: src/pages/settings.tsx:228
+#: src/pages/settings.tsx:248
 msgid "Auto"
 msgstr "自动"
 
@@ -104,16 +112,16 @@ msgstr "取消"
 msgid "Chat with RWKV"
 msgstr "与 RWKV 交互"
 
-#: src/pages/settings.tsx:309
-#: src/pages/settings.tsx:338
+#: src/pages/settings.tsx:329
+#: src/pages/settings.tsx:358
 msgid "Clear"
 msgstr "清除"
 
-#: src/pages/settings.tsx:302
+#: src/pages/settings.tsx:322
 msgid "Clear all conversations"
 msgstr "清除所有对话"
 
-#: src/pages/settings.tsx:336
+#: src/pages/settings.tsx:356
 msgid "Clear Cache"
 msgstr "清除缓存"
 
@@ -126,13 +134,13 @@ msgstr "点击打开模型加载器"
 msgid "Close"
 msgstr "关闭"
 
-#: src/pages/settings.tsx:213
+#: src/pages/settings.tsx:233
 msgid "Color preference"
 msgstr "颜色偏好"
 
-#: src/components/ChatInterfaceComponents.tsx:740
+#: src/components/ChatInterfaceComponents.tsx:743
 msgid "Completion Options"
-msgstr "完成选项"
+msgstr "生成选项"
 
 #: src/pages/settings.tsx:57
 msgid "Confirm"
@@ -142,9 +150,13 @@ msgstr "确认"
 msgid "Content"
 msgstr "内容"
 
-#: src/pages/settings.tsx:209
+#: src/pages/settings.tsx:216
 msgid "Current Language"
 msgstr "中文"
+
+#: src/pages/settings.tsx:216
+#~ msgid "Current Language "
+#~ msgstr ""
 
 #: src/components/ChatTextarea.tsx:433
 msgid "Current Model: <0>{currentModelName}</0>"
@@ -154,21 +166,22 @@ msgstr "当前模型: <0>{currentModelName}</0>"
 msgid "Custom URL"
 msgstr "自定义 URL"
 
-#: src/pages/settings.tsx:225
+#: src/pages/settings.tsx:245
 msgid "Dark"
 msgstr "深色"
 
-#: src/pages/settings.tsx:284
+#: src/pages/settings.tsx:304
 msgid "Data"
 msgstr "数据"
 
-#: src/components/ChatInterfaceComponents.tsx:145
+#: src/components/ChatInterfaceComponents.tsx:148
 msgid "Date"
 msgstr "日期"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
 #: src/pages/settings.tsx:79
 #: src/components/ModelConfigUI.tsx:627
+#: src/components/ChatInterfaceComponents.tsx:952
 msgid "Default: No"
 msgstr "默认：否"
 
@@ -242,7 +255,7 @@ msgid "Language Model"
 msgstr "语言模型"
 
 #. placeholder {0}: import.meta.env.VITE_GIT_COMMIT_DATE
-#: src/pages/settings.tsx:355
+#: src/pages/settings.tsx:375
 msgid "Last Commit at {0}"
 msgstr "最后提交于 {0}"
 
@@ -258,7 +271,7 @@ msgstr "了解更多关于RWKV7的信息"
 msgid "Learn more about WEBRWKV"
 msgstr "了解更多关于WEBRWKV的信息"
 
-#: src/pages/settings.tsx:222
+#: src/pages/settings.tsx:242
 msgid "Light"
 msgstr "浅色"
 
@@ -305,15 +318,15 @@ msgstr "已加载模型"
 msgid "Loading"
 msgstr "加载中"
 
-#: src/App.tsx:27
+#: src/App.tsx:31
 msgid "Loading..."
 msgstr "加载中..."
 
-#: src/pages/settings.tsx:351
+#: src/pages/settings.tsx:371
 msgid "Made with ♥ by Leon"
-msgstr "由 Leon 用心制作"
+msgstr "Made with ♥ by Leon"
 
-#: src/components/ChatInterfaceComponents.tsx:756
+#: src/components/ChatInterfaceComponents.tsx:759
 msgid "Max Output Tokens"
 msgstr "最大输出 Token 数"
 
@@ -321,7 +334,7 @@ msgstr "最大输出 Token 数"
 msgid "Message Information"
 msgstr "消息信息"
 
-#: src/components/ChatInterfaceComponents.tsx:136
+#: src/components/ChatInterfaceComponents.tsx:139
 msgid "Model Name"
 msgstr "模型名称"
 
@@ -335,14 +348,15 @@ msgstr "名称"
 
 #: src/components/Bar.tsx:376
 msgid "New Chat"
-msgstr "开启新对话"
+msgstr "新对话"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:71
 #: src/pages/settings.tsx:89
-#: src/pages/settings.tsx:253
-#: src/pages/settings.tsx:278
+#: src/pages/settings.tsx:273
+#: src/pages/settings.tsx:298
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
+#: src/components/ChatInterfaceComponents.tsx:962
 msgid "No"
 msgstr "否"
 
@@ -380,7 +394,7 @@ msgstr "在线"
 msgid "Online Models"
 msgstr "在线模型"
 
-#: src/App.tsx:75
+#: src/App.tsx:79
 msgid "OOPS..."
 msgstr "哎呀..."
 
@@ -413,18 +427,18 @@ msgid "Recent Models"
 msgstr "最近使用的模型"
 
 #: src/pages/settings.tsx:68
-#: src/components/ChatInterfaceComponents.tsx:658
-#: src/components/ChatInterfaceComponents.tsx:752
-#: src/components/ChatInterfaceComponents.tsx:780
-#: src/components/ChatInterfaceComponents.tsx:817
+#: src/components/ChatInterfaceComponents.tsx:661
+#: src/components/ChatInterfaceComponents.tsx:755
+#: src/components/ChatInterfaceComponents.tsx:783
+#: src/components/ChatInterfaceComponents.tsx:820
 msgid "Reset"
 msgstr "重置"
 
-#: src/pages/settings.tsx:342
+#: src/pages/settings.tsx:362
 msgid "Reset All Data"
 msgstr "重置所有数据"
 
-#: src/App.tsx:89
+#: src/App.tsx:93
 msgid "Return to home page"
 msgstr "返回首页"
 
@@ -444,11 +458,11 @@ msgstr "RWKV G1 2.9B 在训练初期已经展现强大的交互潜力。"
 msgid "RWKV7 G1 1.5B shows amazing performance early in training."
 msgstr "RWKV7 G1 1.5B 在训练初期就表现出惊人的性能。"
 
-#: src/components/ChatInterfaceComponents.tsx:646
+#: src/components/ChatInterfaceComponents.tsx:649
 msgid "Sampler Options"
 msgstr "采样器选项"
 
-#: src/components/ChatInterfaceComponents.tsx:119
+#: src/components/ChatInterfaceComponents.tsx:120
 msgid "Sampler params"
 msgstr "采样器参数"
 
@@ -471,7 +485,7 @@ msgstr "已选择"
 msgid "Selected Model: {0}"
 msgstr "已选模型: {0}"
 
-#: src/components/ChatInterfaceComponents.tsx:627
+#: src/components/ChatInterfaceComponents.tsx:630
 msgid "Session Configuration"
 msgstr "会话配置"
 
@@ -484,7 +498,7 @@ msgstr "设置"
 msgid "Show reasoning"
 msgstr "显示推理过程"
 
-#: src/pages/settings.tsx:258
+#: src/pages/settings.tsx:278
 msgid "Show reasoning content by default"
 msgstr "默认显示推理内容"
 
@@ -496,7 +510,7 @@ msgstr "仅支持单个文件"
 msgid "Size"
 msgstr "大小"
 
-#: src/App.tsx:78
+#: src/App.tsx:82
 msgid "Something went wrong"
 msgstr "出错了"
 
@@ -504,15 +518,15 @@ msgstr "出错了"
 msgid "Stack"
 msgstr "堆栈"
 
-#: src/components/ChatInterfaceComponents.tsx:841
+#: src/components/ChatInterfaceComponents.tsx:844
 msgid "Stop Tokens"
 msgstr "停止词元（Token）"
 
-#: src/components/ChatInterfaceComponents.tsx:821
+#: src/components/ChatInterfaceComponents.tsx:824
 msgid "Stop Words"
 msgstr "停止词"
 
-#: src/components/ChatInterfaceComponents.tsx:803
+#: src/components/ChatInterfaceComponents.tsx:806
 msgid "Stop Words & Stop Tokens"
 msgstr "停止词与停止词元（Token）"
 
@@ -538,7 +552,7 @@ msgstr "此模型未缓存；是否从网络加载？"
 msgid "This will clear your chat history and cache, and may resolve some issues. This is irreversible."
 msgstr "这将清除您的聊天记录和缓存，并可能解决一些问题。此操作不可逆。"
 
-#: src/pages/settings.tsx:314
+#: src/pages/settings.tsx:334
 msgid "Total cache size"
 msgstr "总缓存大小"
 
@@ -562,9 +576,14 @@ msgstr "今天有什么可以帮您的？"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:79
 #: src/pages/settings.tsx:97
-#: src/pages/settings.tsx:250
-#: src/pages/settings.tsx:275
+#: src/pages/settings.tsx:270
+#: src/pages/settings.tsx:295
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
+#: src/components/ChatInterfaceComponents.tsx:970
 msgid "Yes"
 msgstr "是"
+
+#: src/components/ChatInterfaceComponents.tsx:949
+msgid "You can adjust this preference in the settings."
+msgstr "您可以在设置中调整此偏好。"

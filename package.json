@@ -6,14 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "wasm:build": "cross-env wasm-pack build ./web-rwkv-wasm --release --target web",
-    "dev": "pnpm run lingui:compile && pnpm run wasm:build && vite",
+    "dev": "pnpm run lingui:format && pnpm run wasm:build && vite",
     "dev:host": "pnpm run wasm:build && vite --host 0.0.0.0",
     "build": "pnpm run lingui:compile && pnpm run wasm:build && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "pnpm dlx eslint . --ext .ts,.tsx",
     "lint:fix": "pnpm dlx eslint --fix . --ext .ts,.tsx",
     "lingui:extract": "lingui extract",
-    "lingui:compile": "lingui compile --typescript"
+    "lingui:compile": "lingui compile --typescript",
+    "lingui:format": "pnpm run lingui:extract && pnpm run lingui:compile"
   },
   "keywords": [],
   "author": "",

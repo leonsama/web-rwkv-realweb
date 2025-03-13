@@ -7,16 +7,16 @@ from openai import OpenAI
 from tqdm import tqdm
 
 
-TRANSLATE_PROMPT = """以下待翻译内容中，msgid为原文内容，msgstr为译文内容；观察原文语境，在空的 msgstr 中填入原文为对应语言代码的译文，注意符合语境，不要翻译专有词汇；不要修改任何 msgstr 不为空的内容；将结果放入代码块中，不要解释，不要输出其他无关内容。
+TRANSLATE_PROMPT = """In the following content to be translated, msgid is the original text, and msgstr is the translation; Observe the context of the original text and fill in the translation of the original text into the empty msgstr for the corresponding language code, pay attention to the context, avoid literal translation, strive for fidelity, expressiveness, and elegance in translation style, and find the most appropriate translation; Do not translate proper nouns, and do not modify any msgstr that is not empty; Put the results in a code block, do not explain, and do not output other irrelevant content.
 
-语言代码：{lang_code}
+Language code: {lang_code}
 
-待翻译内容：
+Content to be translated:
 \"\"\"
 {translate_content}
 \"\"\"
 
-回答示例：
+Example answer:
 \"\"\"
 ```
 #: src/targets/webrwkv/components/RecentModelCard.tsx:185

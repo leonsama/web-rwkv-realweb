@@ -103,7 +103,7 @@ export function MessageInformationViewer({
       </CardTitle>
       <Entry
         label={<Trans>Content</Trans>}
-        className="min-h-min flex-1 flex-shrink-0 md:items-start text-nowrap"
+        className="min-h-min flex-1 flex-shrink-0 text-nowrap md:items-start"
       >
         <textarea
           value={
@@ -116,7 +116,10 @@ export function MessageInformationViewer({
           className="h-full min-h-80 w-full rounded-lg bg-white p-2 dark:bg-zinc-700"
         ></textarea>
       </Entry>
-      <Entry label={<Trans>Sampler params</Trans>} className="md:items-start text-nowrap">
+      <Entry
+        label={<Trans>Sampler params</Trans>}
+        className="text-nowrap md:items-start"
+      >
         <div className="w-full">
           {currentMessageBlock.messageContents[
             currentMessageBlock.activeMessageContentIndex
@@ -932,16 +935,22 @@ export function ChatSessionConfigurationBar({
             <Card className="m-4 max-w-sm bg-white">
               <CardTitle className="bg-white">
                 <span className="text-lg font-bold">
-                  Always Display Pannel?
+                  <Trans>Always Display Pannel?</Trans>
                 </span>
               </CardTitle>
               <div className="flex flex-col gap-1 text-wrap text-sm text-gray-600">
                 <p>
-                  Always display the session configuration pannel when entering
-                  a chat session?
+                  <Trans>
+                    Always display the session configuration pannel when
+                    entering a chat session?
+                  </Trans>
                 </p>
-                <p>You can adjust this preference in the settings.</p>
-                <p className="mt-4 text-gray-400">Default: No</p>
+                <p>
+                  <Trans>You can adjust this preference in the settings.</Trans>
+                </p>
+                <p className="mt-4 text-gray-400">
+                  <Trans>Default: No</Trans>
+                </p>
               </div>
               <div className="-mb-1 flex justify-end gap-2">
                 <Button
@@ -950,7 +959,7 @@ export function ChatSessionConfigurationBar({
                   name="isAlwaysShow"
                   value={"No"}
                 >
-                  No
+                  <Trans>No</Trans>
                 </Button>
                 <Button
                   type="submit"
@@ -958,7 +967,7 @@ export function ChatSessionConfigurationBar({
                   name="isAlwaysShow"
                   value={"Yes"}
                 >
-                  Yes
+                  <Trans>Yes</Trans>
                 </Button>
               </div>
             </Card>,
