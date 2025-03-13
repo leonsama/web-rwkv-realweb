@@ -8,12 +8,12 @@
     "wasm:build": "cross-env wasm-pack build ./web-rwkv-wasm --release --target web",
     "dev": "pnpm run wasm:build && vite",
     "dev:host": "pnpm run wasm:build && vite --host 0.0.0.0",
-    "build": "pnpm run wasm:build && vite build",
+    "build": "pnpm run lingui:compile && pnpm run wasm:build && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "pnpm dlx eslint . --ext .ts,.tsx",
     "lint:fix": "pnpm dlx eslint --fix . --ext .ts,.tsx",
-    "extract": "lingui extract",
-    "compile": "lingui compile --typescript"
+    "lingui:extract": "lingui extract",
+    "lingui:compile": "lingui compile --typescript"
   },
   "keywords": [],
   "author": "",
