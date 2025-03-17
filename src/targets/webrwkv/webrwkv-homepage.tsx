@@ -47,7 +47,7 @@ export function WebRWKVHomePage({
       style={{ scrollbarGutter: "stable" }}
       onScroll={(e) => {
         sessionStorage.setShowLargeBanner(
-          (e.target as HTMLDivElement).scrollTop < 10,
+          (e.target as HTMLDivElement).scrollTop < 2,
         );
       }}
     >

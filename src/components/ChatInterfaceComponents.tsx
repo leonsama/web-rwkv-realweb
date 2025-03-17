@@ -103,7 +103,7 @@ export function MessageInformationViewer({
       </CardTitle>
       <Entry
         label={<Trans>Content</Trans>}
-        className="min-h-min flex-1 flex-shrink-0 text-nowrap md:items-start"
+        className="min-h-min flex-1 flex-shrink-0 text-nowrap md:flex-col md:items-start"
       >
         <textarea
           value={
@@ -118,7 +118,7 @@ export function MessageInformationViewer({
       </Entry>
       <Entry
         label={<Trans>Sampler params</Trans>}
-        className="text-nowrap md:items-start"
+        className="text-nowrap md:flex-col md:items-start"
       >
         <div className="w-full">
           {currentMessageBlock.messageContents[
@@ -136,7 +136,10 @@ export function MessageInformationViewer({
             : "Empty"}
         </div>
       </Entry>
-      <Entry label={<Trans>Model Name</Trans>} className="text-nowrap">
+      <Entry
+        label={<Trans>Model Name</Trans>}
+        className="text-nowrap md:flex-col md:items-start"
+      >
         <div className="w-full text-wrap">
           {
             currentMessageBlock.messageContents[
@@ -145,7 +148,10 @@ export function MessageInformationViewer({
           }
         </div>
       </Entry>
-      <Entry label={<Trans>Date</Trans>} className="text-nowrap">
+      <Entry
+        label={<Trans>Date</Trans>}
+        className="text-nowrap md:flex-col md:items-start"
+      >
         <div className="w-full">
           {new Date(
             currentMessageBlock.messageContents[
@@ -154,8 +160,11 @@ export function MessageInformationViewer({
           ).toLocaleString()}
         </div>
       </Entry>
-      <Entry label="Completion ID" className="text-nowrap">
-        <div className="w-full">
+      <Entry
+        label="Completion ID"
+        className="text-nowrap md:flex-col md:items-start"
+      >
+        <div className="w-full select-all">
           {currentMessageBlock.messageContents[
             currentMessageBlock.activeMessageContentIndex
           ].completionId || "-"}

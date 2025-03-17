@@ -74,20 +74,20 @@ export const PromptTextarea = ({
   const render = (value: string) => {
     [
       {
-        re: /\n/g,
-        replace: "<br>",
-      },
-      {
-        re: /<br>$/,
-        replace: "<br><br>",
-      },
-      {
         re: /</g,
         replace: "&lt;",
       },
       {
         re: />/g,
         replace: "&gt;",
+      },
+      {
+        re: /\n/g,
+        replace: "<br>",
+      },
+      {
+        re: /<br>$/,
+        replace: "<br><br>",
       },
       ...(config.cover ? textContentFilter : []),
     ].forEach((e) => {

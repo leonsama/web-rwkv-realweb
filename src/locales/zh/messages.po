@@ -58,11 +58,11 @@ msgstr "高级"
 msgid "All"
 msgstr "全部"
 
-#: src/components/ChatInterfaceComponents.tsx:938
+#: src/components/ChatInterfaceComponents.tsx:947
 msgid "Always Display Pannel?"
 msgstr "始终显示面板吗？"
 
-#: src/components/ChatInterfaceComponents.tsx:943
+#: src/components/ChatInterfaceComponents.tsx:952
 msgid "Always display the session configuration pannel when entering a chat session?"
 msgstr "进入聊天会话时始终显示会话配置面板吗？"
 
@@ -138,7 +138,7 @@ msgstr "关闭"
 msgid "Color preference"
 msgstr "颜色偏好"
 
-#: src/components/ChatInterfaceComponents.tsx:743
+#: src/components/ChatInterfaceComponents.tsx:752
 msgid "Completion Options"
 msgstr "生成选项"
 
@@ -174,14 +174,14 @@ msgstr "深色"
 msgid "Data"
 msgstr "数据"
 
-#: src/components/ChatInterfaceComponents.tsx:148
+#: src/components/ChatInterfaceComponents.tsx:152
 msgid "Date"
 msgstr "日期"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
 #: src/pages/settings.tsx:92
 #: src/components/ModelConfigUI.tsx:627
-#: src/components/ChatInterfaceComponents.tsx:952
+#: src/components/ChatInterfaceComponents.tsx:961
 msgid "Default: No"
 msgstr "默认：否"
 
@@ -326,7 +326,7 @@ msgstr "加载中..."
 msgid "Made with ♥ by Leon"
 msgstr "Made with ♥ by Leon"
 
-#: src/components/ChatInterfaceComponents.tsx:759
+#: src/components/ChatInterfaceComponents.tsx:768
 msgid "Max Output Tokens"
 msgstr "最大输出 Token 数"
 
@@ -334,7 +334,7 @@ msgstr "最大输出 Token 数"
 msgid "Message Information"
 msgstr "消息信息"
 
-#: src/components/ChatInterfaceComponents.tsx:139
+#: src/components/ChatInterfaceComponents.tsx:140
 msgid "Model Name"
 msgstr "模型名称"
 
@@ -356,7 +356,7 @@ msgstr "新对话"
 #: src/pages/settings.tsx:310
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
-#: src/components/ChatInterfaceComponents.tsx:962
+#: src/components/ChatInterfaceComponents.tsx:971
 msgid "No"
 msgstr "否"
 
@@ -427,10 +427,10 @@ msgid "Recent Models"
 msgstr "最近使用的模型"
 
 #: src/pages/settings.tsx:81
-#: src/components/ChatInterfaceComponents.tsx:661
-#: src/components/ChatInterfaceComponents.tsx:755
-#: src/components/ChatInterfaceComponents.tsx:783
-#: src/components/ChatInterfaceComponents.tsx:820
+#: src/components/ChatInterfaceComponents.tsx:670
+#: src/components/ChatInterfaceComponents.tsx:764
+#: src/components/ChatInterfaceComponents.tsx:792
+#: src/components/ChatInterfaceComponents.tsx:829
 msgid "Reset"
 msgstr "重置"
 
@@ -458,7 +458,7 @@ msgstr "RWKV G1 2.9B 在训练初期已经展现强大的交互潜力。"
 msgid "RWKV7 G1 1.5B shows amazing performance early in training."
 msgstr "RWKV7 G1 1.5B 在训练初期就表现出惊人的性能。"
 
-#: src/components/ChatInterfaceComponents.tsx:649
+#: src/components/ChatInterfaceComponents.tsx:658
 msgid "Sampler Options"
 msgstr "采样器选项"
 
@@ -485,7 +485,7 @@ msgstr "已选择"
 msgid "Selected Model: {0}"
 msgstr "已选模型: {0}"
 
-#: src/components/ChatInterfaceComponents.tsx:630
+#: src/components/ChatInterfaceComponents.tsx:639
 msgid "Session Configuration"
 msgstr "会话配置"
 
@@ -518,15 +518,15 @@ msgstr "出错了"
 msgid "Stack"
 msgstr "堆栈"
 
-#: src/components/ChatInterfaceComponents.tsx:844
+#: src/components/ChatInterfaceComponents.tsx:853
 msgid "Stop Tokens"
 msgstr "停止词元（Token）"
 
-#: src/components/ChatInterfaceComponents.tsx:824
+#: src/components/ChatInterfaceComponents.tsx:833
 msgid "Stop Words"
 msgstr "停止词"
 
-#: src/components/ChatInterfaceComponents.tsx:806
+#: src/components/ChatInterfaceComponents.tsx:815
 msgid "Stop Words & Stop Tokens"
 msgstr "停止词与停止词元（Token）"
 
@@ -580,10 +580,10 @@ msgstr "今天有什么可以帮您的？"
 #: src/pages/settings.tsx:307
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
-#: src/components/ChatInterfaceComponents.tsx:970
+#: src/components/ChatInterfaceComponents.tsx:979
 msgid "Yes"
 msgstr "是"
 
-#: src/components/ChatInterfaceComponents.tsx:949
+#: src/components/ChatInterfaceComponents.tsx:958
 msgid "You can adjust this preference in the settings."
 msgstr "您可以在设置中调整此偏好。"

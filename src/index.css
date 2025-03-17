@@ -77,24 +77,25 @@ html.dark {
     mask-position: 0% 50%;
   }
 }
+@media (min-width: 768px) {
+  .invisibleScrollbar.hideScrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-.invisibleScrollbar.hideScrollbar::-webkit-scrollbar {
-  display: none;
-}
+  .invisibleScrollbar::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+    background-color: transparent;
+  }
 
-.invisibleScrollbar::-webkit-scrollbar {
-  width: 16px;
-  height: 16px;
-  background-color: transparent;
-}
+  .invisibleScrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
 
-.invisibleScrollbar::-webkit-scrollbar-thumb {
-  background-color: transparent;
-}
-
-.invisibleScrollbar {
-  scrollbar-width: none;
-  scrollbar-color: transparent transparent;
+  .invisibleScrollbar {
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
+  }
 }
 
 @media (min-width: 768px) {
