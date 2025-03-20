@@ -57,6 +57,7 @@
     "clsx": "^2.1.1",
     "comlink": "^4.4.2",
     "comlink-async-generator": "^0.0.1",
+    "copy-to-clipboard": "^3.3.3",
     "highlight.js": "^11.11.1",
     "idb-keyval": "^6.2.1",
     "immer": "^10.1.1",

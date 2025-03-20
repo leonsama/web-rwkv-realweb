@@ -94,7 +94,7 @@ export const PromptTextarea = ({
       value = value.replace(e.re, e.replace);
     });
     // value = value.replaceAll("\n", "<br>");
-    return value;
+    return value === "" ? "<br>" : value;
   };
   const selectionOperation = (
     labelLeft: string,
@@ -195,7 +195,7 @@ export const PromptTextarea = ({
         )}
         <div
           dangerouslySetInnerHTML={{ __html: render(content) }}
-          style={{ wordBreak: editable ? undefined : "break-word" }}
+          // style={{ wordBreak: editable ? undefined : "break-word" }}
           ref={innerRef}
         ></div>
       </div>

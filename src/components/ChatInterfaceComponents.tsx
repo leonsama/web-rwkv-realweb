@@ -29,6 +29,10 @@ import { useChatModelSession } from "../store/ModelStorage";
 import { useLocation, useNavigate, useParams } from "react-router";
 
 import { Trans } from "@lingui/react/macro";
+import { DivSizeTransition } from "./DivTransition";
+
+import copy from "copy-to-clipboard";
+import { toast } from "react-toastify";
 
 export function ToolButton({
   children,
@@ -54,6 +58,87 @@ export function ToolButton({
     >
       {children}
     </button>
+  );
+}
+
+export function SwitchActiveMessageContent({
+  currentMessageBlock,
+  ...prop
+}: {
+  currentMessageBlock: CurrentMessageBlock;
+} & React.HTMLAttributes<HTMLDivElement>) {
+  const { updateCurrentMessageBlock } = useContext(ChatSession);
+  return (
+    <div
+      {...prop}
+      className={cn(
+        "ml-auto flex items-center text-slate-400 dark:text-zinc-300",
+        currentMessageBlock.messageContents.length === 1 &&
+          currentMessageBlock.messageContents[
+            currentMessageBlock.activeMessageContentIndex
+          ].isGenerating
+          ? "pointer-events-none opacity-0"
+          : "opacity-100",
+        prop.className,
+      )}
+    >
+      <ToolButton
+        disabled={currentMessageBlock.activeMessageContentIndex < 1}
+        onClick={() => {
+          if (currentMessageBlock.activeMessageContentIndex < 1) return;
+          currentMessageBlock.activeMessageContentIndex =
+            currentMessageBlock.activeMessageContentIndex - 1;
+          updateCurrentMessageBlock(currentMessageBlock);
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          className="size-4"
+        >
+          <path
+            fillRule="evenodd"
+            d="M9.78 4.22a.75.75 0 0 1 0 1.06L7.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L5.47 8.53a.75.75 0 0 1 0-1.06l3.25-3.25a.75.75 0 0 1 1.06 0Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </ToolButton>
+      <span className="w-9 text-nowrap text-center text-sm">
+        {currentMessageBlock.activeMessageContentIndex + 1}
+        {" / "}
+        {currentMessageBlock.messageContents.length}
+      </span>
+      <ToolButton
+        disabled={
+          currentMessageBlock.activeMessageContentIndex + 1 >=
+          currentMessageBlock.messageContents.length
+        }
+        onClick={() => {
+          if (
+            currentMessageBlock.activeMessageContentIndex + 1 >=
+            currentMessageBlock.messageContents.length
+          )
+            return;
+          currentMessageBlock.activeMessageContentIndex =
+            currentMessageBlock.activeMessageContentIndex + 1;
+          updateCurrentMessageBlock(currentMessageBlock);
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          className="size-4"
+        >
+          <path
+            fillRule="evenodd"
+            d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </ToolButton>
+    </div>
   );
 }
 
@@ -179,20 +264,335 @@ export function UserContent({
 }: {
   currentMessageBlock: CurrentMessageBlock;
 }) {
+  const {
+    updateCurrentMessageBlock,
+    setCurrentModelName,
+    isGenerating,
+    setIsGenerating,
+    sessionConfiguration,
+    selectedModelTitle,
+    checkIsModelLoaded,
+    generator,
+    completion,
+    getActiveMessages,
+    webRWKVLLMInfer,
+    createNewMessasgeBlock,
+  } = useContext(ChatSession);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
+  const [value, setValue] = useState(
+    currentMessageBlock.messageContents[
+      currentMessageBlock.activeMessageContentIndex
+    ].content,
+  );
+  const prevContent = useRef<string>("");
+  const startEdit = () => {
+    prevContent.current =
+      currentMessageBlock.messageContents[
+        currentMessageBlock.activeMessageContentIndex
+      ].content;
+    setIsEditing(true);
+    // setTimeout(() => {
+    //   setIsFocus(true);
+    // }, 0);
+  };
+  const cancelEdit = () => {
+    setValue(prevContent.current);
+    setTimeout(() => {
+      setIsEditing(false);
+    }, 0);
+  };
+  const saveEdit = () => {
+    currentMessageBlock.messageContents[
+      currentMessageBlock.activeMessageContentIndex
+    ].content = value;
+    currentMessageBlock.messageContents[
+      currentMessageBlock.activeMessageContentIndex
+    ].timestamp = Date.now();
+    updateCurrentMessageBlock(currentMessageBlock);
+    setIsEditing(false);
+    createNewGeneration(value);
+  };
+
+  const sendEdit = () => {
+    currentMessageBlock.messageContents[
+      currentMessageBlock.activeMessageContentIndex
+    ].content = value;
+    currentMessageBlock.messageContents[
+      currentMessageBlock.activeMessageContentIndex
+    ].timestamp = Date.now();
+    updateCurrentMessageBlock(currentMessageBlock);
+    setIsEditing(false);
+    createNewGeneration(value);
+  };
+
+  const createNewGeneration = async (content: string) => {
+    if (isGenerating) throw new Error("Unexpected regenerate task.");
+
+    currentMessageBlock.messageContents.push({
+      id: currentMessageBlock.messageContents.length,
+      role: currentMessageBlock.messageContents[
+        currentMessageBlock.activeMessageContentIndex
+      ].role,
+      content: content,
+      activeNextMessageBlockIndex: -1,
+      nextMessagesBlockIds: [],
+      avatar: null,
+      samplerConfig: sessionConfiguration.defaultSamplerConfig,
+      isGenerating: false,
+      rank: 0,
+      modelName: selectedModelTitle,
+      timestamp: Date.now(),
+      completionId: null,
+    });
+    currentMessageBlock.activeMessageContentIndex =
+      currentMessageBlock.messageContents.length - 1;
+    updateCurrentMessageBlock(currentMessageBlock);
+
+    const resultBlock = createNewMessasgeBlock({
+      initialMessage: { role: "Assistant", content: "" },
+      parentBlockId: currentMessageBlock.id,
+      samplerConfig: sessionConfiguration.defaultSamplerConfig,
+      isGenerating: true,
+    });
+
+    const activeMessageContentIndex = resultBlock.activeMessageContentIndex;
+    updateCurrentMessageBlock(resultBlock);
+
+    setIsGenerating(true);
+
+    await checkIsModelLoaded((modelName) => modelName !== null);
+
+    generator.current = await completion({
+      stream: true,
+      messages: getActiveMessages({
+        isGenerating: true,
+        systemPrompt: sessionConfiguration.systemPrompt || "",
+      }),
+      max_tokens: sessionConfiguration.maxTokens,
+      stop_tokens: sessionConfiguration.stopTokens,
+      stop_words: sessionConfiguration.stopWords,
+      temperature: sessionConfiguration.defaultSamplerConfig.temperature,
+      top_p: sessionConfiguration.defaultSamplerConfig.top_p,
+      presence_penalty:
+        sessionConfiguration.defaultSamplerConfig.presence_penalty,
+      count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
+      penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
+      enableReasoning: webRWKVLLMInfer.current.isEnableReasoning,
+    });
+
+    let result = "";
+    for await (const chunk of generator.current) {
+      result += chunk.word;
+      resultBlock.messageContents[activeMessageContentIndex].content = result;
+      resultBlock.messageContents[activeMessageContentIndex].modelName =
+        chunk.model;
+      resultBlock.messageContents[activeMessageContentIndex].completionId =
+        chunk.completionId;
+      setCurrentModelName(chunk.model);
+      updateCurrentMessageBlock(resultBlock);
+    }
+    resultBlock.messageContents[activeMessageContentIndex].isGenerating = false;
+    resultBlock.messageContents[activeMessageContentIndex].timestamp =
+      Date.now();
+    updateCurrentMessageBlock(resultBlock);
+
+    setIsGenerating(false);
+  };
+
   return (
-    <div className="z-10 flex flex-row-reverse motion-opacity-in-[0%] motion-duration-[0.4s]">
-      <div className="ml-10 flex max-w-screen-sm flex-col">
-        <div className="w-full select-text overflow-hidden rounded-3xl rounded-tr-md bg-slate-100 p-4 dark:bg-zinc-800">
-          <span className="whitespace-pre-wrap">
-            {
+    <div className="z-10 flex flex-col">
+      <div
+        className={cn(
+          "flex justify-end pr-1 pt-1 motion-opacity-in-[0%] motion-duration-[0.4s]",
+        )}
+      >
+        <DivSizeTransition
+          trigger={isEditing}
+          className={cn(
+            "flex max-w-screen-sm flex-col transition-[width,height] duration-300",
+            isEditing ? "w-full" : "",
+          )}
+        >
+          <div
+            className={cn(
+              "flex w-full select-text flex-col overflow-hidden rounded-3xl rounded-tr-md bg-slate-100 p-4 shadow-slate-300 transition-[box-shadow,background-color,border-radius,padding] duration-300 dark:bg-zinc-800 dark:shadow-zinc-600",
+              isEditing
+                ? "rounded-tr-3xl bg-transparent shadow-[0px_0px_0px_0.1rem_var(--tw-shadow-color)] dark:bg-transparent"
+                : "shadow-[0px_0px_0px_0rem_var(--tw-shadow-color)]",
+            )}
+            onClick={() => {
+              if (isEditing) setIsFocus(true);
+            }}
+          >
+            <PromptTextarea
+              value={value}
+              onChange={setValue}
+              editable={isEditing}
+              className={cn(
+                "flex-1 caret-black dark:caret-zinc-300",
+                !isEditing && "!select-text",
+              )}
+              isFocus={isFocus}
+              setIsFocus={setIsFocus}
+            ></PromptTextarea>
+            <div
+              className={cn(
+                "relative flex-shrink-0 transition-[height] duration-300",
+                isEditing ? "h-14" : "h-0",
+              )}
+            >
+              <div
+                className={cn(
+                  "absolute left-0 right-0 top-4 flex h-10 justify-end gap-4 transition-[margin,height,opacity,transform] duration-300",
+                  isEditing
+                    ? "opacity-100"
+                    : "pointer-events-none translate-y-7 opacity-0",
+                )}
+              >
+                <Button
+                  className="mr-auto rounded-3xl bg-transparent dark:bg-transparent"
+                  onClick={() => {
+                    saveEdit();
+                  }}
+                >
+                  <Trans>Save</Trans>
+                </Button>
+                <Button
+                  className="rounded-3xl"
+                  onClick={() => {
+                    cancelEdit();
+                  }}
+                >
+                  <Trans>Cancel</Trans>
+                </Button>
+                <Button className="rounded-3xl" onClick={sendEdit}>
+                  <Trans>Send</Trans>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DivSizeTransition>
+      </div>
+      <div className="flex h-9 items-center justify-end gap-2 text-slate-400">
+        {/* switch active currentMessageContent */}
+        <SwitchActiveMessageContent
+          currentMessageBlock={currentMessageBlock}
+          className={cn(
+            currentMessageBlock.messageContents.length === 1 && "opacity-0",
+          )}
+        ></SwitchActiveMessageContent>
+        {/* copy */}
+        <ToolButton
+          className="active:motion-preset-confetti"
+          onClick={() => {
+            copy(
               currentMessageBlock.messageContents[
                 currentMessageBlock.activeMessageContentIndex
-              ].content
+              ].content,
+            );
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+            />
+          </svg>
+        </ToolButton>
+        {/* edit */}
+        <ToolButton
+          onClick={() => {
+            if (isEditing) {
+              cancelEdit();
+            } else {
+              startEdit();
             }
-          </span>
-        </div>
+          }}
+          className={cn(isEditing && "bg-slate-300/40 dark:bg-zinc-600/70")}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+            />
+          </svg>
+        </ToolButton>
       </div>
     </div>
+  );
+}
+
+function AssistantMessageEditor({ content }: { content: string }) {
+  const [value, setValue] = useState(content);
+  return (
+    <Card className="h-screen w-screen max-md:rounded-none md:h-[28rem] md:w-[36rem] lg:h-[36rem] lg:w-[44rem]">
+      <CardTitle
+        icon={
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+            />
+          </svg>
+        }
+      >
+        <span className="text-lg font-bold">
+          <Trans>Edit Message</Trans>
+        </span>
+      </CardTitle>
+      <Entry className="flex-1">
+        <textarea
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          name="newcontent"
+          className="h-full min-h-80 w-full rounded-lg bg-white p-2 dark:bg-zinc-700"
+        ></textarea>
+      </Entry>
+      <div className="-mb-1 flex justify-end gap-2">
+        <Button
+          type="submit"
+          className="cursor-pointer rounded-xl bg-transparent px-4 py-2 active:scale-95"
+          name="savecontent"
+          value={"cancel"}
+        >
+          <Trans>Cancel</Trans>
+        </Button>
+        <Button
+          type="submit"
+          className="cursor-pointer rounded-xl bg-transparent px-4 py-2 font-semibold active:scale-95"
+          name="savecontent"
+          value={"save"}
+        >
+          <Trans>Save</Trans>
+        </Button>
+      </div>
+    </Card>
   );
 }
 
@@ -218,6 +618,7 @@ export function AssistantContent({
   } = useContext(ChatSession);
 
   const avatarEle = useRef<HTMLDivElement>(null);
+  const mdKeySuffix = useRef(Math.random());
 
   const regenerate = async () => {
     if (isGenerating) throw new Error("Unexpected regenerate task.");
@@ -289,6 +690,36 @@ export function AssistantContent({
     setIsGenerating(false);
   };
 
+  const startEdit = async () => {
+    try {
+      const result = await createModalForm<{
+        newcontent: string;
+        savecontent: "save" | "cancel";
+      }>(
+        <AssistantMessageEditor
+          content={
+            currentMessageBlock.messageContents[
+              currentMessageBlock.activeMessageContentIndex
+            ].content
+          }
+        ></AssistantMessageEditor>,
+        { closeOnBackgroundClick: true },
+      ).open();
+      if (result.savecontent === "save") {
+        currentMessageBlock.messageContents[
+          currentMessageBlock.activeMessageContentIndex
+        ].content = result.newcontent;
+        currentMessageBlock.messageContents[
+          currentMessageBlock.activeMessageContentIndex
+        ].timestamp = Date.now();
+        mdKeySuffix.current = Math.random();
+        updateCurrentMessageBlock(currentMessageBlock);
+      }
+    } catch (error) {
+      return true;
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 motion-opacity-in-[0%] motion-duration-[0.4s] md:flex-row">
       <div className="z-20 mt-3">
@@ -300,74 +731,9 @@ export function AssistantContent({
             ref={avatarEle}
           ></div>
           {/* switch active currentMessageContent */}
-          <div
-            className={cn(
-              "ml-auto flex items-center text-slate-400 dark:text-zinc-300",
-              currentMessageBlock.messageContents.length === 1 &&
-                currentMessageBlock.messageContents[
-                  currentMessageBlock.activeMessageContentIndex
-                ].isGenerating
-                ? "pointer-events-none opacity-0"
-                : "opacity-100",
-            )}
-          >
-            <ToolButton
-              disabled={currentMessageBlock.activeMessageContentIndex < 1}
-              onClick={() => {
-                if (currentMessageBlock.activeMessageContentIndex < 1) return;
-                currentMessageBlock.activeMessageContentIndex =
-                  currentMessageBlock.activeMessageContentIndex - 1;
-                updateCurrentMessageBlock(currentMessageBlock);
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="size-4"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M9.78 4.22a.75.75 0 0 1 0 1.06L7.06 8l2.72 2.72a.75.75 0 1 1-1.06 1.06L5.47 8.53a.75.75 0 0 1 0-1.06l3.25-3.25a.75.75 0 0 1 1.06 0Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </ToolButton>
-            <span className="w-9 text-nowrap text-center text-sm">
-              {currentMessageBlock.activeMessageContentIndex + 1}
-              {" / "}
-              {currentMessageBlock.messageContents.length}
-            </span>
-            <ToolButton
-              disabled={
-                currentMessageBlock.activeMessageContentIndex + 1 >=
-                currentMessageBlock.messageContents.length
-              }
-              onClick={() => {
-                if (
-                  currentMessageBlock.activeMessageContentIndex + 1 >=
-                  currentMessageBlock.messageContents.length
-                )
-                  return;
-                currentMessageBlock.activeMessageContentIndex =
-                  currentMessageBlock.activeMessageContentIndex + 1;
-                updateCurrentMessageBlock(currentMessageBlock);
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="size-4"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </ToolButton>
-          </div>
+          <SwitchActiveMessageContent
+            currentMessageBlock={currentMessageBlock}
+          ></SwitchActiveMessageContent>
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-2">
@@ -392,7 +758,7 @@ export function AssistantContent({
                 currentMessageBlock.activeMessageContentIndex
               ].isGenerating
             }
-            key={`${currentMessageBlock.key}-${currentMessageBlock.activeMessageContentIndex}`}
+            key={`${currentMessageBlock.key}-${currentMessageBlock.activeMessageContentIndex}-${mdKeySuffix.current}`}
           >
             {RWKVOutputFormatter(
               currentMessageBlock.messageContents[
@@ -444,7 +810,16 @@ export function AssistantContent({
             }}
           </Modal>
           {/* copy */}
-          <ToolButton className="active:motion-preset-confetti">
+          <ToolButton
+            className="active:motion-preset-confetti"
+            onClick={() => {
+              copy(
+                currentMessageBlock.messageContents[
+                  currentMessageBlock.activeMessageContentIndex
+                ].content,
+              );
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -457,6 +832,27 @@ export function AssistantContent({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+              />
+            </svg>
+          </ToolButton>
+          {/* edit */}
+          <ToolButton
+            onClick={() => {
+              startEdit();
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
               />
             </svg>
           </ToolButton>

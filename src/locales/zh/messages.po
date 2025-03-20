@@ -46,6 +46,10 @@ msgstr "缓存中已存在同名模型。是否覆盖缓存？"
 msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
 msgstr "仅有 0.1B 参数的推理模型，小而惊艳。"
 
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:48
+msgid "A tiny but impressive reasoning model with only 0.4B parameters."
+msgstr "仅有 0.4B 参数的推理模型，小而惊艳。"
+
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:232
 msgid "About RWKV"
 msgstr "关于 RWKV"
@@ -58,11 +62,11 @@ msgstr "高级"
 msgid "All"
 msgstr "全部"
 
-#: src/components/ChatInterfaceComponents.tsx:947
+#: src/components/ChatInterfaceComponents.tsx:1325
 msgid "Always Display Pannel?"
 msgstr "始终显示面板吗？"
 
-#: src/components/ChatInterfaceComponents.tsx:952
+#: src/components/ChatInterfaceComponents.tsx:1330
 msgid "Always display the session configuration pannel when entering a chat session?"
 msgstr "进入聊天会话时始终显示会话配置面板吗？"
 
@@ -105,6 +109,8 @@ msgstr "缓存模型详情"
 
 #: src/components/ModelConfigUI.tsx:219
 #: src/components/ModelConfigUI.tsx:725
+#: src/components/ChatInterfaceComponents.tsx:450
+#: src/components/ChatInterfaceComponents.tsx:566
 msgid "Cancel"
 msgstr "取消"
 
@@ -138,7 +144,7 @@ msgstr "关闭"
 msgid "Color preference"
 msgstr "颜色偏好"
 
-#: src/components/ChatInterfaceComponents.tsx:752
+#: src/components/ChatInterfaceComponents.tsx:1130
 msgid "Completion Options"
 msgstr "生成选项"
 
@@ -146,17 +152,17 @@ msgstr "生成选项"
 msgid "Confirm"
 msgstr "确认"
 
-#: src/components/ChatInterfaceComponents.tsx:105
+#: src/components/ChatInterfaceComponents.tsx:190
 msgid "Content"
 msgstr "内容"
+
+#: src/components/ChatInterfaceComponents.tsx:391
+#~ msgid "Copied"
+#~ msgstr "已复制"
 
 #: src/pages/settings.tsx:228
 msgid "Current Language"
 msgstr "中文"
-
-#: src/pages/settings.tsx:216
-#~ msgid "Current Language "
-#~ msgstr ""
 
 #: src/components/ChatTextarea.tsx:433
 msgid "Current Model: <0>{currentModelName}</0>"
@@ -174,14 +180,14 @@ msgstr "深色"
 msgid "Data"
 msgstr "数据"
 
-#: src/components/ChatInterfaceComponents.tsx:152
+#: src/components/ChatInterfaceComponents.tsx:237
 msgid "Date"
 msgstr "日期"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
 #: src/pages/settings.tsx:92
 #: src/components/ModelConfigUI.tsx:627
-#: src/components/ChatInterfaceComponents.tsx:961
+#: src/components/ChatInterfaceComponents.tsx:1339
 msgid "Default: No"
 msgstr "默认：否"
 
@@ -204,6 +210,10 @@ msgstr "下载中"
 #: src/components/ModelConfigUI.tsx:401
 msgid "Downloading Model"
 msgstr "下载模型中"
+
+#: src/components/ChatInterfaceComponents.tsx:548
+msgid "Edit Message"
+msgstr "编辑消息"
 
 #~ msgid "English"
 #~ msgstr "英语"
@@ -233,7 +243,7 @@ msgstr "文件名"
 msgid "From"
 msgstr "来源"
 
-#: src/components/MarkdownRender.tsx:149
+#: src/components/MarkdownRender.tsx:179
 msgid "Hide reasoning"
 msgstr "隐藏推理过程"
 
@@ -326,15 +336,15 @@ msgstr "加载中..."
 msgid "Made with ♥ by Leon"
 msgstr "Made with ♥ by Leon"
 
-#: src/components/ChatInterfaceComponents.tsx:768
+#: src/components/ChatInterfaceComponents.tsx:1146
 msgid "Max Output Tokens"
 msgstr "最大输出 Token 数"
 
-#: src/components/ChatInterfaceComponents.tsx:88
+#: src/components/ChatInterfaceComponents.tsx:173
 msgid "Message Information"
 msgstr "消息信息"
 
-#: src/components/ChatInterfaceComponents.tsx:140
+#: src/components/ChatInterfaceComponents.tsx:225
 msgid "Model Name"
 msgstr "模型名称"
 
@@ -356,7 +366,7 @@ msgstr "新对话"
 #: src/pages/settings.tsx:310
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
-#: src/components/ChatInterfaceComponents.tsx:971
+#: src/components/ChatInterfaceComponents.tsx:1349
 msgid "No"
 msgstr "否"
 
@@ -427,10 +437,10 @@ msgid "Recent Models"
 msgstr "最近使用的模型"
 
 #: src/pages/settings.tsx:81
-#: src/components/ChatInterfaceComponents.tsx:670
-#: src/components/ChatInterfaceComponents.tsx:764
-#: src/components/ChatInterfaceComponents.tsx:792
-#: src/components/ChatInterfaceComponents.tsx:829
+#: src/components/ChatInterfaceComponents.tsx:1048
+#: src/components/ChatInterfaceComponents.tsx:1142
+#: src/components/ChatInterfaceComponents.tsx:1170
+#: src/components/ChatInterfaceComponents.tsx:1207
 msgid "Reset"
 msgstr "重置"
 
@@ -450,21 +460,26 @@ msgstr "类 RNN 大语言模型"
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV（发音为 RwaKuv）是一种具有出色 LLM 性能的 RNN，并且可以像 Transformer 一样并行化。我们目前处于 RWKV7-G1 \"GooseOne\" 推理模型阶段。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:78
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:108
 msgid "RWKV G1 2.9B has shown promising potential in the early stages of training."
 msgstr "RWKV G1 2.9B 在训练初期已经展现强大的交互潜力。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:48
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:78
 msgid "RWKV7 G1 1.5B shows amazing performance early in training."
 msgstr "RWKV7 G1 1.5B 在训练初期就表现出惊人的性能。"
 
-#: src/components/ChatInterfaceComponents.tsx:658
+#: src/components/ChatInterfaceComponents.tsx:1036
 msgid "Sampler Options"
 msgstr "采样器选项"
 
-#: src/components/ChatInterfaceComponents.tsx:120
+#: src/components/ChatInterfaceComponents.tsx:205
 msgid "Sampler params"
 msgstr "采样器参数"
+
+#: src/components/ChatInterfaceComponents.tsx:442
+#: src/components/ChatInterfaceComponents.tsx:574
+msgid "Save"
+msgstr "保存"
 
 #: src/components/ModelConfigUI.tsx:1401
 msgid "Select / Drop a .st / .prefab file"
@@ -485,7 +500,11 @@ msgstr "已选择"
 msgid "Selected Model: {0}"
 msgstr "已选模型: {0}"
 
-#: src/components/ChatInterfaceComponents.tsx:639
+#: src/components/ChatInterfaceComponents.tsx:453
+msgid "Send"
+msgstr "发送"
+
+#: src/components/ChatInterfaceComponents.tsx:1017
 msgid "Session Configuration"
 msgstr "会话配置"
 
@@ -494,7 +513,7 @@ msgstr "会话配置"
 msgid "Settings"
 msgstr "设置"
 
-#: src/components/MarkdownRender.tsx:153
+#: src/components/MarkdownRender.tsx:183
 msgid "Show reasoning"
 msgstr "显示推理过程"
 
@@ -518,15 +537,15 @@ msgstr "出错了"
 msgid "Stack"
 msgstr "堆栈"
 
-#: src/components/ChatInterfaceComponents.tsx:853
+#: src/components/ChatInterfaceComponents.tsx:1231
 msgid "Stop Tokens"
 msgstr "停止词元（Token）"
 
-#: src/components/ChatInterfaceComponents.tsx:833
+#: src/components/ChatInterfaceComponents.tsx:1211
 msgid "Stop Words"
 msgstr "停止词"
 
-#: src/components/ChatInterfaceComponents.tsx:815
+#: src/components/ChatInterfaceComponents.tsx:1193
 msgid "Stop Words & Stop Tokens"
 msgstr "停止词与停止词元（Token）"
 
@@ -539,7 +558,7 @@ msgstr "请帮我介绍埃菲尔铁塔。"
 msgid "Temp Latest Traininng Models"
 msgstr "正在训练的临时模型"
 
-#: src/components/MarkdownRender.tsx:145
+#: src/components/MarkdownRender.tsx:175
 msgid "Thinking..."
 msgstr "思考中..."
 
@@ -580,10 +599,10 @@ msgstr "今天有什么可以帮您的？"
 #: src/pages/settings.tsx:307
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
-#: src/components/ChatInterfaceComponents.tsx:979
+#: src/components/ChatInterfaceComponents.tsx:1357
 msgid "Yes"
 msgstr "是"
 
-#: src/components/ChatInterfaceComponents.tsx:958
+#: src/components/ChatInterfaceComponents.tsx:1336
 msgid "You can adjust this preference in the settings."
 msgstr "您可以在设置中调整此偏好。"

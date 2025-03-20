@@ -45,6 +45,10 @@ msgstr "A model with the same filename exists in the cache. Overwrite the cache?
 msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
 msgstr "A tiny but impressive reasoning model with only 0.1B parameters. "
 
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:48
+msgid "A tiny but impressive reasoning model with only 0.4B parameters."
+msgstr "A tiny but impressive reasoning model with only 0.4B parameters."
+
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:232
 msgid "About RWKV"
 msgstr "About RWKV"
@@ -57,11 +61,11 @@ msgstr "Advance"
 msgid "All"
 msgstr "All"
 
-#: src/components/ChatInterfaceComponents.tsx:947
+#: src/components/ChatInterfaceComponents.tsx:1325
 msgid "Always Display Pannel?"
 msgstr "Always Display Pannel?"
 
-#: src/components/ChatInterfaceComponents.tsx:952
+#: src/components/ChatInterfaceComponents.tsx:1330
 msgid "Always display the session configuration pannel when entering a chat session?"
 msgstr "Always display the session configuration pannel when entering a chat session?"
 
@@ -104,6 +108,8 @@ msgstr "Cached Model Details"
 
 #: src/components/ModelConfigUI.tsx:219
 #: src/components/ModelConfigUI.tsx:725
+#: src/components/ChatInterfaceComponents.tsx:450
+#: src/components/ChatInterfaceComponents.tsx:566
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -137,7 +143,7 @@ msgstr "Close"
 msgid "Color preference"
 msgstr "Color preference"
 
-#: src/components/ChatInterfaceComponents.tsx:752
+#: src/components/ChatInterfaceComponents.tsx:1130
 msgid "Completion Options"
 msgstr "Completion Options"
 
@@ -145,17 +151,17 @@ msgstr "Completion Options"
 msgid "Confirm"
 msgstr "Confirm"
 
-#: src/components/ChatInterfaceComponents.tsx:105
+#: src/components/ChatInterfaceComponents.tsx:190
 msgid "Content"
 msgstr "Content"
+
+#: src/components/ChatInterfaceComponents.tsx:391
+#~ msgid "Copied"
+#~ msgstr "Copied"
 
 #: src/pages/settings.tsx:228
 msgid "Current Language"
 msgstr "English"
-
-#: src/pages/settings.tsx:216
-#~ msgid "Current Language "
-#~ msgstr "Current Language "
 
 #: src/components/ChatTextarea.tsx:433
 msgid "Current Model: <0>{currentModelName}</0>"
@@ -173,14 +179,14 @@ msgstr "Dark"
 msgid "Data"
 msgstr "Data"
 
-#: src/components/ChatInterfaceComponents.tsx:152
+#: src/components/ChatInterfaceComponents.tsx:237
 msgid "Date"
 msgstr "Date"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
 #: src/pages/settings.tsx:92
 #: src/components/ModelConfigUI.tsx:627
-#: src/components/ChatInterfaceComponents.tsx:961
+#: src/components/ChatInterfaceComponents.tsx:1339
 msgid "Default: No"
 msgstr "Default: No"
 
@@ -203,6 +209,10 @@ msgstr "Downloading"
 #: src/components/ModelConfigUI.tsx:401
 msgid "Downloading Model"
 msgstr "Downloading Model"
+
+#: src/components/ChatInterfaceComponents.tsx:548
+msgid "Edit Message"
+msgstr "Edit Message"
 
 #: src/pages/settings.tsx:209
 #~ msgid "English"
@@ -233,7 +243,7 @@ msgstr "Filename"
 msgid "From"
 msgstr "From"
 
-#: src/components/MarkdownRender.tsx:149
+#: src/components/MarkdownRender.tsx:179
 msgid "Hide reasoning"
 msgstr "Hide reasoning"
 
@@ -326,15 +336,15 @@ msgstr "Loading..."
 msgid "Made with ♥ by Leon"
 msgstr "Made with ♥ by Leon"
 
-#: src/components/ChatInterfaceComponents.tsx:768
+#: src/components/ChatInterfaceComponents.tsx:1146
 msgid "Max Output Tokens"
 msgstr "Max Output Tokens"
 
-#: src/components/ChatInterfaceComponents.tsx:88
+#: src/components/ChatInterfaceComponents.tsx:173
 msgid "Message Information"
 msgstr "Message Information"
 
-#: src/components/ChatInterfaceComponents.tsx:140
+#: src/components/ChatInterfaceComponents.tsx:225
 msgid "Model Name"
 msgstr "Model Name"
 
@@ -356,7 +366,7 @@ msgstr "New Chat"
 #: src/pages/settings.tsx:310
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
-#: src/components/ChatInterfaceComponents.tsx:971
+#: src/components/ChatInterfaceComponents.tsx:1349
 msgid "No"
 msgstr "No"
 
@@ -427,10 +437,10 @@ msgid "Recent Models"
 msgstr "Recent Models"
 
 #: src/pages/settings.tsx:81
-#: src/components/ChatInterfaceComponents.tsx:670
-#: src/components/ChatInterfaceComponents.tsx:764
-#: src/components/ChatInterfaceComponents.tsx:792
-#: src/components/ChatInterfaceComponents.tsx:829
+#: src/components/ChatInterfaceComponents.tsx:1048
+#: src/components/ChatInterfaceComponents.tsx:1142
+#: src/components/ChatInterfaceComponents.tsx:1170
+#: src/components/ChatInterfaceComponents.tsx:1207
 msgid "Reset"
 msgstr "Reset"
 
@@ -450,21 +460,26 @@ msgstr "RNN-Inspired Large Language Model"
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:78
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:108
 msgid "RWKV G1 2.9B has shown promising potential in the early stages of training."
 msgstr "RWKV G1 2.9B has shown promising potential in the early stages of training."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:48
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:78
 msgid "RWKV7 G1 1.5B shows amazing performance early in training."
 msgstr "RWKV7 G1 1.5B shows amazing performance early in training."
 
-#: src/components/ChatInterfaceComponents.tsx:658
+#: src/components/ChatInterfaceComponents.tsx:1036
 msgid "Sampler Options"
 msgstr "Sampler Options"
 
-#: src/components/ChatInterfaceComponents.tsx:120
+#: src/components/ChatInterfaceComponents.tsx:205
 msgid "Sampler params"
 msgstr "Sampler params"
+
+#: src/components/ChatInterfaceComponents.tsx:442
+#: src/components/ChatInterfaceComponents.tsx:574
+msgid "Save"
+msgstr "Save"
 
 #: src/components/ModelConfigUI.tsx:1401
 msgid "Select / Drop a .st / .prefab file"
@@ -485,7 +500,11 @@ msgstr "Selected"
 msgid "Selected Model: {0}"
 msgstr "Selected Model: {0}"
 
-#: src/components/ChatInterfaceComponents.tsx:639
+#: src/components/ChatInterfaceComponents.tsx:453
+msgid "Send"
+msgstr "Send"
+
+#: src/components/ChatInterfaceComponents.tsx:1017
 msgid "Session Configuration"
 msgstr "Session Configuration"
 
@@ -494,7 +513,7 @@ msgstr "Session Configuration"
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/MarkdownRender.tsx:153
+#: src/components/MarkdownRender.tsx:183
 msgid "Show reasoning"
 msgstr "Show reasoning"
 
@@ -518,15 +537,15 @@ msgstr "Something went wrong"
 msgid "Stack"
 msgstr "Stack"
 
-#: src/components/ChatInterfaceComponents.tsx:853
+#: src/components/ChatInterfaceComponents.tsx:1231
 msgid "Stop Tokens"
 msgstr "Stop Tokens"
 
-#: src/components/ChatInterfaceComponents.tsx:833
+#: src/components/ChatInterfaceComponents.tsx:1211
 msgid "Stop Words"
 msgstr "Stop Words"
 
-#: src/components/ChatInterfaceComponents.tsx:815
+#: src/components/ChatInterfaceComponents.tsx:1193
 msgid "Stop Words & Stop Tokens"
 msgstr "Stop Words & Stop Tokens"
 
@@ -539,7 +558,7 @@ msgstr "Tell me about the Eiffel Tower."
 msgid "Temp Latest Traininng Models"
 msgstr "Temp Latest Traininng Models"
 
-#: src/components/MarkdownRender.tsx:145
+#: src/components/MarkdownRender.tsx:175
 msgid "Thinking..."
 msgstr "Thinking..."
 
@@ -581,10 +600,10 @@ msgstr "What can I help you today?"
 #: src/pages/settings.tsx:307
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
-#: src/components/ChatInterfaceComponents.tsx:979
+#: src/components/ChatInterfaceComponents.tsx:1357
 msgid "Yes"
 msgstr "Yes"
 
-#: src/components/ChatInterfaceComponents.tsx:958
+#: src/components/ChatInterfaceComponents.tsx:1336
 msgid "You can adjust this preference in the settings."
 msgstr "You can adjust this preference in the settings."

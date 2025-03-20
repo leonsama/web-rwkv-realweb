@@ -22,6 +22,7 @@
   font-size: 1rem;
   font-weight: 400;
   line-height: inherit;
+  min-width: 2px;
 }
 
 .PromptEditorInner > textarea {

@@ -54,7 +54,7 @@ export function WebRWKVHomePage({
       <div className="flex h-full w-full max-w-screen-md flex-1 flex-col gap-4">
         <h1
           className={cn(
-            "mt-40 select-none text-6xl font-medium text-slate-300 min-[345px]:mt-28 xl:mt-36 xl:text-7xl",
+            "mt-44 select-none text-6xl font-medium text-slate-300 min-[345px]:mt-32 xl:mt-36 xl:text-7xl",
             showUI
               ? "motion-translate-y-in-75 motion-opacity-in-0"
               : "motion-translate-y-out-75 motion-opacity-out-0",

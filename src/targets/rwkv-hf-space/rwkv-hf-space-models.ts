@@ -31,7 +31,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
       },
     },
     APIParam: {
-      baseUrl: "https://rwkv-red-team-rwkv-latestspace.hf.space/api/v1",
+      baseUrl: import.meta.env.VITE_API_MODEL_BASE_URL,
       key: "sk-test",
     },
     from: "API",
@@ -43,14 +43,14 @@ export const AVALIABLE_HF_MODELS: APIModel[] = [...RWKV_G1_MODELS];
 
 export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
   {
-    title: "RWKV7 G1 1.5B 16% trained",
-    name: "RWKV7-G1-1.5B-16%trained-20250308-ctx4k",
-    description: t`RWKV7 G1 1.5B shows amazing performance early in training.`,
+    title: "RWKV7 G1 0.4B 75% trained",
+    name: "RWKV7-G1-0.4B-75%trained-20250317-ctx4k",
+    description: t`A tiny but impressive reasoning model with only 0.4B parameters.`,
     supportReasoning: true,
-    reasoningName: "RWKV7-G1-1.5B-16%trained-20250308-ctx4k:thinking",
+    reasoningName: "RWKV7-G1-0.4B-75%trained-20250317-ctx4k:thinking",
     param: "1.5B",
     dataset: "v2.8",
-    update: "2025/03/08",
+    update: "2025/03/17",
     ctx: "4096",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
@@ -66,7 +66,37 @@ export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
       },
     },
     APIParam: {
-      baseUrl: "https://rwkv-red-team-rwkv-latestspace.hf.space/api/v1",
+      baseUrl: import.meta.env.VITE_API_MODEL_BASE_URL,
+      key: "sk-test",
+    },
+    from: "API",
+    defaultMode: "reasoning",
+  },
+  {
+    title: "RWKV7 G1 1.5B 32% trained",
+    name: "RWKV7-G1-1.5B-32%trained-20250319-ctx4k",
+    description: t`RWKV7 G1 1.5B shows amazing performance early in training.`,
+    supportReasoning: true,
+    reasoningName: "RWKV7-G1-1.5B-32%trained-20250319-ctx4k:thinking",
+    param: "1.5B",
+    dataset: "v2.8",
+    update: "2025/03/19",
+    ctx: "4096",
+    defaultSessionConfiguration: {
+      stopTokens: DEFAULT_STOP_TOKENS,
+      stopWords: DEFAULT_STOP_WORDS,
+      maxTokens: 4096,
+      systemPrompt: null,
+      defaultSamplerConfig: {
+        temperature: 2.0,
+        top_p: 0.3,
+        presence_penalty: 0.5,
+        count_penalty: 0.5,
+        half_life: 200,
+      },
+    },
+    APIParam: {
+      baseUrl: import.meta.env.VITE_API_MODEL_BASE_URL,
       key: "sk-test",
     },
     from: "API",
@@ -96,7 +126,7 @@ export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
       },
     },
     APIParam: {
-      baseUrl: "https://rwkv-red-team-rwkv-latestspace.hf.space/api/v1",
+      baseUrl: import.meta.env.VITE_API_MODEL_BASE_URL,
       key: "sk-test",
     },
     from: "API",

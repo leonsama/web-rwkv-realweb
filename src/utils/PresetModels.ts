@@ -30,7 +30,7 @@ export const DEFAULT_API_MODEL: APIModel = {
     },
   },
   APIParam: {
-    baseUrl: "https://rwkv-red-team-rwkv-latestspace.hf.space/api/v1",
+    baseUrl: import.meta.env.VITE_API_MODEL_BASE_URL,
     key: "sk-test",
   },
   from: "API",

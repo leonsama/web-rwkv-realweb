@@ -56,13 +56,17 @@ function FadeText({
   const prevPos = useRef(0);
   const prevText = useRef("");
   const textList = useRef<React.ReactElement[]>([]);
+  const suffix = useRef<number>(Math.random());
 
   useEffect(() => {
-    if (children.length > prevPos.current) {
+    if (
+      children.startsWith(prevText.current) &&
+      children.length > prevPos.current
+    ) {
       textList.current = [
         ...textList.current,
         <FadeTextInline
-          key={children.length}
+          key={`${children.length}-${suffix.current}`}
           className={`${
             (animate && "motion-opacity-in-0 motion-duration-1000") || ""
           }`}
@@ -72,13 +76,16 @@ function FadeText({
       ];
       prevPos.current = children.length;
       prevText.current = children;
-    } else if (children.length < prevPos.current) {
+    } else if (
+      prevText.current.startsWith(children) &&
+      children.length < prevPos.current
+    ) {
       const shortList = textList.current.filter((v) => {
-        return (v as any).key <= children.length;
+        return parseInt((v as any).key) <= children.length;
       });
       if (
         shortList.length > 0 &&
-        (shortList[shortList.length - 1] as any).key < children.length
+        parseInt((shortList[shortList.length - 1] as any).key) < children.length
       )
         shortList.push(
           cloneElement(
@@ -86,10 +93,33 @@ function FadeText({
             {
               ...textList.current[shortList.length].props,
             },
-            children.slice((shortList[shortList.length - 1] as any).key),
+            children.slice(
+              parseInt((shortList[shortList.length - 1] as any).key),
+            ),
           ),
         );
       textList.current = shortList;
+      prevPos.current = children.length;
+      prevText.current = children;
+    } else {
+      // console.log(prevText.current, children, textList);
+      suffix.current = Math.random();
+
+      if (textList.current.length > 0) {
+        textList.current = [
+          cloneElement(
+            textList.current[0],
+            {
+              ...textList.current[0].props,
+              key: `${children.length}-${suffix.current}`,
+            },
+            children,
+          ),
+        ];
+      } else {
+        textList.current = [];
+      }
+
       prevPos.current = children.length;
       prevText.current = children;
     }

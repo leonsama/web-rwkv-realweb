@@ -169,7 +169,7 @@ export function RWKVHfSpaceHomePage({
       <div className="flex w-full max-w-screen-md flex-1 flex-col gap-4">
         <h1
           className={cn(
-            "mt-40 select-none text-4xl font-medium text-slate-300 min-[345px]:mt-28 sm:text-6xl xl:mt-36 xl:text-7xl",
+            "mt-44 select-none text-4xl font-medium text-slate-300 min-[345px]:mt-32 sm:text-6xl xl:mt-36 xl:text-7xl",
             showUI
               ? "motion-translate-y-in-75 motion-opacity-in-0"
               : "motion-translate-y-out-75 motion-opacity-out-0",
