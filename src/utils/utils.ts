@@ -27,18 +27,28 @@ export function dangerousUUIDV4() {
 export function throttle<T extends (...args: any[]) => void>(
   func: T,
   wait: number,
-): (...args: [...Parameters<T>, boolean?]) => void {
+): (...args: Parameters<T>) => void {
   let timer: ReturnType<typeof setTimeout> | null = null;
-  let lastArgs: Parameters<T> | null = null;
-  let isWaiting = false;
+  var lastArgs: Parameters<T> | undefined = undefined;
+  var isWaiting = false;
 
-  return (...args: [...Parameters<T>, boolean?]) => {
+  const timeoutHandler = () => {
+    if (lastArgs !== undefined) {
+      func(...lastArgs);
+      lastArgs = undefined;
+      timer = setTimeout(timeoutHandler, wait);
+    } else {
+      isWaiting = false;
+      timer = null;
+    }
+  };
+
+  return (...args: Parameters<T>) => {
     let instant = false;
 
-    // 检查最后一个参数是否为布尔值（instant参数）
-    if (args.length > 0 && typeof args[args.length - 1] === "boolean") {
-      instant = args.pop() as boolean;
-    }
+    // if (args.length > 0 && typeof args[args.length - 1] === "boolean") {
+    //   instant = args.pop() as boolean;
+    // }
 
     if (instant) {
       if (timer) {
@@ -46,28 +56,19 @@ export function throttle<T extends (...args: any[]) => void>(
         timer = null;
       }
       func(...args);
-      // 重新开始等待周期
       isWaiting = true;
-      timer = setTimeout(() => {
-        isWaiting = false;
-        if (lastArgs) {
-          func(...args);
-          lastArgs = null;
-        }
-      }, wait);
+      timer = setTimeout(timeoutHandler, wait);
     } else if (!isWaiting) {
-      // 首次调用立即执行
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
       func(...args);
+
       isWaiting = true;
-      timer = setTimeout(() => {
-        isWaiting = false;
-        if (lastArgs) {
-          func(...args);
-          lastArgs = null;
-        }
-      }, wait);
+
+      timer = setTimeout(timeoutHandler, wait);
     } else {
-      // 缓存最后一次参数
       lastArgs = args as unknown as Parameters<T>;
     }
   };

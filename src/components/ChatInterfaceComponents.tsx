@@ -845,6 +845,11 @@ export function AssistantContent({
             onClick={() => {
               startEdit();
             }}
+            disabled={isGenerating}
+            className={cn(
+              "transition-[margin,opacity,transform]",
+              isGenerating ? "-ml-7 scale-75 opacity-0" : "",
+            )}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
