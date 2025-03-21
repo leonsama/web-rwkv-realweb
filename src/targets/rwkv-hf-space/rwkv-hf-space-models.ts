@@ -48,7 +48,7 @@ export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
     description: t`A tiny but impressive reasoning model with only 0.4B parameters.`,
     supportReasoning: true,
     reasoningName: "RWKV7-G1-0.4B-75%trained-20250317-ctx4k:thinking",
-    param: "1.5B",
+    param: "0.4B",
     dataset: "v2.8",
     update: "2025/03/17",
     ctx: "4096",

@@ -1,6 +1,7 @@
 import { createRef, useContext, useEffect, useRef, useState } from "react";
 import {
   CurrentMessageBlock,
+  CurrentMessageContent,
   useChatSession,
 } from "../store/ChatSessionStorage";
 import {
@@ -32,7 +33,8 @@ import { Trans } from "@lingui/react/macro";
 import { DivSizeTransition } from "./DivTransition";
 
 import copy from "copy-to-clipboard";
-import { toast } from "react-toastify";
+
+const STICK_BOTTOM_LINE_COUNT = 6;
 
 export function ToolButton({
   children,
@@ -312,17 +314,9 @@ export function UserContent({
     ].timestamp = Date.now();
     updateCurrentMessageBlock(currentMessageBlock);
     setIsEditing(false);
-    createNewGeneration(value);
   };
 
   const sendEdit = () => {
-    currentMessageBlock.messageContents[
-      currentMessageBlock.activeMessageContentIndex
-    ].content = value;
-    currentMessageBlock.messageContents[
-      currentMessageBlock.activeMessageContentIndex
-    ].timestamp = Date.now();
-    updateCurrentMessageBlock(currentMessageBlock);
     setIsEditing(false);
     createNewGeneration(value);
   };
@@ -330,7 +324,7 @@ export function UserContent({
   const createNewGeneration = async (content: string) => {
     if (isGenerating) throw new Error("Unexpected regenerate task.");
 
-    currentMessageBlock.messageContents.push({
+    const newMessageContent: CurrentMessageContent = {
       id: currentMessageBlock.messageContents.length,
       role: currentMessageBlock.messageContents[
         currentMessageBlock.activeMessageContentIndex
@@ -345,10 +339,11 @@ export function UserContent({
       modelName: selectedModelTitle,
       timestamp: Date.now(),
       completionId: null,
-    });
+    };
+
+    currentMessageBlock.messageContents.push(newMessageContent);
     currentMessageBlock.activeMessageContentIndex =
       currentMessageBlock.messageContents.length - 1;
-    updateCurrentMessageBlock(currentMessageBlock);
 
     const resultBlock = createNewMessasgeBlock({
       initialMessage: { role: "Assistant", content: "" },
@@ -357,12 +352,16 @@ export function UserContent({
       isGenerating: true,
     });
 
-    const activeMessageContentIndex = resultBlock.activeMessageContentIndex;
+    console.log(resultBlock);
+
+    updateCurrentMessageBlock(currentMessageBlock);
     updateCurrentMessageBlock(resultBlock);
 
     setIsGenerating(true);
 
     await checkIsModelLoaded((modelName) => modelName !== null);
+
+    const activeMessageContentIndex = resultBlock.activeMessageContentIndex;
 
     generator.current = await completion({
       stream: true,
@@ -400,6 +399,14 @@ export function UserContent({
 
     setIsGenerating(false);
   };
+
+  useEffect(() => {
+    setValue(
+      currentMessageBlock.messageContents[
+        currentMessageBlock.activeMessageContentIndex
+      ].content,
+    );
+  }, [currentMessageBlock.activeMessageContentIndex]);
 
   return (
     <div className="z-10 flex flex-col">
@@ -453,9 +460,7 @@ export function UserContent({
               >
                 <Button
                   className="mr-auto rounded-3xl bg-transparent dark:bg-transparent"
-                  onClick={() => {
-                    saveEdit();
-                  }}
+                  onClick={saveEdit}
                 >
                   <Trans>Save</Trans>
                 </Button>
@@ -1465,15 +1470,6 @@ export function ChatInterface({
     setCurrentModelName,
   } = useContext(ChatInterfaceContext);
 
-  //   useEffect(() => {
-  //     if (ref) {
-  //       ref.current = {
-  //         startGenerationTask: startGenerationTask,
-  //         generator: useRef<CompletionGenerator>(null!),
-  //       };
-  //     }
-  //   }, []);
-
   const {
     activeMessageBlocks,
     createNewMessasgeBlock,
@@ -1492,17 +1488,6 @@ export function ChatInterface({
     defaultSessionConfiguration,
     currentInferPort: webRWKVLLMInfer,
   } = useWebRWKVChat(llmModel);
-
-  //   const [showSessionConfigurationBar, setShowSessionConfigurationBar] =
-  //     useState(false);
-
-  //   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  //   const generator = useRef<CompletionGenerator>(null!);
-
-  //     const loadModelModal = useRef<ModalInterface>(null!);
-  //   const checkIsModelLoaded = useSuspendUntilValid(selectedModelTitle, () => {
-  //     loadModelModal.current.setIsModalOpen(true);
-  //   });
 
   const containerEle = useRef<HTMLDivElement>(null);
   const messagesRenderEle = useRef<HTMLDivElement>(null);
@@ -1631,7 +1616,7 @@ export function ChatInterface({
         containerEle.current.scrollHeight <
           containerEle.current.scrollTop +
             containerEle.current.clientHeight +
-            messageLineHeight.current * 4
+            messageLineHeight.current * STICK_BOTTOM_LINE_COUNT
       ) {
         contentScrollToBottom(0);
       }

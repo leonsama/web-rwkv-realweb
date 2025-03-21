@@ -24,31 +24,51 @@ export function dangerousUUIDV4() {
   });
 }
 
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: any[]) => void>(
   func: T,
   wait: number,
-): (...args: Parameters<T>) => void {
-  let lastTime = 0;
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+): (...args: [...Parameters<T>, boolean?]) => void {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let lastArgs: Parameters<T> | null = null;
+  let isWaiting = false;
 
-  return (...args: Parameters<T>) => {
-    const now = Date.now();
-    if (now - lastTime >= wait) {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-        timeoutId = null;
+  return (...args: [...Parameters<T>, boolean?]) => {
+    let instant = false;
+
+    // 检查最后一个参数是否为布尔值（instant参数）
+    if (args.length > 0 && typeof args[args.length - 1] === "boolean") {
+      instant = args.pop() as boolean;
+    }
+
+    if (instant) {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
       }
-      lastTime = now;
       func(...args);
-    } else if (!timeoutId) {
-      timeoutId = setTimeout(
-        () => {
-          lastTime = Date.now();
-          timeoutId = null;
+      // 重新开始等待周期
+      isWaiting = true;
+      timer = setTimeout(() => {
+        isWaiting = false;
+        if (lastArgs) {
           func(...args);
-        },
-        wait - (now - lastTime),
-      );
+          lastArgs = null;
+        }
+      }, wait);
+    } else if (!isWaiting) {
+      // 首次调用立即执行
+      func(...args);
+      isWaiting = true;
+      timer = setTimeout(() => {
+        isWaiting = false;
+        if (lastArgs) {
+          func(...args);
+          lastArgs = null;
+        }
+      }, wait);
+    } else {
+      // 缓存最后一次参数
+      lastArgs = args as unknown as Parameters<T>;
     }
   };
 }
@@ -62,6 +82,8 @@ export function debounce<T extends (...args: any[]) => any>(
   return (...args: Parameters<T>) => {
     if (timeoutId !== null) {
       clearTimeout(timeoutId);
+    } else {
+      func(...args);
     }
 
     timeoutId = setTimeout(() => {

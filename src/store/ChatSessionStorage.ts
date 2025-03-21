@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Sampler } from "../web-rwkv-wasm-port/types";
 import { useShallow } from "zustand/react/shallow";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { dangerousUUIDV4 } from "../utils/utils";
+import { dangerousUUIDV4, throttle } from "../utils/utils";
 import { create } from "zustand";
 import {
   CompletionMessage,
@@ -476,7 +476,7 @@ export function useChatSession(id: string) {
 
     getActiveMessages,
     createNewMessasgeBlock,
-    updateCurrentMessageBlock,
+    updateCurrentMessageBlock: throttle(updateCurrentMessageBlock, 50),
     updateChatSessionTitle,
     updateSessionConfiguration,
   };

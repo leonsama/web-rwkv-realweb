@@ -34,6 +34,8 @@ export function RadioGroup({
 
   const activeItem = (key: number) => {
     if (key < 0) return;
+    selectedIndex.current = key;
+
     const itemRect =
       groupEle.current?.children[key + 1].getBoundingClientRect();
     const groupRect = groupEle.current?.getBoundingClientRect();
@@ -72,7 +74,6 @@ export function RadioGroup({
     if (target.props.disabled) return;
     onChange?.(target.props.value, key);
 
-    selectedIndex.current = key;
     activeItem(key);
   };
 
@@ -84,12 +85,14 @@ export function RadioGroup({
         activeItem(selectedIndex.current);
       }
     }, 200);
-    window.addEventListener("resize", resize);
+    const callResize = () => resize();
+
+    window.addEventListener("resize", callResize);
     setTimeout(() => {
       isDomReady.current = 1;
     }, 0);
     return () => {
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", callResize);
     };
   }, []);
 

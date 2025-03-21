@@ -122,8 +122,9 @@ function ModelCard({
             ) : [v.title, v.name, v.reasoningName].includes(
                 selectedModelTitle,
               ) ? (
-                <span className="text-yellow-600"><Trans>Selected</Trans></span>
-              
+              <span className="text-yellow-600">
+                <Trans>Selected</Trans>
+              </span>
             ) : (
               <Trans>Use</Trans>
             )}
@@ -162,7 +163,7 @@ export function RWKVHfSpaceHomePage({
       className="relative flex h-full w-full flex-1 flex-shrink-0 flex-col items-center overflow-auto px-2 md:px-4"
       style={{ scrollbarGutter: "stable" }}
       onScroll={(e) => {
-        if (showLargeBanner !== (e.target as HTMLDivElement).scrollTop < 10)
+        if (showLargeBanner !== (e.target as HTMLDivElement).scrollTop < 2)
           setShowLargeBanner(!showLargeBanner);
       }}
     >

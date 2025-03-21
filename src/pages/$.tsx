@@ -304,7 +304,9 @@ export default function ChatRouter() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Stop</span>
+                <span>
+                  <Trans>Stop</Trans>
+                </span>
               </button>
               <Modal ref={loadModelModal}>
                 {({ close }) => {

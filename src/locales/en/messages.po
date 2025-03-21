@@ -61,11 +61,11 @@ msgstr "Advance"
 msgid "All"
 msgstr "All"
 
-#: src/components/ChatInterfaceComponents.tsx:1325
+#: src/components/ChatInterfaceComponents.tsx:1343
 msgid "Always Display Pannel?"
 msgstr "Always Display Pannel?"
 
-#: src/components/ChatInterfaceComponents.tsx:1330
+#: src/components/ChatInterfaceComponents.tsx:1348
 msgid "Always display the session configuration pannel when entering a chat session?"
 msgstr "Always display the session configuration pannel when entering a chat session?"
 
@@ -108,8 +108,8 @@ msgstr "Cached Model Details"
 
 #: src/components/ModelConfigUI.tsx:219
 #: src/components/ModelConfigUI.tsx:725
-#: src/components/ChatInterfaceComponents.tsx:450
-#: src/components/ChatInterfaceComponents.tsx:566
+#: src/components/ChatInterfaceComponents.tsx:468
+#: src/components/ChatInterfaceComponents.tsx:584
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -143,7 +143,7 @@ msgstr "Close"
 msgid "Color preference"
 msgstr "Color preference"
 
-#: src/components/ChatInterfaceComponents.tsx:1130
+#: src/components/ChatInterfaceComponents.tsx:1148
 msgid "Completion Options"
 msgstr "Completion Options"
 
@@ -186,7 +186,7 @@ msgstr "Date"
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
 #: src/pages/settings.tsx:92
 #: src/components/ModelConfigUI.tsx:627
-#: src/components/ChatInterfaceComponents.tsx:1339
+#: src/components/ChatInterfaceComponents.tsx:1357
 msgid "Default: No"
 msgstr "Default: No"
 
@@ -210,7 +210,7 @@ msgstr "Downloading"
 msgid "Downloading Model"
 msgstr "Downloading Model"
 
-#: src/components/ChatInterfaceComponents.tsx:548
+#: src/components/ChatInterfaceComponents.tsx:566
 msgid "Edit Message"
 msgstr "Edit Message"
 
@@ -336,7 +336,7 @@ msgstr "Loading..."
 msgid "Made with ♥ by Leon"
 msgstr "Made with ♥ by Leon"
 
-#: src/components/ChatInterfaceComponents.tsx:1146
+#: src/components/ChatInterfaceComponents.tsx:1164
 msgid "Max Output Tokens"
 msgstr "Max Output Tokens"
 
@@ -366,7 +366,7 @@ msgstr "New Chat"
 #: src/pages/settings.tsx:310
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
-#: src/components/ChatInterfaceComponents.tsx:1349
+#: src/components/ChatInterfaceComponents.tsx:1367
 msgid "No"
 msgstr "No"
 
@@ -437,10 +437,10 @@ msgid "Recent Models"
 msgstr "Recent Models"
 
 #: src/pages/settings.tsx:81
-#: src/components/ChatInterfaceComponents.tsx:1048
-#: src/components/ChatInterfaceComponents.tsx:1142
-#: src/components/ChatInterfaceComponents.tsx:1170
-#: src/components/ChatInterfaceComponents.tsx:1207
+#: src/components/ChatInterfaceComponents.tsx:1066
+#: src/components/ChatInterfaceComponents.tsx:1160
+#: src/components/ChatInterfaceComponents.tsx:1188
+#: src/components/ChatInterfaceComponents.tsx:1225
 msgid "Reset"
 msgstr "Reset"
 
@@ -468,7 +468,7 @@ msgstr "RWKV G1 2.9B has shown promising potential in the early stages of traini
 msgid "RWKV7 G1 1.5B shows amazing performance early in training."
 msgstr "RWKV7 G1 1.5B shows amazing performance early in training."
 
-#: src/components/ChatInterfaceComponents.tsx:1036
+#: src/components/ChatInterfaceComponents.tsx:1054
 msgid "Sampler Options"
 msgstr "Sampler Options"
 
@@ -476,8 +476,8 @@ msgstr "Sampler Options"
 msgid "Sampler params"
 msgstr "Sampler params"
 
-#: src/components/ChatInterfaceComponents.tsx:442
-#: src/components/ChatInterfaceComponents.tsx:574
+#: src/components/ChatInterfaceComponents.tsx:460
+#: src/components/ChatInterfaceComponents.tsx:592
 msgid "Save"
 msgstr "Save"
 
@@ -500,11 +500,11 @@ msgstr "Selected"
 msgid "Selected Model: {0}"
 msgstr "Selected Model: {0}"
 
-#: src/components/ChatInterfaceComponents.tsx:453
+#: src/components/ChatInterfaceComponents.tsx:471
 msgid "Send"
 msgstr "Send"
 
-#: src/components/ChatInterfaceComponents.tsx:1017
+#: src/components/ChatInterfaceComponents.tsx:1035
 msgid "Session Configuration"
 msgstr "Session Configuration"
 
@@ -537,15 +537,19 @@ msgstr "Something went wrong"
 msgid "Stack"
 msgstr "Stack"
 
-#: src/components/ChatInterfaceComponents.tsx:1231
+#: src/pages/$.tsx:308
+msgid "Stop"
+msgstr "Stop"
+
+#: src/components/ChatInterfaceComponents.tsx:1249
 msgid "Stop Tokens"
 msgstr "Stop Tokens"
 
-#: src/components/ChatInterfaceComponents.tsx:1211
+#: src/components/ChatInterfaceComponents.tsx:1229
 msgid "Stop Words"
 msgstr "Stop Words"
 
-#: src/components/ChatInterfaceComponents.tsx:1193
+#: src/components/ChatInterfaceComponents.tsx:1211
 msgid "Stop Words & Stop Tokens"
 msgstr "Stop Words & Stop Tokens"
 
@@ -600,10 +604,10 @@ msgstr "What can I help you today?"
 #: src/pages/settings.tsx:307
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
-#: src/components/ChatInterfaceComponents.tsx:1357
+#: src/components/ChatInterfaceComponents.tsx:1375
 msgid "Yes"
 msgstr "Yes"
 
-#: src/components/ChatInterfaceComponents.tsx:1336
+#: src/components/ChatInterfaceComponents.tsx:1354
 msgid "You can adjust this preference in the settings."
 msgstr "You can adjust this preference in the settings."
