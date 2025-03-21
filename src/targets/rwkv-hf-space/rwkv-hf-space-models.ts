@@ -43,14 +43,14 @@ export const AVALIABLE_HF_MODELS: APIModel[] = [...RWKV_G1_MODELS];
 
 export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
   {
-    title: "RWKV7 G1 0.4B 75% trained",
-    name: "RWKV7-G1-0.4B-75%trained-20250317-ctx4k",
-    description: t`A tiny but impressive reasoning model with only 0.4B parameters.`,
+    title: "RWKV7 G1 2.9B 16% trained",
+    name: "RWKV7-G1-2.9B-16%trained-20250313-ctx4k",
+    description: t`RWKV G1 2.9B has shown promising potential in the early stages of training.`,
     supportReasoning: true,
-    reasoningName: "RWKV7-G1-0.4B-75%trained-20250317-ctx4k:thinking",
-    param: "0.4B",
+    reasoningName: "RWKV7-G1-2.9B-16%trained-20250313-ctx4k:thinking",
+    param: "2.9B",
     dataset: "v2.8",
-    update: "2025/03/17",
+    update: "2025/03/13",
     ctx: "4096",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
@@ -103,14 +103,14 @@ export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
     defaultMode: "reasoning",
   },
   {
-    title: "RWKV7 G1 2.9B 16% trained",
-    name: "RWKV7-G1-2.9B-16%trained-20250313-ctx4k",
-    description: t`RWKV G1 2.9B has shown promising potential in the early stages of training.`,
+    title: "RWKV7 G1 0.4B 75% trained",
+    name: "RWKV7-G1-0.4B-75%trained-20250317-ctx4k",
+    description: t`A tiny but impressive reasoning model with only 0.4B parameters.`,
     supportReasoning: true,
-    reasoningName: "RWKV7-G1-2.9B-16%trained-20250313-ctx4k:thinking",
-    param: "2.9B",
+    reasoningName: "RWKV7-G1-0.4B-75%trained-20250317-ctx4k:thinking",
+    param: "0.4B",
     dataset: "v2.8",
-    update: "2025/03/13",
+    update: "2025/03/17",
     ctx: "4096",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
