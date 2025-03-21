@@ -217,8 +217,8 @@ export function RWKVHfSpaceHomePage({
               </h2>
               <p className="pl-2 text-sm font-semibold">
                 <Trans>
-                  Note: These models are not fully trained, and performance may
-                  not be as expected.
+                  Note: These models are still in training and will be stronger
+                  once training is complete.
                 </Trans>
               </p>
               {AVALIABLE_TEMP_HF_MODELS.map((v, k) => (
