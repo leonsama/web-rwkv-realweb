@@ -73,7 +73,7 @@ export const AVALIABLE_HF_MODELS: APIModel[] = [...RWKV_G1_MODELS];
 
 export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
   {
-    title: "RWKV7 G1 2.9B 32% trained",
+    title: "RWKV7 G1 2.9B 32%",
     name: "RWKV7-G1-2.9B-32%trained-20250327-ctx4k",
     description: t`RWKV G1 2.9B has shown promising potential in the early stages of training.`,
     supportReasoning: true,
@@ -103,11 +103,11 @@ export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
     defaultMode: "reasoning",
   },
   {
-    title: "RWKV7 G1 1.5B 32% trained",
-    name: "RWKV7-G1-1.5B-32%trained-20250319-ctx4k",
+    title: "RWKV7 G1 1.5B 32%",
+    name: "RWKV7-G1-1.5B-50%trained-20250330-ctx4k",
     description: t`RWKV7 G1 1.5B shows amazing performance early in training.`,
     supportReasoning: true,
-    reasoningName: "RWKV7-G1-1.5B-32%trained-20250319-ctx4k:thinking",
+    reasoningName: "RWKV7-G1-1.5B-50%trained-20250330-ctx4k:thinking",
     param: "1.5B",
     dataset: "v2.8",
     update: "2025/03/19",
