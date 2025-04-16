@@ -213,7 +213,7 @@ export function RWKVHfSpaceHomePage({
                 <ModelCard key={k} model={v}></ModelCard>
               ))}
               <h2 className="mb-2 mt-3 pl-2 text-2xl font-semibold">
-                <Trans>Temp Latest Traininng Models</Trans>
+                <Trans>Temp Latest Training Models</Trans>
               </h2>
               <p className="pl-2 text-sm font-semibold">
                 <Trans>

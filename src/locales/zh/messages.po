@@ -559,7 +559,7 @@ msgid "Tell me about the Eiffel Tower."
 msgstr "请帮我介绍埃菲尔铁塔。"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:216
-msgid "Temp Latest Traininng Models"
+msgid "Temp Latest Training Models"
 msgstr "正在训练的临时模型"
 
 #: src/components/MarkdownRender.tsx:175

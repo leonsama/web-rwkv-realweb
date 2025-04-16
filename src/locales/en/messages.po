@@ -559,8 +559,8 @@ msgid "Tell me about the Eiffel Tower."
 msgstr "Tell me about the Eiffel Tower."
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:216
-msgid "Temp Latest Traininng Models"
-msgstr "Temp Latest Traininng Models"
+msgid "Temp Latest Training Models"
+msgstr "Temp Latest Training Models"
 
 #: src/components/MarkdownRender.tsx:175
 msgid "Thinking..."
