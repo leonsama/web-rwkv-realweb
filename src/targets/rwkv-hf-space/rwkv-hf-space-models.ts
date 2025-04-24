@@ -73,7 +73,7 @@ export const AVALIABLE_HF_MODELS: APIModel[] = [...RWKV_G1_MODELS];
 
 export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
   {
-    title: "RWKV7 G1 2.9B 41%",
+    title: "RWKV7 G1 2.9B 59%",
     name: "RWKV7-G1-2.9B-59%trained-20250424-ctx4k",
     description: t`RWKV G1 2.9B has shown promising potential in the early stages of training.`,
     supportReasoning: true,
