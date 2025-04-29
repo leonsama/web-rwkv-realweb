@@ -10,7 +10,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
   {
     title: "RWKV7 G1 1.5B",
     name: "rwkv7-g1-1.5b-20250429-ctx4096",
-    description: t`RWKV7 G1 1.5B shows amazing performance early in training.`,
+    description: t`A tiny but impressive multilingual reasoning model with only 1.5B parameters.`,
     supportReasoning: true,
     reasoningName: "rwkv7-g1-1.5b-20250429-ctx4096:thinking",
     param: "1.5B",
@@ -40,7 +40,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
   {
     title: "RWKV7 G1 0.4B",
     name: "rwkv7-g1-0.4b-20250324-ctx4096",
-    description: t`A tiny but impressive reasoning model with only 0.4B parameters.`,
+    description: t`A tiny but impressive multilingual reasoning model with only 0.4B parameters.`,
     supportReasoning: true,
     reasoningName: "rwkv7-g1-0.4b-20250324-ctx4096:thinking",
     param: "0.4B",
@@ -70,7 +70,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
   {
     title: "RWKV7 G1 0.1B",
     name: "rwkv7-g1-0.1b-20250307-ctx4096",
-    description: t`A tiny but impressive reasoning model with only 0.1B parameters. `,
+    description: t`A tiny but impressive multilingual reasoning model with only 0.1B parameters.`,
     supportReasoning: true,
     reasoningName: "rwkv7-g1-0.1b-20250307-ctx4096:thinking",
     param: "0.1B",
@@ -105,7 +105,7 @@ export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
   {
     title: "RWKV7 G1 2.9B 59%",
     name: "RWKV7-G1-2.9B-59%trained-20250424-ctx4k",
-    description: t`RWKV G1 2.9B has shown promising potential in the early stages of training.`,
+    description: t`A tiny but impressive multilingual reasoning model with only 2.9B parameters.`,
     supportReasoning: true,
     reasoningName: "RWKV7-G1-2.9B-59%trained-20250424-ctx4k:thinking",
     param: "2.9B",

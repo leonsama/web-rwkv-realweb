@@ -41,13 +41,29 @@ msgstr "A Cutting-Edge, RNN-Inspired Large Language Model"
 msgid "A model with the same filename exists in the cache. Overwrite the cache?"
 msgstr "A model with the same filename exists in the cache. Overwrite the cache?"
 
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:73
+msgid "A tiny but impressive multilingual reasoning model with only 0.1B parameters."
+msgstr "A tiny but impressive multilingual reasoning model with only 0.1B parameters."
+
 #: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:43
-msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
-msgstr "A tiny but impressive reasoning model with only 0.1B parameters. "
+msgid "A tiny but impressive multilingual reasoning model with only 0.4B parameters."
+msgstr "A tiny but impressive multilingual reasoning model with only 0.4B parameters."
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:13
-msgid "A tiny but impressive reasoning model with only 0.4B parameters."
-msgstr "A tiny but impressive reasoning model with only 0.4B parameters."
+msgid "A tiny but impressive multilingual reasoning model with only 1.5B parameters."
+msgstr "A tiny but impressive multilingual reasoning model with only 1.5B parameters."
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:108
+msgid "A tiny but impressive multilingual reasoning model with only 2.9B parameters."
+msgstr "A tiny but impressive multilingual reasoning model with only 2.9B parameters."
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:43
+#~ msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
+#~ msgstr "A tiny but impressive reasoning model with only 0.1B parameters. "
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:13
+#~ msgid "A tiny but impressive reasoning model with only 0.4B parameters."
+#~ msgstr "A tiny but impressive reasoning model with only 0.4B parameters."
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:233
 msgid "About RWKV"
@@ -461,12 +477,12 @@ msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and paralle
 msgstr "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:78
-msgid "RWKV G1 2.9B has shown promising potential in the early stages of training."
-msgstr "RWKV G1 2.9B has shown promising potential in the early stages of training."
+#~ msgid "RWKV G1 2.9B has shown promising potential in the early stages of training."
+#~ msgstr "RWKV G1 2.9B has shown promising potential in the early stages of training."
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:108
-msgid "RWKV7 G1 1.5B shows amazing performance early in training."
-msgstr "RWKV7 G1 1.5B shows amazing performance early in training."
+#~ msgid "RWKV7 G1 1.5B shows amazing performance early in training."
+#~ msgstr "RWKV7 G1 1.5B shows amazing performance early in training."
 
 #: src/components/ChatInterfaceComponents.tsx:1064
 msgid "Sampler Options"

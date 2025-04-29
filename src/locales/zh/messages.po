@@ -42,13 +42,27 @@ msgstr "受RNN启发的前沿大语言模型"
 msgid "A model with the same filename exists in the cache. Overwrite the cache?"
 msgstr "缓存中已存在同名模型。是否覆盖缓存？"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:43
-msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:73
+msgid "A tiny but impressive multilingual reasoning model with only 0.1B parameters."
 msgstr "仅有 0.1B 参数的推理模型，小而惊艳。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:13
-msgid "A tiny but impressive reasoning model with only 0.4B parameters."
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:43
+msgid "A tiny but impressive multilingual reasoning model with only 0.4B parameters."
 msgstr "仅有 0.4B 参数的推理模型，小而惊艳。"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:13
+msgid "A tiny but impressive multilingual reasoning model with only 1.5B parameters."
+msgstr "仅有 1.5B 参数的推理模型，小而惊艳。"
+
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:108
+msgid "A tiny but impressive multilingual reasoning model with only 2.9B parameters."
+msgstr "仅有 2.9B 参数的推理模型，小而惊艳。"
+
+#~ msgid "A tiny but impressive reasoning model with only 0.1B parameters. "
+#~ msgstr "仅有 0.1B 参数的推理模型，小而惊艳。"
+
+#~ msgid "A tiny but impressive reasoning model with only 0.4B parameters."
+#~ msgstr "仅有 0.4B 参数的推理模型，小而惊艳。"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:233
 msgid "About RWKV"
@@ -156,7 +170,6 @@ msgstr "确认"
 msgid "Content"
 msgstr "内容"
 
-#: src/components/ChatInterfaceComponents.tsx:391
 #~ msgid "Copied"
 #~ msgstr "已复制"
 
@@ -460,13 +473,11 @@ msgstr "类 RNN 大语言模型"
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV（发音为 RwaKuv）是一种具有出色 LLM 性能的 RNN，并且可以像 Transformer 一样并行化。我们目前处于 RWKV7-G1 \"GooseOne\" 推理模型阶段。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:78
-msgid "RWKV G1 2.9B has shown promising potential in the early stages of training."
-msgstr "RWKV G1 2.9B 在训练初期已经展现强大的交互潜力。"
+#~ msgid "RWKV G1 2.9B has shown promising potential in the early stages of training."
+#~ msgstr "RWKV G1 2.9B 在训练初期已经展现强大的交互潜力。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:108
-msgid "RWKV7 G1 1.5B shows amazing performance early in training."
-msgstr "RWKV7 G1 1.5B 在训练初期就表现出惊人的性能。"
+#~ msgid "RWKV7 G1 1.5B shows amazing performance early in training."
+#~ msgstr "RWKV7 G1 1.5B 在训练初期就表现出惊人的性能。"
 
 #: src/components/ChatInterfaceComponents.tsx:1064
 msgid "Sampler Options"
