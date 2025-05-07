@@ -103,14 +103,14 @@ export const AVALIABLE_HF_MODELS: APIModel[] = [...RWKV_G1_MODELS];
 
 export const AVALIABLE_TEMP_HF_MODELS: APIModel[] = [
   {
-    title: "RWKV7 G1 2.9B 59%",
-    name: "RWKV7-G1-2.9B-59%trained-20250424-ctx4k",
+    title: "RWKV7 G1 2.9B 73%",
+    name: "RWKV7-G1-2.9B-73%trained-20250504-ctx4k",
     description: t`A tiny but impressive multilingual reasoning model with only 2.9B parameters.`,
     supportReasoning: true,
-    reasoningName: "RWKV7-G1-2.9B-59%trained-20250424-ctx4k:thinking",
+    reasoningName: "RWKV7-G1-2.9B-73%trained-20250504-ctx4k:thinking",
     param: "2.9B",
     dataset: "v2.8",
-    update: "2025/04/24",
+    update: "2025/05/04",
     ctx: "4096",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
