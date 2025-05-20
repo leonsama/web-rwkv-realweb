@@ -107,11 +107,11 @@ export function App() {
     ) {
       console.log("Load API Model");
       (async () => {
-        const { AVALIABLE_TEMP_HF_MODELS } = await import(
+        const { AVALIABLE_HF_MODELS } = await import(
           "./targets/rwkv-hf-space/rwkv-hf-space-models"
         );
         if (import.meta.env.VITE_TARGET === "rwkv-hf-space") {
-          fromAPI(AVALIABLE_TEMP_HF_MODELS[0]);
+          fromAPI(AVALIABLE_HF_MODELS[0]);
         } else {
           fromAPI(DEFAULT_API_MODEL);
         }

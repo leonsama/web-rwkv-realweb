@@ -212,18 +212,23 @@ export function RWKVHfSpaceHomePage({
               {RWKV_G1_MODELS.map((v, k) => (
                 <ModelCard key={k} model={v}></ModelCard>
               ))}
-              <h2 className="mb-2 mt-3 pl-2 text-2xl font-semibold">
-                <Trans>Temp Latest Training Models</Trans>
-              </h2>
-              <p className="pl-2 text-sm font-semibold">
-                <Trans>
-                  Note: These models are still in training and will be stronger
-                  once training is complete.
-                </Trans>
-              </p>
-              {AVALIABLE_TEMP_HF_MODELS.map((v, k) => (
-                <ModelCard key={k} model={v}></ModelCard>
-              ))}
+              {AVALIABLE_TEMP_HF_MODELS.length > 0 && (
+                <>
+                  <h2 className="mb-2 mt-3 pl-2 text-2xl font-semibold">
+                    <Trans>Temp Latest Training Models</Trans>
+                  </h2>
+                  <p className="pl-2 text-sm font-semibold">
+                    <Trans>
+                      Note: These models are still in training and will be
+                      stronger once training is complete.
+                    </Trans>
+                  </p>
+                  {AVALIABLE_TEMP_HF_MODELS.map((v, k) => (
+                    <ModelCard key={k} model={v}></ModelCard>
+                  ))}
+                </>
+              )}
+
               <Entry className="block">
                 {/* <RecentModelsCard
                   APIModels={AVALIABLE_HF_MODELS}
