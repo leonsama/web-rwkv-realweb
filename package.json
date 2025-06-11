@@ -49,6 +49,7 @@
     "vite-plugin-wasm-pack": "^0.1.12"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@lingui/core": "^5.2.0",
     "@lingui/detect-locale": "^5.2.0",
     "@lingui/react": "^5.2.0",
@@ -58,6 +59,7 @@
     "comlink": "^4.4.2",
     "comlink-async-generator": "^0.0.1",
     "copy-to-clipboard": "^3.3.3",
+    "gsap": "^3.13.0",
     "highlight.js": "^11.11.1",
     "idb-keyval": "^6.2.1",
     "immer": "^10.1.1",
@@ -74,6 +76,7 @@
     "react-toastify": "^11.0.3",
     "react-transition-group": "^4.4.5",
     "tailwind-merge": "^2.5.5",
+    "tailwindcss-intersect": "^2.2.0",
     "zustand": "^5.0.2"
   },
   "prettier": {

@@ -6,24 +6,19 @@ import { useChatModelSession } from "../store/ModelStorage";
 import { Modal, ModalInterface } from "./popup/Modals";
 import { ModelLoaderCard } from "./ModelConfigUI";
 
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { t } from "@lingui/core/macro";
+import {
+  fetchSuggestions,
+  SuggestionCategory,
+  SuggestionData,
+  useSuggestionStore,
+} from "../store/SuggestionStorage";
+import { detectLocal } from "../i18n";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
 
-interface Suggestion {
-  prompt: string;
-  title: React.ReactNode;
-}
-
-const suggestions: Suggestion[] = [
-  {
-    prompt: t`Tell me about the Eiffel Tower.`,
-    title: <Trans>Tell me about the Eiffel Tower.</Trans>,
-  },
-  {
-    prompt: t`How many major planets are there in the Solar System?`,
-    title: <Trans>How many major planets are there in the Solar System?</Trans>,
-  },
-];
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export function ReasoningIcon({
   enableReasoning,
@@ -78,7 +73,7 @@ function PromptSuggestion({
   return (
     <button
       className={cn(
-        "h-7 flex-shrink-0 select-none rounded-3xl px-2 py-1.5 text-xs shadow-md outline outline-1 outline-slate-400 transition-[opacity,background-color] duration-300 hover:bg-gray-100 dark:hover:bg-zinc-600/50",
+        "flex rounded-2xl p-2 text-left text-sm md:hover:bg-gray-100 md:dark:hover:bg-zinc-600/50",
         className,
       )}
       onClick={(e) => {
@@ -103,8 +98,225 @@ function PromptSuggestion({
       style={style}
       {...prop}
     >
-      {children}
+      <div className="p-0.5">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="size-4"
+        >
+          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06l7.22 7.22H6.75a.75.75 0 0 0 0 1.5h7.5a.747.747 0 0 0 .75-.75v-7.5a.75.75 0 0 0-1.5 0v5.69L6.28 5.22Z" />
+        </svg>
+      </div>
+      <div className="flex-1">{children}</div>
     </button>
+  );
+}
+
+function SuggestionPannel({
+  setValue,
+  isPannelExpaned,
+  isKeepFocus,
+}: {
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  isPannelExpaned: boolean;
+  isKeepFocus: React.MutableRefObject<boolean>;
+}) {
+  const [suggestions, setSuggestions] = useState<SuggestionCategory[]>([]);
+  const { cachedSuggestions, setCachedSuggestions } = useSuggestionStore();
+  const [selectedSuggestion, setSelectedSuggestion] = useState<string | null>(
+    null,
+  );
+  const needsUpdate = useRef(true);
+  const suggestionPannelRef = useRef<HTMLDivElement>(null);
+
+  const gsapContainer = useRef(null);
+
+  const { i18n } = useLingui();
+
+  useEffect(() => {
+    const loadSuggestions = async () => {
+      try {
+        let data = cachedSuggestions;
+        if (!data) {
+          data = await fetchSuggestions();
+          setCachedSuggestions(data);
+          needsUpdate.current = false;
+        }
+
+        // Filter for chat category in current language (zh/en)
+        const lang = detectLocal() || "zh"; // Could be dynamic based on user language
+        const chatSuggestions = data[lang]?.chat || [];
+        setSuggestions(chatSuggestions);
+
+        // Flatten suggestions for initial display
+        // const flatSuggestions = chatSuggestions.flatMap((category) =>
+        //   category.items.map((item) => ({
+        //     prompt: item.prompt,
+        //     title: item.display || item.prompt,
+        //     category: category.name,
+        //   })),
+        // );
+
+        if (needsUpdate.current) {
+          data = await fetchSuggestions();
+          setCachedSuggestions(data);
+          needsUpdate.current = false;
+        }
+      } catch (error) {
+        console.error("Failed to load suggestions:", error);
+      }
+    };
+    loadSuggestions();
+  }, [i18n.locale]);
+
+  useEffect(() => {
+    if (!isPannelExpaned) {
+      setSelectedSuggestion(null);
+    }
+  }, [isPannelExpaned]);
+
+  const { contextSafe } = useGSAP({ scope: gsapContainer });
+
+  const suggestionActivateAnimation = contextSafe((className: string) => {
+    let tl = gsap.timeline();
+    tl.to(className, { y: 1, duration: 0.07 });
+    tl.to(className, { y: -7, duration: 0.1 });
+    tl.to(className, { y: 0, duration: 0.17 });
+  });
+  const suggestionCloseAnimation = contextSafe((className: string) => {
+    let tl = gsap.timeline();
+    tl.to(className, { y: 2, duration: 0.1 });
+    tl.to(className, { y: 0, duration: 0.17 });
+  });
+
+  return (
+    <>
+      <div
+        className={cn(
+          "max-h-[20vh] overflow-hidden transition-all duration-300 [mask-image:linear-gradient(00deg,#0000_0,#ffff_1rem,#ffff_calc(100%-1rem),#0000_100%)] md:max-h-none",
+          selectedSuggestion ? "h-60" : "h-0",
+        )}
+      >
+        <SwitchTransition>
+          <CSSTransition
+            key={selectedSuggestion || "none"}
+            nodeRef={suggestionPannelRef}
+            addEndListener={(done) => {
+              suggestionPannelRef.current?.addEventListener(
+                "transitionend",
+                done,
+                false,
+              );
+            }}
+            classNames={{
+              enter: "opacity-0",
+              enterActive: "!opacity-100 transition-opacity duration-75",
+              exit: "opacity-100",
+              exitActive: "!opacity-0 transition-opacity duration-300 test",
+            }}
+          >
+            <div
+              key={selectedSuggestion || "none"}
+              ref={suggestionPannelRef}
+              className={cn(
+                "invisibleScrollbar hideScrollbar flex h-full flex-col gap-2 overflow-auto p-2",
+                selectedSuggestion ? "" : "!duration-75",
+              )}
+            >
+              {selectedSuggestion
+                ? suggestions
+                    .find((v) => v.name === selectedSuggestion)
+                    ?.items.map((item, i) => (
+                      <PromptSuggestion
+                        key={`${item.prompt}-${i}`}
+                        promptContent={item.prompt}
+                        onClick={() => {
+                          setValue(
+                            item.prompt && item.prompt !== ""
+                              ? item.prompt
+                              : item.display || item.prompt,
+                          );
+                        }}
+                        className={cn(
+                          "motion-duration-300",
+                          i < 8
+                            ? "motion-translate-y-in-[30px] motion-opacity-in-0"
+                            : "intersect:motion-translate-y-in-[30px] intersect:motion-opacity-in-0",
+                        )}
+                        style={
+                          {
+                            ...(i < 8
+                              ? {
+                                  "--motion-delay": `${i * 100}ms`,
+                                }
+                              : {}),
+                          } as React.CSSProperties
+                        }
+                        isKeepFocus={isKeepFocus}
+                      >
+                        {item.display || item.prompt}
+                      </PromptSuggestion>
+                    ))
+                : null}
+            </div>
+          </CSSTransition>
+        </SwitchTransition>
+      </div>
+      <div
+        ref={gsapContainer}
+        className={cn(
+          "invisibleScrollbar hideScrollbar relative flex flex-nowrap items-center gap-3 overflow-auto overflow-y-hidden text-nowrap px-3 transition-all duration-500 md:px-5",
+          isPannelExpaned ? "h-12 md:h-16" : "h-0",
+        )}
+      >
+        {suggestions.map((v: SuggestionCategory, k: number) => {
+          return (
+            <button
+              key={v.name}
+              className={cn(
+                "h-7 flex-shrink-0 select-none rounded-3xl px-2 py-1.5 text-xs outline outline-1 outline-slate-400 transition-[opacity,background-color] duration-300 md:hover:bg-gray-100 md:dark:hover:bg-zinc-600/50",
+                isPannelExpaned ? "opacity-100" : "opacity-0",
+                selectedSuggestion === v.name && "shadow-md",
+                `sg-select-${v.name}`,
+              )}
+              style={{
+                transitionDelay: isPannelExpaned
+                  ? `${Math.min(400 + k * 50, 2000)}ms,0ms`
+                  : undefined,
+              }}
+              onClick={(e) => {
+                if (selectedSuggestion !== v.name) {
+                  setSelectedSuggestion(v.name);
+                  suggestionActivateAnimation(`.sg-select-${v.name}`);
+                } else {
+                  suggestionCloseAnimation(`.sg-select-${v.name}`);
+                  setSelectedSuggestion(null);
+                }
+              }}
+              onTouchStart={() => {
+                if (isKeepFocus) {
+                  isKeepFocus.current = true;
+                  setTimeout(() => {
+                    isKeepFocus.current = false;
+                  }, 500);
+                }
+              }}
+              onMouseDown={() => {
+                if (isKeepFocus) {
+                  isKeepFocus.current = true;
+                  setTimeout(() => {
+                    isKeepFocus.current = false;
+                  }, 500);
+                }
+              }}
+            >
+              {v.name}
+            </button>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -234,33 +446,11 @@ export function ChatTextarea({
         }}
       </Modal>
       {/* suggestions */}
-      <div
-        className={cn(
-          "invisibleScrollbar hideScrollbar flex flex-nowrap items-center gap-3 overflow-auto overflow-y-hidden text-nowrap px-3 transition-all duration-500 md:px-5",
-          isPannelExpaned ? "h-12 md:h-16" : "h-0",
-        )}
-      >
-        {suggestions.map((v: Suggestion, k: number) => {
-          return (
-            <PromptSuggestion
-              key={k}
-              promptContent={v.prompt}
-              onClick={(e) => {
-                setValue(e);
-              }}
-              className={cn(isPannelExpaned ? "opacity-100" : "opacity-0")}
-              style={{
-                transitionDelay: isPannelExpaned
-                  ? `${400 + k * 50}ms,0ms`
-                  : undefined,
-              }}
-              isKeepFocus={isKeepFocus}
-            >
-              {v.title}
-            </PromptSuggestion>
-          );
-        })}
-      </div>
+      <SuggestionPannel
+        setValue={setValue}
+        isKeepFocus={isKeepFocus}
+        isPannelExpaned={isPannelExpaned}
+      ></SuggestionPannel>
       {/* edit area */}
       <div
         className={cn(
@@ -352,7 +542,7 @@ export function ChatTextarea({
         </div>
         <button
           className={cn(
-            "absolute bottom-0 right-0 m-2 h-10 w-10 self-end rounded-full p-2.5 text-slate-400 transition-[background-color,margin] duration-[200ms,500ms] hover:bg-slate-100 dark:text-zinc-400",
+            "absolute bottom-0 right-0 m-2 h-10 w-10 self-end rounded-full p-2.5 text-slate-400 transition-[background-color,margin] duration-[200ms,500ms] dark:text-zinc-400 md:hover:bg-slate-100",
             value.trim() !== "" && "text-slate-600 dark:text-zinc-300",
             isPannelExpaned ? "max-md:my-0" : "",
           )}

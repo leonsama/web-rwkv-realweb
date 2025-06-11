@@ -25,7 +25,7 @@ msgstr " Reset"
 msgid ".st or .prefab file only"
 msgstr ".st or .prefab file only"
 
-#: src/components/ChatTextarea.tsx:508
+#: src/components/ChatTextarea.tsx:693
 msgid "<0>Loading... Sit back and relax!</0><1>{loadingModelTitle}</1>"
 msgstr "<0>Loading... Sit back and relax!</0><1>{loadingModelTitle}</1>"
 
@@ -41,19 +41,19 @@ msgstr "A Cutting-Edge, RNN-Inspired Large Language Model"
 msgid "A model with the same filename exists in the cache. Overwrite the cache?"
 msgstr "A model with the same filename exists in the cache. Overwrite the cache?"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:73
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:103
 msgid "A tiny but impressive multilingual reasoning model with only 0.1B parameters."
 msgstr "A tiny but impressive multilingual reasoning model with only 0.1B parameters."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:43
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:73
 msgid "A tiny but impressive multilingual reasoning model with only 0.4B parameters."
 msgstr "A tiny but impressive multilingual reasoning model with only 0.4B parameters."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:13
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:43
 msgid "A tiny but impressive multilingual reasoning model with only 1.5B parameters."
 msgstr "A tiny but impressive multilingual reasoning model with only 1.5B parameters."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:108
+#: src/targets/rwkv-hf-space/rwkv-hf-space-models.ts:13
 msgid "A tiny but impressive multilingual reasoning model with only 2.9B parameters."
 msgstr "A tiny but impressive multilingual reasoning model with only 2.9B parameters."
 
@@ -65,7 +65,7 @@ msgstr "A tiny but impressive multilingual reasoning model with only 2.9B parame
 #~ msgid "A tiny but impressive reasoning model with only 0.4B parameters."
 #~ msgstr "A tiny but impressive reasoning model with only 0.4B parameters."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:233
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:238
 msgid "About RWKV"
 msgstr "About RWKV"
 
@@ -179,7 +179,7 @@ msgstr "Content"
 msgid "Current Language"
 msgstr "English"
 
-#: src/components/ChatTextarea.tsx:433
+#: src/components/ChatTextarea.tsx:618
 msgid "Current Model: <0>{currentModelName}</0>"
 msgstr "Current Model: <0>{currentModelName}</0>"
 
@@ -265,8 +265,8 @@ msgstr "Hide reasoning"
 
 #: src/components/ChatTextarea.tsx:23
 #: src/components/ChatTextarea.tsx:24
-msgid "How many major planets are there in the Solar System?"
-msgstr "How many major planets are there in the Solar System?"
+#~ msgid "How many major planets are there in the Solar System?"
+#~ msgstr "How many major planets are there in the Solar System?"
 
 #: src/targets/webrwkv/webrwkv-homepage.tsx:133
 msgid "Inference engine for RWKV implemented in pure WebGPU"
@@ -364,7 +364,7 @@ msgstr "Message Information"
 msgid "Model Name"
 msgstr "Model Name"
 
-#: src/components/ChatTextarea.tsx:504
+#: src/components/ChatTextarea.tsx:689
 msgid "Model not loaded. Click to open model loader."
 msgstr "Model not loaded. Click to open model loader."
 
@@ -405,7 +405,7 @@ msgstr "No model loaded"
 msgid "No Recent Models"
 msgstr "No Recent Models"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:219
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:221
 msgid "Note: These models are still in training and will be stronger once training is complete."
 msgstr "Note: These models are still in training and will be stronger once training is complete."
 
@@ -440,7 +440,7 @@ msgstr "Reading Model"
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:80
 #: src/components/ModelConfigUI.tsx:1009
 #: src/components/ModelConfigUI.tsx:1208
-#: src/components/ChatTextarea.tsx:415
+#: src/components/ChatTextarea.tsx:600
 msgid "Reasoning"
 msgstr "Reasoning"
 
@@ -472,7 +472,7 @@ msgstr "Return to home page"
 msgid "RNN-Inspired Large Language Model"
 msgstr "RNN-Inspired Large Language Model"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:236
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:241
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 
@@ -512,7 +512,7 @@ msgid "Selected"
 msgstr "Selected"
 
 #. placeholder {0}: currentInferPort.current && (isEnableReasoning ? currentInferPort.current.portType === "api" ? (currentInferPort.current as APIInferPort) .reasoningModelName : currentInferPort.current.selectedModelTitle : currentInferPort.current.selectedModelTitle)
-#: src/components/ChatTextarea.tsx:440
+#: src/components/ChatTextarea.tsx:625
 msgid "Selected Model: {0}"
 msgstr "Selected Model: {0}"
 
@@ -571,10 +571,10 @@ msgstr "Stop Words & Stop Tokens"
 
 #: src/components/ChatTextarea.tsx:19
 #: src/components/ChatTextarea.tsx:20
-msgid "Tell me about the Eiffel Tower."
-msgstr "Tell me about the Eiffel Tower."
+#~ msgid "Tell me about the Eiffel Tower."
+#~ msgstr "Tell me about the Eiffel Tower."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:216
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:218
 msgid "Temp Latest Training Models"
 msgstr "Temp Latest Training Models"
 
@@ -610,7 +610,7 @@ msgstr "Use"
 #~ msgid "Web"
 #~ msgstr "Web"
 
-#: src/components/ChatTextarea.tsx:145
+#: src/components/ChatTextarea.tsx:352
 msgid "What can I help you today?"
 msgstr "What can I help you today?"
 

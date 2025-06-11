@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@gsap/react':
+        specifier: ^2.1.2
+        version: 2.1.2(gsap@3.13.0)(react@19.0.0)
       '@lingui/core':
         specifier: ^5.2.0
         version: 5.2.0(@lingui/babel-plugin-lingui-macro@5.2.0(babel-plugin-macros@3.1.0)(typescript@5.6.3))(babel-plugin-macros@3.1.0)
@@ -35,6 +38,9 @@ importers:
       copy-to-clipboard:
         specifier: ^3.3.3
         version: 3.3.3
+      gsap:
+        specifier: ^3.13.0
+        version: 3.13.0
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -83,6 +89,9 @@ importers:
       tailwind-merge:
         specifier: ^2.5.5
         version: 2.6.0
+      tailwindcss-intersect:
+        specifier: ^2.2.0
+        version: 2.2.0(tailwindcss@3.4.17)
       zustand:
         specifier: ^5.0.2
         version: 5.0.2(@types/react@18.3.18)(immer@10.1.1)(react@19.0.0)
@@ -694,6 +703,12 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==, tarball: https://registry.npmmirror.com/@floating-ui/utils/-/utils-0.2.9.tgz}
+
+  '@gsap/react@2.1.2':
+    resolution: {integrity: sha512-JqliybO1837UcgH2hVOM4VO+38APk3ECNrsuSM4MuXp+rbf+/2IG2K1YJiqfTcXQHH7XlA0m3ykniFYstfq0Iw==}
+    peerDependencies:
+      gsap: ^3.12.5
+      react: '>=17'
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2207,6 +2222,9 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
+  gsap@3.13.0:
+    resolution: {integrity: sha512-QL7MJ2WMjm1PHWsoFrAQH/J8wUeqZvMtHO58qdekHpCfhvhSL4gSiz6vJf5EeMP0LOn3ZCprL2ki/gjED8ghVw==}
+
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
@@ -3209,6 +3227,11 @@ packages:
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
+  tailwindcss-intersect@2.2.0:
+    resolution: {integrity: sha512-LnOQ/iU44jNQ8k3OExa7Ccv/y5NlzAN574jjDnX5gLCdlqoeUT5ADtTznF92oAdon3NZA69b+JLknahbwsqxDA==}
+    peerDependencies:
+      tailwindcss: '>=3.2.0 || >=4.0.0'
+
   tailwindcss-motion@1.0.0:
     resolution: {integrity: sha512-Bc8XJxiSGjup0NHsph4OBGXXFfmbInFUhvVVluKPScQD1R2kDQTZIODqumsI/lONryeTpDdKzwuuw1a99Z38bQ==}
     peerDependencies:
@@ -4098,6 +4121,11 @@ snapshots:
       react-dom: 19.0.0(react@19.0.0)
 
   '@floating-ui/utils@0.2.9': {}
+
+  '@gsap/react@2.1.2(gsap@3.13.0)(react@19.0.0)':
+    dependencies:
+      gsap: 3.13.0
+      react: 19.0.0
 
   '@humanfs/core@0.19.1': {}
 
@@ -5851,6 +5879,8 @@ snapshots:
 
   graphemer@1.4.0: {}
 
+  gsap@3.13.0: {}
+
   has-flag@4.0.0: {}
 
   hasown@2.0.2:
@@ -6985,6 +7015,10 @@ snapshots:
   supports-preserve-symlinks-flag@1.0.0: {}
 
   tailwind-merge@2.6.0: {}
+
+  tailwindcss-intersect@2.2.0(tailwindcss@3.4.17):
+    dependencies:
+      tailwindcss: 3.4.17
 
   tailwindcss-motion@1.0.0(tailwindcss@3.4.17):
     dependencies:

@@ -33,6 +33,13 @@ const app = createRoot(document.getElementById("root")!);
 
 PositionObserver;
 
+// gsap
+
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
+
 app.render(
   <StrictMode>
     <App />
