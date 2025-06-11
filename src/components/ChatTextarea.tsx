@@ -136,6 +136,7 @@ function SuggestionPannel({
 
   useEffect(() => {
     const loadSuggestions = async () => {
+      setSelectedSuggestion(null) // reset suggestions
       try {
         let data = cachedSuggestions;
         if (!data) {
