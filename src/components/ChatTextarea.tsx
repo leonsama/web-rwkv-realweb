@@ -181,8 +181,9 @@ function SuggestionPannel({
   const suggestionActivateAnimation = contextSafe((className: string) => {
     let tl = gsap.timeline();
     tl.to(className, { y: 1, duration: 0.07 });
-    tl.to(className, { y: -7, duration: 0.1 });
-    tl.to(className, { y: 0, duration: 0.17 });
+    tl.to(className, { y: -8, duration: 0.3, ease: "power4.out" });
+    tl.to(className, { y: 2, duration: 0.09 });
+    tl.to(className, { y: 0, duration: 0.08 });
   });
   const suggestionCloseAnimation = contextSafe((className: string) => {
     let tl = gsap.timeline();
@@ -278,7 +279,7 @@ function SuggestionPannel({
                 "h-7 flex-shrink-0 select-none rounded-3xl px-2 py-1.5 text-xs outline outline-1 outline-slate-400 transition-[opacity,background-color] duration-300 md:hover:bg-gray-100 md:dark:hover:bg-zinc-600/50",
                 isPannelExpaned ? "opacity-100" : "opacity-0",
                 selectedSuggestion === v.name && "shadow-md",
-                `sg-select-${v.name}`,
+                `sg-select-${v.name.replaceAll(/[^\w\u4e00-\u9fff]/g, "-")}`,
               )}
               style={{
                 transitionDelay: isPannelExpaned
@@ -288,9 +289,13 @@ function SuggestionPannel({
               onClick={(e) => {
                 if (selectedSuggestion !== v.name) {
                   setSelectedSuggestion(v.name);
-                  suggestionActivateAnimation(`.sg-select-${v.name}`);
+                  suggestionActivateAnimation(
+                    `.sg-select-${v.name.replaceAll(/[^\w\u4e00-\u9fff]/g, "-")}`,
+                  );
                 } else {
-                  suggestionCloseAnimation(`.sg-select-${v.name}`);
+                  suggestionCloseAnimation(
+                    `.sg-select-${v.name.replaceAll(/[^\w\u4e00-\u9fff]/g, "-")}`,
+                  );
                   setSelectedSuggestion(null);
                 }
               }}

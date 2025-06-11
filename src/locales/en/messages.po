@@ -25,7 +25,7 @@ msgstr " Reset"
 msgid ".st or .prefab file only"
 msgstr ".st or .prefab file only"
 
-#: src/components/ChatTextarea.tsx:693
+#: src/components/ChatTextarea.tsx:698
 msgid "<0>Loading... Sit back and relax!</0><1>{loadingModelTitle}</1>"
 msgstr "<0>Loading... Sit back and relax!</0><1>{loadingModelTitle}</1>"
 
@@ -179,7 +179,7 @@ msgstr "Content"
 msgid "Current Language"
 msgstr "English"
 
-#: src/components/ChatTextarea.tsx:618
+#: src/components/ChatTextarea.tsx:623
 msgid "Current Model: <0>{currentModelName}</0>"
 msgstr "Current Model: <0>{currentModelName}</0>"
 
@@ -364,7 +364,7 @@ msgstr "Message Information"
 msgid "Model Name"
 msgstr "Model Name"
 
-#: src/components/ChatTextarea.tsx:689
+#: src/components/ChatTextarea.tsx:694
 msgid "Model not loaded. Click to open model loader."
 msgstr "Model not loaded. Click to open model loader."
 
@@ -440,7 +440,7 @@ msgstr "Reading Model"
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:80
 #: src/components/ModelConfigUI.tsx:1009
 #: src/components/ModelConfigUI.tsx:1208
-#: src/components/ChatTextarea.tsx:600
+#: src/components/ChatTextarea.tsx:605
 msgid "Reasoning"
 msgstr "Reasoning"
 
@@ -512,7 +512,7 @@ msgid "Selected"
 msgstr "Selected"
 
 #. placeholder {0}: currentInferPort.current && (isEnableReasoning ? currentInferPort.current.portType === "api" ? (currentInferPort.current as APIInferPort) .reasoningModelName : currentInferPort.current.selectedModelTitle : currentInferPort.current.selectedModelTitle)
-#: src/components/ChatTextarea.tsx:625
+#: src/components/ChatTextarea.tsx:630
 msgid "Selected Model: {0}"
 msgstr "Selected Model: {0}"
 
@@ -610,7 +610,7 @@ msgstr "Use"
 #~ msgid "Web"
 #~ msgstr "Web"
 
-#: src/components/ChatTextarea.tsx:352
+#: src/components/ChatTextarea.tsx:357
 msgid "What can I help you today?"
 msgstr "What can I help you today?"
 
