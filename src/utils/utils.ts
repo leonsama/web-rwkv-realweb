@@ -257,3 +257,6 @@ export function removeOuterThinkTags(text: string): string {
   }
   return text;
 }
+
+export const compareObject = (object1: any, object2: any) =>
+  JSON.stringify(object1) === JSON.stringify(object2);

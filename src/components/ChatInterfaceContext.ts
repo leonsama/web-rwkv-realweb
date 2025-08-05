@@ -24,8 +24,7 @@ export const ChatSession = createContext<
       validate: (currentState: string | null) => boolean,
     ) => Promise<void>;
 
-    webRWKVLLMInfer: React.MutableRefObject<InferPortInterface>
-    ;
+    webRWKVLLMInfer: React.MutableRefObject<InferPortInterface>;
 
     currentModelName: string | null;
     setCurrentModelName: (name: string) => void;
@@ -53,4 +52,6 @@ export const ChatInterfaceContext = createContext<{
   generalUpdateSessionConfiguration: (
     sessionConfiguration: SessionConfiguration,
   ) => void;
+
+  defaultSessionConfiguration: React.MutableRefObject<SessionConfiguration>;
 }>(null!);

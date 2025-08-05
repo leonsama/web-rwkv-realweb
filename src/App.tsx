@@ -10,7 +10,7 @@ import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 
 import { HashRouter } from "react-router";
 import { useChatModelSession } from "./store/ModelStorage";
-import { useModelLoader } from "./components/ModelConfigUI";
+import { APIModel, useModelLoader } from "./components/ModelConfigUI";
 import { Button } from "./components/Button";
 import { DEFAULT_API_MODEL } from "./utils/PresetModels";
 const BASENAME = import.meta.env.VITE_BASE_URL;
@@ -105,12 +105,25 @@ export function App() {
       import.meta.env.VITE_AUTO_SET_HF_API === "true" &&
       !chatModelSession.llmModel.selectedModelTitle
     ) {
-      console.log("Load API Model");
+      console.log("Load API Model", import.meta.env.VITE_TARGET);
       (async () => {
-        const { AVALIABLE_HF_MODELS } = await import(
-          "./targets/rwkv-hf-space/rwkv-hf-space-models"
-        );
+        let AVALIABLE_HF_MODELS: APIModel[] = [];
+
         if (import.meta.env.VITE_TARGET === "rwkv-hf-space") {
+          AVALIABLE_HF_MODELS = (
+            await import("./targets/rwkv-hf-space/rwkv-hf-space-models")
+          )["AVALIABLE_HF_MODELS"];
+        } else if (import.meta.env.VITE_TARGET === "RWKV7-G0-7.2B-llamacpp") {
+          AVALIABLE_HF_MODELS = (
+            await import(
+              "./targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-models-g0-7.2b-llamacpp"
+            )
+          )["AVALIABLE_HF_MODELS"];
+        }
+
+        if (import.meta.env.VITE_TARGET === "rwkv-hf-space") {
+          fromAPI(AVALIABLE_HF_MODELS[0]);
+        } else if (import.meta.env.VITE_TARGET === "RWKV7-G0-7.2B-llamacpp") {
           fromAPI(AVALIABLE_HF_MODELS[0]);
         } else {
           fromAPI(DEFAULT_API_MODEL);

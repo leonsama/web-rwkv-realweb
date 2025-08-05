@@ -26,7 +26,7 @@ msgstr "重置"
 msgid ".st or .prefab file only"
 msgstr "仅支持 .st 或 .prefab 文件"
 
-#: src/components/ChatTextarea.tsx:698
+#: src/components/ChatTextarea.tsx:704
 msgid "<0>Loading... Sit back and relax!</0><1>{loadingModelTitle}</1>"
 msgstr "<0>加载中... 坐和放宽！</0><1>{loadingModelTitle}</1>"
 
@@ -65,6 +65,7 @@ msgstr "仅有 2.9B 参数的推理模型，小而惊艳。"
 #~ msgstr "仅有 0.4B 参数的推理模型，小而惊艳。"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:238
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:238
 msgid "About RWKV"
 msgstr "关于 RWKV"
 
@@ -76,11 +77,11 @@ msgstr "高级"
 msgid "All"
 msgstr "全部"
 
-#: src/components/ChatInterfaceComponents.tsx:1353
+#: src/components/ChatInterfaceComponents.tsx:1390
 msgid "Always Display Pannel?"
 msgstr "始终显示面板吗？"
 
-#: src/components/ChatInterfaceComponents.tsx:1358
+#: src/components/ChatInterfaceComponents.tsx:1395
 msgid "Always display the session configuration pannel when entering a chat session?"
 msgstr "进入聊天会话时始终显示会话配置面板吗？"
 
@@ -123,12 +124,13 @@ msgstr "缓存模型详情"
 
 #: src/components/ModelConfigUI.tsx:219
 #: src/components/ModelConfigUI.tsx:725
-#: src/components/ChatInterfaceComponents.tsx:473
-#: src/components/ChatInterfaceComponents.tsx:589
+#: src/components/ChatInterfaceComponents.tsx:474
+#: src/components/ChatInterfaceComponents.tsx:590
 msgid "Cancel"
 msgstr "取消"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:186
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:186
 msgid "Chat with RWKV"
 msgstr "与 RWKV 交互"
 
@@ -158,7 +160,7 @@ msgstr "关闭"
 msgid "Color preference"
 msgstr "颜色偏好"
 
-#: src/components/ChatInterfaceComponents.tsx:1158
+#: src/components/ChatInterfaceComponents.tsx:1193
 msgid "Completion Options"
 msgstr "生成选项"
 
@@ -166,7 +168,7 @@ msgstr "生成选项"
 msgid "Confirm"
 msgstr "确认"
 
-#: src/components/ChatInterfaceComponents.tsx:192
+#: src/components/ChatInterfaceComponents.tsx:193
 msgid "Content"
 msgstr "内容"
 
@@ -177,7 +179,7 @@ msgstr "内容"
 msgid "Current Language"
 msgstr "中文"
 
-#: src/components/ChatTextarea.tsx:623
+#: src/components/ChatTextarea.tsx:629
 msgid "Current Model: <0>{currentModelName}</0>"
 msgstr "当前模型: <0>{currentModelName}</0>"
 
@@ -193,14 +195,14 @@ msgstr "深色"
 msgid "Data"
 msgstr "数据"
 
-#: src/components/ChatInterfaceComponents.tsx:239
+#: src/components/ChatInterfaceComponents.tsx:240
 msgid "Date"
 msgstr "日期"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:61
 #: src/pages/settings.tsx:92
 #: src/components/ModelConfigUI.tsx:627
-#: src/components/ChatInterfaceComponents.tsx:1367
+#: src/components/ChatInterfaceComponents.tsx:1404
 msgid "Default: No"
 msgstr "默认：否"
 
@@ -224,7 +226,7 @@ msgstr "下载中"
 msgid "Downloading Model"
 msgstr "下载模型中"
 
-#: src/components/ChatInterfaceComponents.tsx:571
+#: src/components/ChatInterfaceComponents.tsx:572
 msgid "Edit Message"
 msgstr "编辑消息"
 
@@ -260,8 +262,6 @@ msgstr "来源"
 msgid "Hide reasoning"
 msgstr "隐藏推理过程"
 
-#: src/components/ChatTextarea.tsx:23
-#: src/components/ChatTextarea.tsx:24
 #~ msgid "How many major planets are there in the Solar System?"
 #~ msgstr "太阳系中有多少颗主要行星？"
 
@@ -334,6 +334,7 @@ msgstr "已加载模型"
 #: src/targets/webrwkv/components/RecentModelCard.tsx:237
 #: src/targets/webrwkv/components/RecentModelCard.tsx:263
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:121
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:121
 #: src/components/ModelConfigUI.tsx:1102
 #: src/components/ModelConfigUI.tsx:1132
 #: src/components/ModelConfigUI.tsx:1297
@@ -349,19 +350,19 @@ msgstr "加载中..."
 msgid "Made with ♥ by Leon"
 msgstr "Made with ♥ by Leon"
 
-#: src/components/ChatInterfaceComponents.tsx:1174
+#: src/components/ChatInterfaceComponents.tsx:1209
 msgid "Max Output Tokens"
 msgstr "最大输出 Token 数"
 
-#: src/components/ChatInterfaceComponents.tsx:175
+#: src/components/ChatInterfaceComponents.tsx:176
 msgid "Message Information"
 msgstr "消息信息"
 
-#: src/components/ChatInterfaceComponents.tsx:227
+#: src/components/ChatInterfaceComponents.tsx:228
 msgid "Model Name"
 msgstr "模型名称"
 
-#: src/components/ChatTextarea.tsx:694
+#: src/components/ChatTextarea.tsx:700
 msgid "Model not loaded. Click to open model loader."
 msgstr "模型未加载。点击打开模型加载器。"
 
@@ -379,7 +380,7 @@ msgstr "新对话"
 #: src/pages/settings.tsx:310
 #: src/components/ModelConfigUI.tsx:154
 #: src/components/ModelConfigUI.tsx:637
-#: src/components/ChatInterfaceComponents.tsx:1377
+#: src/components/ChatInterfaceComponents.tsx:1414
 msgid "No"
 msgstr "否"
 
@@ -388,6 +389,7 @@ msgid "No Cache"
 msgstr "无缓存"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:67
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:67
 #: src/components/ModelConfigUI.tsx:996
 #: src/components/ModelConfigUI.tsx:1195
 msgid "No description."
@@ -403,11 +405,13 @@ msgid "No Recent Models"
 msgstr "没有最近使用的模型"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:221
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:221
 msgid "Note: These models are still in training and will be stronger once training is complete."
 msgstr "注意：这些模型仍在训练中，训练完成后会更强。"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:185
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:91
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:91
 #: src/components/ModelConfigUI.tsx:1020
 #: src/components/ModelConfigUI.tsx:1219
 msgid "Online"
@@ -435,9 +439,10 @@ msgstr "读取模型中"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:174
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:80
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:80
 #: src/components/ModelConfigUI.tsx:1009
 #: src/components/ModelConfigUI.tsx:1208
-#: src/components/ChatTextarea.tsx:605
+#: src/components/ChatTextarea.tsx:611
 msgid "Reasoning"
 msgstr "推理"
 
@@ -450,10 +455,10 @@ msgid "Recent Models"
 msgstr "最近使用的模型"
 
 #: src/pages/settings.tsx:81
-#: src/components/ChatInterfaceComponents.tsx:1076
-#: src/components/ChatInterfaceComponents.tsx:1170
-#: src/components/ChatInterfaceComponents.tsx:1198
-#: src/components/ChatInterfaceComponents.tsx:1235
+#: src/components/ChatInterfaceComponents.tsx:1111
+#: src/components/ChatInterfaceComponents.tsx:1205
+#: src/components/ChatInterfaceComponents.tsx:1233
+#: src/components/ChatInterfaceComponents.tsx:1272
 msgid "Reset"
 msgstr "重置"
 
@@ -466,29 +471,35 @@ msgid "Return to home page"
 msgstr "返回首页"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:181
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:181
 msgid "RNN-Inspired Large Language Model"
 msgstr "类 RNN 大语言模型"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:241
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:241
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV（发音为 RwaKuv）是一种具有出色 LLM 性能的 RNN，并且可以像 Transformer 一样并行化。我们目前处于 RWKV7-G1 \"GooseOne\" 推理模型阶段。"
 
 #~ msgid "RWKV G1 2.9B has shown promising potential in the early stages of training."
 #~ msgstr "RWKV G1 2.9B 在训练初期已经展现强大的交互潜力。"
 
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-models-g0-7.2b-llamacpp.ts:13
+msgid "RWKV7 G0 7.2B deployed using llamacpp"
+msgstr "基于llamacpp部署的RWKV7 G0 7.2B模型"
+
 #~ msgid "RWKV7 G1 1.5B shows amazing performance early in training."
 #~ msgstr "RWKV7 G1 1.5B 在训练初期就表现出惊人的性能。"
 
-#: src/components/ChatInterfaceComponents.tsx:1064
+#: src/components/ChatInterfaceComponents.tsx:1098
 msgid "Sampler Options"
 msgstr "采样器选项"
 
-#: src/components/ChatInterfaceComponents.tsx:207
+#: src/components/ChatInterfaceComponents.tsx:208
 msgid "Sampler params"
 msgstr "采样器参数"
 
-#: src/components/ChatInterfaceComponents.tsx:465
-#: src/components/ChatInterfaceComponents.tsx:597
+#: src/components/ChatInterfaceComponents.tsx:466
+#: src/components/ChatInterfaceComponents.tsx:598
 msgid "Save"
 msgstr "保存"
 
@@ -499,6 +510,7 @@ msgstr "选择 / 拖放 .st 或 .prefab 文件"
 #: src/targets/webrwkv/components/RecentModelCard.tsx:242
 #: src/targets/webrwkv/components/RecentModelCard.tsx:268
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:126
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:126
 #: src/components/ModelConfigUI.tsx:1108
 #: src/components/ModelConfigUI.tsx:1138
 #: src/components/ModelConfigUI.tsx:1302
@@ -507,15 +519,15 @@ msgid "Selected"
 msgstr "已选择"
 
 #. placeholder {0}: currentInferPort.current && (isEnableReasoning ? currentInferPort.current.portType === "api" ? (currentInferPort.current as APIInferPort) .reasoningModelName : currentInferPort.current.selectedModelTitle : currentInferPort.current.selectedModelTitle)
-#: src/components/ChatTextarea.tsx:630
+#: src/components/ChatTextarea.tsx:636
 msgid "Selected Model: {0}"
 msgstr "已选模型: {0}"
 
-#: src/components/ChatInterfaceComponents.tsx:476
+#: src/components/ChatInterfaceComponents.tsx:477
 msgid "Send"
 msgstr "发送"
 
-#: src/components/ChatInterfaceComponents.tsx:1045
+#: src/components/ChatInterfaceComponents.tsx:1079
 msgid "Session Configuration"
 msgstr "会话配置"
 
@@ -548,28 +560,27 @@ msgstr "出错了"
 msgid "Stack"
 msgstr "堆栈"
 
-#: src/pages/$.tsx:308
+#: src/pages/$.tsx:325
 msgid "Stop"
 msgstr "停止"
 
-#: src/components/ChatInterfaceComponents.tsx:1259
+#: src/components/ChatInterfaceComponents.tsx:1296
 msgid "Stop Tokens"
 msgstr "停止词元（Token）"
 
-#: src/components/ChatInterfaceComponents.tsx:1239
+#: src/components/ChatInterfaceComponents.tsx:1276
 msgid "Stop Words"
 msgstr "停止词"
 
-#: src/components/ChatInterfaceComponents.tsx:1221
+#: src/components/ChatInterfaceComponents.tsx:1256
 msgid "Stop Words & Stop Tokens"
 msgstr "停止词与停止词元（Token）"
 
-#: src/components/ChatTextarea.tsx:19
-#: src/components/ChatTextarea.tsx:20
 #~ msgid "Tell me about the Eiffel Tower."
 #~ msgstr "请帮我介绍埃菲尔铁塔。"
 
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:218
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:218
 msgid "Temp Latest Training Models"
 msgstr "正在训练的临时模型"
 
@@ -596,6 +607,7 @@ msgstr "卸载"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:270
 #: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:129
+#: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:129
 #: src/components/ModelConfigUI.tsx:1140
 #: src/components/ModelConfigUI.tsx:1330
 msgid "Use"
@@ -604,7 +616,7 @@ msgstr "使用"
 #~ msgid "Web"
 #~ msgstr "网络"
 
-#: src/components/ChatTextarea.tsx:357
+#: src/components/ChatTextarea.tsx:363
 msgid "What can I help you today?"
 msgstr "今天有什么可以帮您的？"
 
@@ -614,10 +626,10 @@ msgstr "今天有什么可以帮您的？"
 #: src/pages/settings.tsx:307
 #: src/components/ModelConfigUI.tsx:162
 #: src/components/ModelConfigUI.tsx:645
-#: src/components/ChatInterfaceComponents.tsx:1385
+#: src/components/ChatInterfaceComponents.tsx:1422
 msgid "Yes"
 msgstr "是"
 
-#: src/components/ChatInterfaceComponents.tsx:1364
+#: src/components/ChatInterfaceComponents.tsx:1401
 msgid "You can adjust this preference in the settings."
 msgstr "您可以在设置中调整此偏好。"

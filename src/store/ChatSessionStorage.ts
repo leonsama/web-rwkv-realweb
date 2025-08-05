@@ -9,6 +9,7 @@ import {
   DEFAULT_SESSION_CONFIGURATION,
   SessionConfiguration,
 } from "../web-rwkv-wasm-port/web-rwkv";
+import { useChatModelSession } from "./ModelStorage";
 
 export interface ChatSession {
   id: string;
@@ -240,10 +241,24 @@ export function useChatSession(id: string) {
     CurrentMessageBlock[]
   >([]);
   const [sessionConfiguration, setSessionConfiguration] =
-    useState<SessionConfiguration>(DEFAULT_SESSION_CONFIGURATION);
+    useState<SessionConfiguration>({
+      stopTokens: [261, 0],
+      stopWords: ["\n\nUser"],
+      maxTokens: 4096,
+      systemPrompt: null,
+      defaultSamplerConfig: {
+        temperature: 0.8,
+        top_p: 0.3,
+        presence_penalty: 0.5,
+        count_penalty: 0.5,
+        half_life: 200,
+      },
+    });
   const [currentChatSessionId, setCurrentChatSessionId] = useState<
     string | null
   >(null);
+
+  // const { llmModel: webRWKVLLMInfer } = useChatModelSession((s) => s);
 
   const activeSession = useRef<CurrentChatSession>(
     sessions[id] as CurrentChatSession,
@@ -412,7 +427,9 @@ export function useChatSession(id: string) {
     // activeSession.current.sessionConfiguration =
     //   window.structuredClone(sessionConfiguration);
     activeSession.current.sessionConfiguration = sessionConfiguration;
-    setSessionConfiguration(activeSession.current.sessionConfiguration);
+    setSessionConfiguration(
+      window.structuredClone(activeSession.current.sessionConfiguration),
+    );
     // window.requestAnimationFrame(() => syncSession());
     syncSession();
     // return activeSession.current.sessionConfiguration;
@@ -464,10 +481,26 @@ export function useChatSession(id: string) {
 
   useEffect(() => {
     activeSession.current = sessions[id] as CurrentChatSession;
-    setSessionConfiguration(activeSession.current.sessionConfiguration);
+    console.log(
+      "x",
+      JSON.stringify(activeSession.current.sessionConfiguration),
+    );
+
+    setSessionConfiguration(
+      window.structuredClone(activeSession.current.sessionConfiguration),
+    );
     updateActiveMessageList();
     setCurrentChatSessionId(id);
   }, [id]);
+
+  // useEffect(() => {
+  //   console.log("update", webRWKVLLMInfer.defaultSessionConfiguration);
+  //   setSessionConfiguration(webRWKVLLMInfer.defaultSessionConfiguration);
+  // }, [webRWKVLLMInfer]);
+
+  useEffect(() => {
+    console.log("su", JSON.stringify(sessionConfiguration));
+  }, [sessionConfiguration]);
 
   return {
     activeMessageBlocks,

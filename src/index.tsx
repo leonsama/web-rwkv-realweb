@@ -10,6 +10,11 @@ switch (import.meta.env.VITE_TARGET) {
   case "rwkv-hf-space":
     import("./targets/rwkv-hf-space/rwkv-hf-space.css");
     break;
+
+  case "RWKV7-G0-7.2B-llamacpp":
+    import("./targets/rwkv-hf-space/rwkv-hf-space.css");
+    break;
+
   default:
     throw new Error(`Unknow target '${import.meta.env.VITE_TARGET}'`);
 }
@@ -17,7 +22,6 @@ switch (import.meta.env.VITE_TARGET) {
 import { App } from "./App";
 import { StrictMode } from "react";
 import { PositionObserver } from "./utils/position-observer";
-
 
 // i18n
 import { i18n } from "@lingui/core";

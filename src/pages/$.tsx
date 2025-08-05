@@ -30,7 +30,9 @@ import { WebRWKVHomePage } from "../targets/webrwkv/webrwkv-homepage";
 import { usePageStorage } from "../store/PageStorage";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import path from "path";
+
 import { RWKVHfSpaceHomePage } from "../targets/rwkv-hf-space/rwkv-hf-space-homepage";
+import { RWKVHfSpaceHomePage as RWKV_G0_7B2_LLAMACPP_HomePage } from "../targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage";
 
 import { Trans } from "@lingui/react/macro";
 import {
@@ -151,9 +153,10 @@ export default function ChatRouter() {
 
   const submitPrompt = (prompt: string) => {
     if (currentPage === "homepage") {
+      console.log("create", webRWKVLLMInfer.defaultSessionConfiguration);
       const newChatSession = generateChatSessionObject({
         title: prompt,
-        sessionConfiguration: generalSessionConfiguration,
+        sessionConfiguration: webRWKVLLMInfer.defaultSessionConfiguration,
       });
       const newChatSessionId = createChatSessionWithChatSession({
         chatSession: newChatSession,
@@ -182,6 +185,14 @@ export default function ChatRouter() {
       </MenuItem>
     </Menu>,
   );
+
+  useEffect(() => {
+    if (webRWKVLLMInfer) {
+      setGeneralSessionConfiguration(
+        webRWKVLLMInfer.defaultSessionConfiguration,
+      );
+    }
+  }, [webRWKVLLMInfer]);
 
   return (
     <div className="flex h-full w-full">
@@ -253,6 +264,10 @@ export default function ChatRouter() {
                       {import.meta.env.VITE_TARGET === "rwkv-hf-space" && (
                         <RWKVHfSpaceHomePage></RWKVHfSpaceHomePage>
                       )}
+                      {import.meta.env.VITE_TARGET ===
+                        "RWKV7-G0-7.2B-llamacpp" && (
+                        <RWKV_G0_7B2_LLAMACPP_HomePage></RWKV_G0_7B2_LLAMACPP_HomePage>
+                      )}
                     </>
                   )}
                   {renderPage === "chat" && sessionId !== null && (
@@ -268,6 +283,8 @@ export default function ChatRouter() {
 
                         chatInterfaceUpdateSessionConfiguration,
                         generalUpdateSessionConfiguration,
+
+                        defaultSessionConfiguration,
                       }}
                     >
                       <ChatInterface chatSessionId={sessionId}></ChatInterface>

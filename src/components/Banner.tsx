@@ -80,9 +80,14 @@ export function WebRWKVBanner() {
                   showLargeBanner
                     ? "xl:mt-30 m mt-32 text-6xl md:mt-[7.5rem] xl:text-8xl"
                     : "ml-16 mt-5 text-gray-300 md:ml-7 md:mt-7",
-                  import.meta.env.VITE_TARGET === "rwkv-hf-space" &&
+                  (import.meta.env.VITE_TARGET === "rwkv-hf-space" ||
+                    import.meta.env.VITE_TARGET === "RWKV7-G0-7.2B-llamacpp") &&
                     showLargeBanner
-                    ? "d:-indent-1 xl:-indent-2"
+                    ? "md:-indent-1 xl:-indent-2"
+                    : "",
+                  import.meta.env.VITE_TARGET === "RWKV7-G0-7.2B-llamacpp" &&
+                    showLargeBanner
+                    ? "text-5xl md:text-7xl"
                     : "",
                   isEnterIndex() && "animate-[banner-gradient_3.5s_ease]",
                 )}

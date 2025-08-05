@@ -6,6 +6,7 @@ import {
 } from "../store/ChatSessionStorage";
 import {
   cn,
+  compareObject,
   Timer,
   useMaxWidthBreakpoint,
   useSuspendUntilValid,
@@ -653,22 +654,53 @@ export function AssistantContent({
     setIsGenerating(true);
 
     await checkIsModelLoaded((modelName) => modelName !== null);
-
+    const defaultSessionConfiguration =
+      webRWKVLLMInfer.current.defaultSessionConfiguration;
     generator.current = await completion({
       stream: true,
       messages: getActiveMessages({
         isGenerating: true,
         systemPrompt: sessionConfiguration.systemPrompt || "",
       }),
-      max_tokens: sessionConfiguration.maxTokens,
-      stop_tokens: sessionConfiguration.stopTokens,
-      stop_words: sessionConfiguration.stopWords,
-      temperature: sessionConfiguration.defaultSamplerConfig.temperature,
-      top_p: sessionConfiguration.defaultSamplerConfig.top_p,
-      presence_penalty:
-        sessionConfiguration.defaultSamplerConfig.presence_penalty,
-      count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
-      penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
+
+      ...(sessionConfiguration.maxTokens !==
+        defaultSessionConfiguration.maxTokens && {
+        max_tokens: sessionConfiguration.maxTokens,
+      }),
+      ...(!compareObject(
+        sessionConfiguration.stopTokens,
+        defaultSessionConfiguration.stopTokens,
+      ) && {
+        stop_tokens: sessionConfiguration.stopTokens,
+      }),
+      ...(!compareObject(
+        sessionConfiguration.stopWords,
+        defaultSessionConfiguration.stopWords,
+      ) && {
+        stop_words: sessionConfiguration.stopWords,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.temperature !==
+        defaultSessionConfiguration.defaultSamplerConfig.temperature && {
+        temperature: sessionConfiguration.defaultSamplerConfig.temperature,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.top_p !==
+        defaultSessionConfiguration.defaultSamplerConfig.top_p && {
+        top_p: sessionConfiguration.defaultSamplerConfig.top_p,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.presence_penalty !==
+        defaultSessionConfiguration.defaultSamplerConfig.presence_penalty && {
+        presence_penalty:
+          sessionConfiguration.defaultSamplerConfig.presence_penalty,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.count_penalty !==
+        defaultSessionConfiguration.defaultSamplerConfig.count_penalty && {
+        count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.half_life !==
+        defaultSessionConfiguration.defaultSamplerConfig.half_life && {
+        penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
+      }),
+
       enableReasoning: webRWKVLLMInfer.current.isEnableReasoning,
     });
 
@@ -1022,6 +1054,8 @@ export function ChatSessionConfigurationCard({
     sessionConfiguration: SessionConfiguration,
   ) => void;
 }) {
+  const { llmModel: webRWKVLLMInfer } = useChatModelSession((s) => s);
+
   return (
     <Card
       className={cn(
@@ -1066,8 +1100,9 @@ export function ChatSessionConfigurationCard({
         <Button
           className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
-            sessionConfiguration.defaultSamplerConfig =
-              DEFAULT_SESSION_CONFIGURATION.defaultSamplerConfig;
+            sessionConfiguration.defaultSamplerConfig = window.structuredClone(
+              webRWKVLLMInfer.defaultSessionConfiguration.defaultSamplerConfig,
+            );
             updateSessionConfiguration(
               window.structuredClone(sessionConfiguration),
             );
@@ -1161,7 +1196,7 @@ export function ChatSessionConfigurationCard({
           className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
             sessionConfiguration.maxTokens =
-              DEFAULT_SESSION_CONFIGURATION.maxTokens;
+              webRWKVLLMInfer.defaultSessionConfiguration.maxTokens;
             updateSessionConfiguration(
               window.structuredClone(sessionConfiguration),
             );
@@ -1189,7 +1224,7 @@ export function ChatSessionConfigurationCard({
           className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
             sessionConfiguration.systemPrompt =
-              DEFAULT_SESSION_CONFIGURATION.systemPrompt;
+              webRWKVLLMInfer.defaultSessionConfiguration.systemPrompt;
             updateSessionConfiguration(
               window.structuredClone(sessionConfiguration),
             );
@@ -1223,10 +1258,12 @@ export function ChatSessionConfigurationCard({
         <Button
           className="ml-auto h-10 rounded-xl text-sm text-gray-500 dark:text-gray-300"
           onClick={() => {
-            sessionConfiguration.stopTokens =
-              DEFAULT_SESSION_CONFIGURATION.stopTokens;
-            sessionConfiguration.stopWords =
-              DEFAULT_SESSION_CONFIGURATION.stopWords;
+            sessionConfiguration.stopTokens = window.structuredClone(
+              webRWKVLLMInfer.defaultSessionConfiguration.stopTokens,
+            );
+            sessionConfiguration.stopWords = window.structuredClone(
+              webRWKVLLMInfer.defaultSessionConfiguration.stopWords,
+            );
             updateSessionConfiguration(
               window.structuredClone(sessionConfiguration),
             );
@@ -1516,6 +1553,7 @@ export function ChatInterface({
     prompt: string,
     newChat: boolean = false,
   ) => {
+    // debugger
     const promptBlock = newChat
       ? createNewMessasgeBlock({
           initialMessage: { role: "User", content: prompt },
@@ -1547,15 +1585,48 @@ export function ChatInterface({
         isGenerating: true,
         systemPrompt: sessionConfiguration.systemPrompt || "",
       }),
-      max_tokens: sessionConfiguration.maxTokens,
-      stop_tokens: sessionConfiguration.stopTokens,
-      stop_words: sessionConfiguration.stopWords,
-      temperature: sessionConfiguration.defaultSamplerConfig.temperature,
-      top_p: sessionConfiguration.defaultSamplerConfig.top_p,
-      presence_penalty:
-        sessionConfiguration.defaultSamplerConfig.presence_penalty,
-      count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
-      penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
+
+      ...(sessionConfiguration.maxTokens !==
+        defaultSessionConfiguration.current.maxTokens && {
+        max_tokens: sessionConfiguration.maxTokens,
+      }),
+      ...(!compareObject(
+        sessionConfiguration.stopTokens,
+        defaultSessionConfiguration.current.stopTokens,
+      ) && {
+        stop_tokens: sessionConfiguration.stopTokens,
+      }),
+      ...(!compareObject(
+        sessionConfiguration.stopWords,
+        defaultSessionConfiguration.current.stopWords,
+      ) && {
+        stop_words: sessionConfiguration.stopWords,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.temperature !==
+        defaultSessionConfiguration.current.defaultSamplerConfig
+          .temperature && {
+        temperature: sessionConfiguration.defaultSamplerConfig.temperature,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.top_p !==
+        defaultSessionConfiguration.current.defaultSamplerConfig.top_p && {
+        top_p: sessionConfiguration.defaultSamplerConfig.top_p,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.presence_penalty !==
+        defaultSessionConfiguration.current.defaultSamplerConfig
+          .presence_penalty && {
+        presence_penalty:
+          sessionConfiguration.defaultSamplerConfig.presence_penalty,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.count_penalty !==
+        defaultSessionConfiguration.current.defaultSamplerConfig
+          .count_penalty && {
+        count_penalty: sessionConfiguration.defaultSamplerConfig.count_penalty,
+      }),
+      ...(sessionConfiguration.defaultSamplerConfig.half_life !==
+        defaultSessionConfiguration.current.defaultSamplerConfig.half_life && {
+        penalty_half_life: sessionConfiguration.defaultSamplerConfig.half_life,
+      }),
+
       enableReasoning: webRWKVLLMInfer.current.isEnableReasoning,
     });
     resultBlock.messageContents[activeMessageContentIndex].modelName =

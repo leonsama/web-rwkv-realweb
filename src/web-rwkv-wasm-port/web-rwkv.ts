@@ -122,8 +122,8 @@ export function useWebRWKVChat(webRWKVInferPort: InferPortInterface) {
       penalty_half_life,
       stream,
       new_message_role = "Assistant",
-      stop_tokens = DEFAULT_STOP_TOKENS,
-      stop_words = DEFAULT_STOP_WORDS,
+      stop_tokens,
+      stop_words,
       enableReasoning = false,
     }: {
       max_tokens?: number;
@@ -592,17 +592,24 @@ export class APIInferPort implements InferPortInterface {
       Authorization: `Bearer ${this.APIModelParam.key}`,
     };
 
+    const apiMessage = options.messages?.map((c) => ({
+      role: c.role.toLowerCase(),
+      content: c.content,
+    }));
+
     const requestBody = {
       model:
         this.portType === "api" && options.enableReasoning
           ? (this as APIInferPort).reasoningModelName!
           : this.selectedModelTitle!,
       // prompt: options.prompt,
-      messages: options.messages,
-      max_tokens: options.max_tokens,
-      temperature: options.temperature,
-      top_p: options.top_p,
-      presence_penalty: options.presence_penalty,
+      messages: apiMessage,
+      ...(options.max_tokens && { max_tokens: options.max_tokens }),
+      ...(options.temperature && { temperature: options.temperature }),
+      ...(options.top_p && { top_p: options.top_p }),
+      ...(options.presence_penalty && {
+        presence_penalty: options.presence_penalty,
+      }),
       ...(options.count_penalty !== undefined && {
         count_penalty: options.count_penalty,
       }),
