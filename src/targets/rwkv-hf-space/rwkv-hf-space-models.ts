@@ -8,7 +8,7 @@ import { t } from "@lingui/core/macro";
 
 export const RWKV_G1_MODELS: APIModel[] = [
   {
-    title: "RWKV7 G1A 2.9B",
+    title: "RWKV7 G1a 2.9B",
     name: "rwkv7-g1a-2.9b-20250924-ctx4096",
     description: t`A tiny but impressive multilingual reasoning model with only 2.9B parameters.`,
     supportReasoning: true,
@@ -38,7 +38,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
     defaultMode: "reasoning",
   },
   {
-    title: "RWKV7 G1A 1.5B",
+    title: "RWKV7 G1a 1.5B",
     name: "rwkv7-g1a-1.5b-20250922-ctx4096",
     description: t`A tiny but impressive multilingual reasoning model with only 1.5B parameters.`,
     supportReasoning: true,
@@ -68,7 +68,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
     defaultMode: "reasoning",
   },
   {
-    title: "RWKV7 G1A 0.4B",
+    title: "RWKV7 G1a 0.4B",
     name: "rwkv7-g1a-0.4b-20250905-ctx4096",
     description: t`A tiny but impressive multilingual reasoning model with only 0.4B parameters.`,
     supportReasoning: true,
@@ -98,7 +98,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
     defaultMode: "reasoning",
   },
   {
-    title: "RWKV7 G1A 0.1B",
+    title: "RWKV7 G1a 0.1B",
     name: "rwkv7-g1a-0.1b-20250728-ctx4096",
     description: t`A tiny but impressive multilingual reasoning model with only 0.1B parameters.`,
     supportReasoning: true,
