@@ -23,7 +23,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
       maxTokens: 4096,
       systemPrompt: null,
       defaultSamplerConfig: {
-        temperature: 2.0,
+        temperature: 1.0,
         top_p: 0.3,
         presence_penalty: 0.5,
         count_penalty: 0.5,
@@ -53,7 +53,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
       maxTokens: 4096,
       systemPrompt: null,
       defaultSamplerConfig: {
-        temperature: 2.0,
+        temperature: 1.0,
         top_p: 0.3,
         presence_penalty: 0.5,
         count_penalty: 0.5,
@@ -83,7 +83,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
       maxTokens: 8192,
       systemPrompt: null,
       defaultSamplerConfig: {
-        temperature: 2.0,
+        temperature: 1.0,
         top_p: 0.3,
         presence_penalty: 0.5,
         count_penalty: 0.5,
@@ -113,7 +113,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
       maxTokens: 4096,
       systemPrompt: null,
       defaultSamplerConfig: {
-        temperature: 2.0,
+        temperature: 1.0,
         top_p: 0.3,
         presence_penalty: 0.5,
         count_penalty: 0.5,
