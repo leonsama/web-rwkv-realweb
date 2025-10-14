@@ -64,7 +64,7 @@ msgstr "仅有 2.9B 参数的推理模型，小而惊艳。"
 #~ msgid "A tiny but impressive reasoning model with only 0.4B parameters."
 #~ msgstr "仅有 0.4B 参数的推理模型，小而惊艳。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:238
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:249
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:238
 msgid "About RWKV"
 msgstr "关于 RWKV"
@@ -129,7 +129,7 @@ msgstr "缓存模型详情"
 msgid "Cancel"
 msgstr "取消"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:186
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:197
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:186
 msgid "Chat with RWKV"
 msgstr "与 RWKV 交互"
@@ -333,7 +333,7 @@ msgstr "已加载模型"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:237
 #: src/targets/webrwkv/components/RecentModelCard.tsx:263
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:121
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:132
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:121
 #: src/components/ModelConfigUI.tsx:1102
 #: src/components/ModelConfigUI.tsx:1132
@@ -404,7 +404,7 @@ msgstr "未加载模型"
 msgid "No Recent Models"
 msgstr "没有最近使用的模型"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:221
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:232
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:221
 msgid "Note: These models are still in training and will be stronger once training is complete."
 msgstr "注意：这些模型仍在训练中，训练完成后会更强。"
@@ -470,12 +470,12 @@ msgstr "重置所有数据"
 msgid "Return to home page"
 msgstr "返回首页"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:181
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:192
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:181
 msgid "RNN-Inspired Large Language Model"
 msgstr "类 RNN 大语言模型"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:241
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:252
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:241
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV（发音为 RwaKuv）是一种具有出色 LLM 性能的 RNN，并且可以像 Transformer 一样并行化。我们目前处于 RWKV7-G1 \"GooseOne\" 推理模型阶段。"
@@ -509,7 +509,7 @@ msgstr "选择 / 拖放 .st 或 .prefab 文件"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:242
 #: src/targets/webrwkv/components/RecentModelCard.tsx:268
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:126
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:137
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:126
 #: src/components/ModelConfigUI.tsx:1108
 #: src/components/ModelConfigUI.tsx:1138
@@ -579,7 +579,7 @@ msgstr "停止词与停止词元（Token）"
 #~ msgid "Tell me about the Eiffel Tower."
 #~ msgstr "请帮我介绍埃菲尔铁塔。"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:218
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:229
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:218
 msgid "Temp Latest Training Models"
 msgstr "正在训练的临时模型"
@@ -606,7 +606,7 @@ msgid "Unload"
 msgstr "卸载"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:270
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:129
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:140
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:129
 #: src/components/ModelConfigUI.tsx:1140
 #: src/components/ModelConfigUI.tsx:1330

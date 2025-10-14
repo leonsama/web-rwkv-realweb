@@ -103,6 +103,17 @@ function ModelCard({
               </span>
             </div>
           )}
+          {v.update && (
+            <div>
+              <span
+                className={cn(
+                  "border-g flex items-center rounded-3xl border border-green-600 p-0.5 text-xs text-green-600",
+                )}
+              >
+                {v.update}
+              </span>
+            </div>
+          )}
         </div>
         <div className="flex justify-end gap-1">
           <Button

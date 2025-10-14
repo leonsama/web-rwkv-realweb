@@ -65,7 +65,7 @@ msgstr "A tiny but impressive multilingual reasoning model with only 2.9B parame
 #~ msgid "A tiny but impressive reasoning model with only 0.4B parameters."
 #~ msgstr "A tiny but impressive reasoning model with only 0.4B parameters."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:238
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:249
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:238
 msgid "About RWKV"
 msgstr "About RWKV"
@@ -130,7 +130,7 @@ msgstr "Cached Model Details"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:186
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:197
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:186
 msgid "Chat with RWKV"
 msgstr "Chat with RWKV"
@@ -338,7 +338,7 @@ msgstr "Loaded model"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:237
 #: src/targets/webrwkv/components/RecentModelCard.tsx:263
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:121
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:132
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:121
 #: src/components/ModelConfigUI.tsx:1102
 #: src/components/ModelConfigUI.tsx:1132
@@ -409,7 +409,7 @@ msgstr "No model loaded"
 msgid "No Recent Models"
 msgstr "No Recent Models"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:221
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:232
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:221
 msgid "Note: These models are still in training and will be stronger once training is complete."
 msgstr "Note: These models are still in training and will be stronger once training is complete."
@@ -475,12 +475,12 @@ msgstr "Reset All Data"
 msgid "Return to home page"
 msgstr "Return to home page"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:181
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:192
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:181
 msgid "RNN-Inspired Large Language Model"
 msgstr "RNN-Inspired Large Language Model"
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:241
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:252
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:241
 msgid "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
 msgstr "RWKV (pronounced RwaKuv) is an RNN with great LLM performance and parallelizable like a Transformer. We are at RWKV7-G1 \"GooseOne\" reasoning model."
@@ -516,7 +516,7 @@ msgstr "Select / Drop a .st / .prefab file"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:242
 #: src/targets/webrwkv/components/RecentModelCard.tsx:268
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:126
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:137
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:126
 #: src/components/ModelConfigUI.tsx:1108
 #: src/components/ModelConfigUI.tsx:1138
@@ -588,7 +588,7 @@ msgstr "Stop Words & Stop Tokens"
 #~ msgid "Tell me about the Eiffel Tower."
 #~ msgstr "Tell me about the Eiffel Tower."
 
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:218
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:229
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:218
 msgid "Temp Latest Training Models"
 msgstr "Temp Latest Training Models"
@@ -615,7 +615,7 @@ msgid "Unload"
 msgstr "Unload"
 
 #: src/targets/webrwkv/components/RecentModelCard.tsx:270
-#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:129
+#: src/targets/rwkv-hf-space/rwkv-hf-space-homepage.tsx:140
 #: src/targets/rwkv-g0-7.2b-llamacpp/rwkv-hf-space-homepage.tsx:129
 #: src/components/ModelConfigUI.tsx:1140
 #: src/components/ModelConfigUI.tsx:1330

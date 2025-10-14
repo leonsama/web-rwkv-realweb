@@ -15,7 +15,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
     reasoningName: "rwkv7-g1a-2.9b-20250924-ctx4096:thinking",
     param: "2.9B",
     dataset: "v2.8",
-    update: "2025/05/19",
+    update: "2025/09/24",
     ctx: "4096",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
@@ -45,7 +45,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
     reasoningName: "rwkv7-g1a-1.5b-20250922-ctx4096:thinking",
     param: "1.5B",
     dataset: "v2.8",
-    update: "2025/04/29",
+    update: "2025/09/22",
     ctx: "4096",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
@@ -75,7 +75,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
     reasoningName: "rwkv7-g1a-0.4b-20250905-ctx4096:thinking",
     param: "0.4B",
     dataset: "v2.8",
-    update: "2025/03/24",
+    update: "2025/09/05",
     ctx: "4096",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
@@ -105,7 +105,7 @@ export const RWKV_G1_MODELS: APIModel[] = [
     reasoningName: "rwkv7-g1a-0.1b-20250728-ctx4096:thinking",
     param: "0.1B",
     dataset: "v2.8",
-    update: "2025/03/07",
+    update: "2025/07/28",
     ctx: "4096",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
