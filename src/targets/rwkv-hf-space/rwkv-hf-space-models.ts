@@ -8,19 +8,19 @@ import { t } from "@lingui/core/macro";
 
 export const RWKV_G1_MODELS: APIModel[] = [
   {
-    title: "RWKV7 G1a 2.9B",
-    name: "rwkv7-g1a-2.9b-20250924-ctx4096",
+    title: "RWKV7 G1a4 2.9B",
+    name: "rwkv7-g1a4-2.9b-20251118-ctx8192",
     description: t`A tiny but impressive multilingual reasoning model with only 2.9B parameters.`,
     supportReasoning: true,
-    reasoningName: "rwkv7-g1a-2.9b-20250924-ctx4096:thinking",
+    reasoningName: "rwkv7-g1a4-2.9b-20251118-ctx8192:thinking",
     param: "2.9B",
-    dataset: "v2.8",
-    update: "2025/09/24",
-    ctx: "4096",
+    dataset: "a4",
+    update: "2025/11/18",
+    ctx: "8192",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
       stopWords: DEFAULT_STOP_WORDS,
-      maxTokens: 4096,
+      maxTokens: 8192,
       systemPrompt: null,
       defaultSamplerConfig: {
         temperature: 1.0,
@@ -38,19 +38,19 @@ export const RWKV_G1_MODELS: APIModel[] = [
     defaultMode: "reasoning",
   },
   {
-    title: "RWKV7 G1a 1.5B",
-    name: "rwkv7-g1a-1.5b-20250922-ctx4096",
+    title: "RWKV7 G1a3 1.5B",
+    name: "rwkv7-g1a3-1.5b-20251015-ctx8192",
     description: t`A tiny but impressive multilingual reasoning model with only 1.5B parameters.`,
     supportReasoning: true,
-    reasoningName: "rwkv7-g1a-1.5b-20250922-ctx4096:thinking",
+    reasoningName: "rwkv7-g1a3-1.5b-20251015-ctx8192:thinking",
     param: "1.5B",
-    dataset: "v2.8",
-    update: "2025/09/22",
-    ctx: "4096",
+    dataset: "a3",
+    update: "2025/10/15",
+    ctx: "8192",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
       stopWords: DEFAULT_STOP_WORDS,
-      maxTokens: 4096,
+      maxTokens: 8192,
       systemPrompt: null,
       defaultSamplerConfig: {
         temperature: 1.0,
