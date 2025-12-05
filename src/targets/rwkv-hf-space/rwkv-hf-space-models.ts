@@ -38,14 +38,14 @@ export const RWKV_G1_MODELS: APIModel[] = [
     defaultMode: "reasoning",
   },
   {
-    title: "RWKV7 G1a3 1.5B",
-    name: "rwkv7-g1a3-1.5b-20251015-ctx8192",
+    title: "RWKV7 G1b 1.5B",
+    name: "rwkv7-g1b-1.5b-20251202-ctx8192",
     description: t`A tiny but impressive multilingual reasoning model with only 1.5B parameters.`,
     supportReasoning: true,
-    reasoningName: "rwkv7-g1a3-1.5b-20251015-ctx8192:thinking",
+    reasoningName: "rwkv7-g1b-1.5b-20251202-ctx8192:thinking",
     param: "1.5B",
     dataset: "a3",
-    update: "2025/10/15",
+    update: "2025/12/02",
     ctx: "8192",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
