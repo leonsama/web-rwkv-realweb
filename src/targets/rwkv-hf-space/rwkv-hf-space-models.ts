@@ -8,14 +8,14 @@ import { t } from "@lingui/core/macro";
 
 export const RWKV_G1_MODELS: APIModel[] = [
   {
-    title: "RWKV7 G1b 2.9B",
-    name: "rwkv7-g1b-2.9b-20251205-ctx8192",
+    title: "RWKV7 G1c 2.9B",
+    name: "rwkv7-g1c-2.9b-20251231-ctx8192",
     description: t`A tiny but impressive multilingual reasoning model with only 2.9B parameters.`,
     supportReasoning: true,
-    reasoningName: "rwkv7-g1b-2.9b-20251205-ctx8192:thinking",
+    reasoningName: "rwkv7-g1c-2.9b-20251231-ctx8192:thinking",
     param: "2.9B",
-    dataset: "b",
-    update: "2025/12/05",
+    dataset: "c",
+    update: "2025/12/31",
     ctx: "8192",
     defaultSessionConfiguration: {
       stopTokens: DEFAULT_STOP_TOKENS,
